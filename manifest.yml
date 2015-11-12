@@ -1,0 +1,15 @@
+applications:
+- path: .
+  memory: 64M
+  instances: 1
+  domain: mybluemix.net
+  name: utc-vat
+  host: utc-vat
+  disk_quota: 1024M
+  services:
+  - utc-vat-MAS
+  - utc-vat-Push
+  - utc-vat-MobileData
+  - utc-vat-Mobile Quality Assurance
+  - Apache Spark-46
+  - Apache Spark-46_objectstore
