@@ -10,7 +10,12 @@ var namespace = require('express-namespace');
 var ibmbluemix = require('ibmbluemix');
 var ibmdata = require('ibmdata');
 var ibmpush = require('ibmpush');
+var ibmdb = require('ibm_db');
+
 var num = 0;
+
+var serviceName = 'SQLDB';
+
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({
@@ -29,14 +34,14 @@ ibmbluemix.initialize(config);
 var logger = ibmbluemix.getLogger();
 var ibmconfig = ibmbluemix.getConfig(); //Getting context for app
 //Basic GET test
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
     res.status(200).send("GET, OK :D");
     res.sendfile('public/index.html');
 });
 
 
 // init service sdks 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     // req.data = ibmdata.initializeService(req);
     //    req.ibmpush = ibmpush.initializeService(req);
     req.logger = logger;
@@ -51,62 +56,78 @@ app.use(require('./lib/setup'));
 //app.use(mas);
 
 
-
 logger.info('mbaas context root: ' + ibmconfig.getContextRoot());
 // "Require" modules and files containing endpoints and apply the routes to our application
 app.use(ibmconfig.getContextRoot(), require('./lib/accounts'));
 app.use(ibmconfig.getContextRoot(), require('./lib/staticfile'));
 
 
-http.listen(ibmconfig.getPort(), function() {
+http.listen(ibmconfig.getPort(), function () {
     console.log('Express server listening on port ' + ibmconfig.getPort());
 });
 
 
-
-
 //Test of URI using app context
-app.get(ibmconfig.getContextRoot() + '/test', function(req, res) {
+app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
     res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
 
 });
 
-//Socket Test ////
-/*
-io.on('connection', function(socket){
-  console.log('a user connected');
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+//VCAP_SERVICES
+function findKey(obj, lookup) {
+    for (var i in obj) {
+        if (typeof(obj[i]) === "object") {
+            if (i.toUpperCase().indexOf(lookup) > -1) {
+                // Found the key
+                return i;
+            }
+            findKey(obj[i], lookup);
+        }
+    }
+    return -1;
+}
+if (process.env.VCAP_SERVICES) {
+    env = JSON.parse(process.env.VCAP_SERVICES);
+    key = findKey(env, serviceName);
+}
+
+var credentials = env[key][0].credentials;
+var dsnString = "DRIVER={DB2};DATABASE=" + credentials.db + ";UID=" + credentials.username + ";PWD=" +
+    credentials.password + ";HOSTNAME=" + credentials.hostname + ";port=" + credentials.port;
+/*Connect to the database server
+ param 1: The DSN string which has the details of database name to connect to, user id, password, hostname, portnumber
+ param 2: The Callback function to execute when connection attempt to the specified database is completed
+ API for the ibm_db package can be found here: https://www.npmjs.org/package/ibm_db
+ */
+
+app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
+
+try {
+
+    ibmdb.open(cn, function (err, conn) {
+        var stmt = conn.prepareSync("ALTER TABLE datapoints RENAME COLUMN VACTZ to VECTZ");
+
+        //Bind and Execute the statment asynchronously
+    //    stmt.execute("ALTER TABLE datapoints RENAME COLUMN VACTZ to VECTZ");
+
+    });
+
+}catch(err){console.log("ERROR: " + err.message)}
+
+    res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
 });
 
-io.of('/upload').on('connection', function(socket){
-  socket.on('data', function(msg){
-	  //Print keys of object
-    console.log('message: ' + Object.keys(msg));
-	
-	//Print values of object to html
-    //console.log('message: ' + msg.VECTX);
-  });
-});
-*/
 
-//var database = new pg.Client("postgres://oissqfiq:nl1mY_7HmE6Tbu35j09tG_qRWSt98CyI@pellefant.db.elephantsql.com:5432/oissqfiq")
-var database = new pg.Client("postgres://eiqghlkn:jI37df2QkRNfDd--AEQOZJ_Rz5l5cDsy@jumbo.db.elephantsql.com:5432/eiqghlkn")
-database.connect(function(error) {
-    if (error) {
-        console.log(error)
+ibmdb.open(dsnString, function (err, conn) {
+    if (err) {
+        response.write("error: ", err.message + "<br>\n");
+        response.end();
+        console.log("ERROR Test of VCAP_SERVICES ERROR");
     } else {
+        console.log("Test of VCAP_SERVICES");
 
-
-        //Test of URI using app context
-        app.get(ibmconfig.getContextRoot() + '/upload', function(req, res) {
-            res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
-
-        });
-
-        io.of('/upload').on('connection', function(socket) {
-            socket.on('data', function(msg) {
+        io.of('/upload').on('connection', function (socket) {
+            socket.on('data', function (msg) {
                 console.log("Socket connection made.");
                 keyNames = Object.keys(msg); //Gets key names from object in array form
                 var valueData = [];
@@ -134,20 +155,18 @@ database.connect(function(error) {
 
                 //  num = 0; //reset
 
-                var vectx = valueData[0];
-                var vecty = valueData[1];
-                var vectz = valueData[2];
-                var tstmpV = valueData[3];
-                var gyrox = valueData[4];
-                var gyroy = valueData[5];
-                var gyroz = valueData[6];
-                var tstmpG = valueData[7];
-                var accelx = valueData[8];
-                var accely = valueData[9];
-                var accelz = valueData[10];
-                var tstmpA = valueData[11];
-
-
+                var vectx = parseFloat(valueData[0]);
+                var vecty = parseFloat(valueData[1]);
+                var vectz = parseFloat(valueData[2]);
+                var tstmpV = parseFloat(valueData[3]);
+                var gyrox = parseFloat(valueData[4]);
+                var gyroy = parseFloat(valueData[5]);
+                var gyroz = parseFloat(valueData[6]);
+                var tstmpG = parseFloat(valueData[7]);
+                var accelx = parseFloat(valueData[8]);
+                var accely = parseFloat(valueData[9]);
+                var accelz = parseFloat(valueData[10]);
+                var tstmpA = parseFloat(valueData[11]);
 
 
                 //Add code to send to Postgres here
@@ -159,10 +178,20 @@ database.connect(function(error) {
 
                 //io.emit('chat message', msgv); //Sends data to html if exists
 
-				var lo = 0;
+                var lo = 0;
+
+
+                conn.prepare("INSERT INTO datapoints (TSTMPA, ACCELX, ACCELY, ACCELZ,  TSTMPG, GYROX, GYROY, GYROZ, TSTMPV, VECTX, VECTY, VECTZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+                    if (err) {
+                        //could not prepare for some reason
+                        console.log(err);
+                        return conn.closeSync();
+                    }
+
+
                 //Send data to database
                 for (var i = 0; i < tstmpA.length; i++) {
-					lo++;
+                    lo++;
                     try {
                         //Check if values are null and if so add 0
                         vectx[i] = vectx[i] != null ? vectx[i] : 0;
@@ -179,19 +208,48 @@ database.connect(function(error) {
                         tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : 0;
 
 
-                        database.query("INSERT INTO datapoints ( tstmpA, accelX, accelY, accelZ,  tstmpG, gyroX, gyroY, gyroZ, tstmpV, vectX, vectY, vectZ)"
-                        			+ " VALUES (" + parseFloat(tstmpA[i]) + ', ' + parseFloat(accelx[i]) + ', ' + parseFloat(accely[i]) + ', ' + parseFloat(accelz[i]) + ', ' + parseFloat(tstmpG[i]) + ', ' + parseFloat(gyrox[i]) + ', ' + parseFloat(gyroy[i]) + ', ' + parseFloat(gyroz[i]) + ', ' + parseFloat(tstmpV[i]) + ', ' + parseFloat(vectx[i]) + ', ' + parseFloat(vecty[i]) + ', ' + parseFloat(vectz[i]) + ')');
+                        // database.query("INSERT INTO datapoints ( tstmpA, accelX, accelY, accelZ,  tstmpG, gyroX, gyroY, gyroZ, tstmpV, vectX, vectY, vectZ)"
+                        //     + " VALUES (" + parseFloat(tstmpA[i]) + ', ' + parseFloat(accelx[i]) + ', ' + parseFloat(accely[i]) + ', ' + parseFloat(accelz[i]) + ', ' + parseFloat(tstmpG[i]) + ', ' + parseFloat(gyrox[i]) + ', ' + parseFloat(gyroy[i]) + ', ' + parseFloat(gyroz[i]) + ', ' + parseFloat(tstmpV[i]) + ', ' + parseFloat(vectx[i]) + ', ' + parseFloat(vecty[i]) + ', ' + parseFloat(vectz[i]) + ')');
 
-                        console.log(tstmpA.length + " - - " + lo);
+
+                        stmt.execute([tstmpA[i], accelx[i], accely[i], accelz[i], tstmpG[i], gyroy[i], gyroy[i], gyroz[i], tstmpV[i], vectx[i], vecty[i]], function (err, result) {
+                            if (err) console.log(err);
+                            else result.closeSync();
+
+                            console.log(tstmpA.length + " - - " + lo);
+                        });
                     } catch (err) {
-                        console.log("ERROR: " + err);
+                        console.log("ERROR: " + err.message);
                     }
-                }
+
+
+                };
+                });
             });
         });
     }
 });
 
+
+//Socket Test ////
+/*
+ io.on('connection', function(socket){
+ console.log('a user connected');
+ socket.on('disconnect', function(){
+ console.log('user disconnected');
+ });
+ });
+
+ io.of('/upload').on('connection', function(socket){
+ socket.on('data', function(msg){
+ //Print keys of object
+ console.log('message: ' + Object.keys(msg));
+
+ //Print values of object to html
+ //console.log('message: ' + msg.VECTX);
+ });
+ });
+ */
 
 
 
@@ -203,63 +261,63 @@ database.connect(function(error) {
 //app.use(mas);
 
 /*
- 
-//initialize mbaas-config module
-ibmbluemix.initialize(config);
-var logger = ibmbluemix.getLogger();
 
-app.use(function(req, res, next) {
-	req.ibmpush = ibmpush.initializeService(req);
-	req.logger = logger;
-	next();
-});
+ //initialize mbaas-config module
+ ibmbluemix.initialize(config);
+ var logger = ibmbluemix.getLogger();
 
-//initialize ibmconfig module
-var ibmconfig = ibmbluemix.getConfig();
+ app.use(function(req, res, next) {
+ req.ibmpush = ibmpush.initializeService(req);
+ req.logger = logger;
+ next();
+ });
 
-//get context root to deploy your application
-//the context root is '${appHostName}/v1/apps/${applicationId}'
-var contextRoot = ibmconfig.getContextRoot();
-appContext=express.Router();
-app.use(contextRoot, appContext);
+ //initialize ibmconfig module
+ var ibmconfig = ibmbluemix.getConfig();
 
-console.log("contextRoot: " + contextRoot);
+ //get context root to deploy your application
+ //the context root is '${appHostName}/v1/apps/${applicationId}'
+ var contextRoot = ibmconfig.getContextRoot();
+ appContext=express.Router();
+ app.use(contextRoot, appContext);
 
-// log all requests
-app.all('*', function(req, res, next) {
-	console.log("Received request to " + req.url);
-	next();
-});
+ console.log("contextRoot: " + contextRoot);
 
-// create resource URIs
-// endpoint: https://mobile.ng.bluemix.net/${appHostName}/v1/apps/${applicationId}/notifyOtherDevices/
-appContext.post('/notifyOtherDevices', function(req,res) {
-	var results = 'Sent notification to all registered devices successfully.';
+ // log all requests
+ app.all('*', function(req, res, next) {
+ console.log("Received request to " + req.url);
+ next();
+ });
 
-	console.log("Trying to send push notification via JavaScript Push SDK");
-	var message = { "alert" : "The data has been updated.",
-					"url": "http://www.google.com"
-	};
+ // create resource URIs
+ // endpoint: https://mobile.ng.bluemix.net/${appHostName}/v1/apps/${applicationId}/notifyOtherDevices/
+ appContext.post('/notifyOtherDevices', function(req,res) {
+ var results = 'Sent notification to all registered devices successfully.';
 
-	req.ibmpush.sendBroadcastNotification(message,null).then(function (response) {
-		console.log("Notification sent successfully to all devices.", response);
-		res.send("Sent notification to all registered devices.");
-	}, function(err) {
-		console.log("Failed to send notification to all devices.");
-		console.log(err);
-		res.send(400, {reason: "An error occurred while sending the Push notification.", error: err});
-	});
-});
+ console.log("Trying to send push notification via JavaScript Push SDK");
+ var message = { "alert" : "The data has been updated.",
+ "url": "http://www.google.com"
+ };
 
-// host static files in public folder
-// endpoint:  https://mobile.ng.bluemix.net/${appHostName}/v1/apps/${applicationId}/static/
-appContext.use('/static', express.static('public'));
+ req.ibmpush.sendBroadcastNotification(message,null).then(function (response) {
+ console.log("Notification sent successfully to all devices.", response);
+ res.send("Sent notification to all registered devices.");
+ }, function(err) {
+ console.log("Failed to send notification to all devices.");
+ console.log(err);
+ res.send(400, {reason: "An error occurred while sending the Push notification.", error: err});
+ });
+ });
 
-//redirect to cloudcode doc page when accessing the root context
-app.get('/', function(req, res){
-	res.sendfile('public/index.html');
-});
+ // host static files in public folder
+ // endpoint:  https://mobile.ng.bluemix.net/${appHostName}/v1/apps/${applicationId}/static/
+ appContext.use('/static', express.static('public'));
+
+ //redirect to cloudcode doc page when accessing the root context
+ app.get('/', function(req, res){
+ res.sendfile('public/index.html');
+ });
 
 
 
-*/
+ */
