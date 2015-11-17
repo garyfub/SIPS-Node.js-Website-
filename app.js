@@ -1,5 +1,4 @@
 //Module Dependencies
-var pg = require("pg")
 var app = require("express")();
 var bodyparser = require("body-parser");
 var http = require('http').Server(app);
@@ -10,7 +9,7 @@ var namespace = require('express-namespace');
 var ibmbluemix = require('ibmbluemix');
 var ibmdata = require('ibmdata');
 var ibmpush = require('ibmpush');
-var ibmdb = require('ibm_db');
+var Cloudant = require('cloudant');
 
 var num = 0;
 
@@ -101,23 +100,10 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentials.db + ";UID=" + credential
  */
 
 app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
-
-try {
-
-    ibmdb.open(cn, function (err, conn) {
-        var stmt = conn.prepareSync("ALTER TABLE datapoints RENAME COLUMN VACTZ to VECTZ");
-
-        //Bind and Execute the statment asynchronously
-    //    stmt.execute("ALTER TABLE datapoints RENAME COLUMN VACTZ to VECTZ");
-
-    });
-
-}catch(err){console.log("ERROR: " + err.message)}
-
     res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
 });
 
-
+/*
 ibmdb.open(dsnString, function (err, conn) {
     if (err) {
         response.write("error: ", err.message + "<br>\n");
@@ -208,10 +194,6 @@ ibmdb.open(dsnString, function (err, conn) {
                         tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : 0;
 
 
-                        // database.query("INSERT INTO datapoints ( tstmpA, accelX, accelY, accelZ,  tstmpG, gyroX, gyroY, gyroZ, tstmpV, vectX, vectY, vectZ)"
-                        //     + " VALUES (" + parseFloat(tstmpA[i]) + ', ' + parseFloat(accelx[i]) + ', ' + parseFloat(accely[i]) + ', ' + parseFloat(accelz[i]) + ', ' + parseFloat(tstmpG[i]) + ', ' + parseFloat(gyrox[i]) + ', ' + parseFloat(gyroy[i]) + ', ' + parseFloat(gyroz[i]) + ', ' + parseFloat(tstmpV[i]) + ', ' + parseFloat(vectx[i]) + ', ' + parseFloat(vecty[i]) + ', ' + parseFloat(vectz[i]) + ')');
-
-
                         stmt.execute([tstmpA[i], accelx[i], accely[i], accelz[i], tstmpG[i], gyroy[i], gyroy[i], gyroz[i], tstmpV[i], vectx[i], vecty[i]], function (err, result) {
                             if (err) console.log(err);
                             else result.closeSync();
@@ -229,7 +211,7 @@ ibmdb.open(dsnString, function (err, conn) {
         });
     }
 });
-
+*/
 
 //Socket Test ////
 /*
