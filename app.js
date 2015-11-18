@@ -7,13 +7,15 @@ var path = require('path');
 var namespace = require('express-namespace');
 //Bluemix Mobile Cloud dependencies
 var ibmbluemix = require('ibmbluemix');
-var ibmdata = require('ibmdata');
 var ibmpush = require('ibmpush');
 var Cloudant = require('cloudant');
 
+var env = null;
+var key = null;
 var num = 0;
 
-var serviceName = 'SQLDB';
+//Service to get account information for
+var serviceName = 'CLOUDANTNOSQLDB';
 
 
 app.use(bodyparser.json())
@@ -65,19 +67,13 @@ http.listen(ibmconfig.getPort(), function () {
     console.log('Express server listening on port ' + ibmconfig.getPort());
 });
 
-
-//Test of URI using app context
-app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
-    res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
-
-});
-
 //VCAP_SERVICES
 function findKey(obj, lookup) {
     for (var i in obj) {
         if (typeof(obj[i]) === "object") {
             if (i.toUpperCase().indexOf(lookup) > -1) {
                 // Found the key
+                console.log("Key was found");
                 return i;
             }
             findKey(obj[i], lookup);
@@ -90,149 +86,56 @@ if (process.env.VCAP_SERVICES) {
     key = findKey(env, serviceName);
 }
 
+//Get Bluemix Cloudant account credentials
 var credentials = env[key][0].credentials;
-var dsnString = "DRIVER={DB2};DATABASE=" + credentials.db + ";UID=" + credentials.username + ";PWD=" +
-    credentials.password + ";HOSTNAME=" + credentials.hostname + ";port=" + credentials.port;
-/*Connect to the database server
- param 1: The DSN string which has the details of database name to connect to, user id, password, hostname, portnumber
- param 2: The Callback function to execute when connection attempt to the specified database is completed
- API for the ibm_db package can be found here: https://www.npmjs.org/package/ibm_db
- */
+var me = credentials.username;
+var password = credentials.password;
 
+// Initialize Cloudant library.
+var cloudant = Cloudant({account: me, password: password});
+
+
+//Test of URI using app context
 app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
     res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
+
 });
 
-/*
-ibmdb.open(dsnString, function (err, conn) {
-    if (err) {
-        response.write("error: ", err.message + "<br>\n");
-        response.end();
-        console.log("ERROR Test of VCAP_SERVICES ERROR");
-    } else {
-        console.log("Test of VCAP_SERVICES");
+//Test if Cloudant databases are accessible. Displays name of databases on page and logs
+app.get(ibmconfig.getContextRoot() + '/test1', function (req, res) {
 
-        io.of('/upload').on('connection', function (socket) {
-            socket.on('data', function (msg) {
-                console.log("Socket connection made.");
-                keyNames = Object.keys(msg); //Gets key names from object in array form
-                var valueData = [];
-                var value = [];
-                var data;
-                var num = 0;
-                var valTotal = "";
+    cloudant.db.list(function (err, allDbs) {
+        console.log('All my databases: %s', allDbs.join(', '));
+        res.status(200).send('All my databases: ' + allDbs.join(', ')); //Removing status code affects the android app's response.
+    });
+
+});
+
+// Specify the database we are going to use
+var datapoints = cloudant.db.use('utc-vat') // database is named utc-vat
 
 
-                for (var key in msg) {
-                    //Create Array that contains arrays of data in String format, removing JSON brackets and using a comma delimiter
-                    //The internal arrays are in the same order as the key names in the object.
-                    valueData[num] = (msg[key].substring(1, msg[key].length - 1)).split(",");
+io.of('/upload').on('connection', function (socket) {
+    socket.on('data', function (msg) {
+        console.log("Socket connection made.");
+
+        keyNames = Object.keys(msg); //Gets key names from object in array form
+        //Print out key names to verify session object loaded
+        for (var i in keyNames) {
+            console.log("msg." + keyNames[i]);
+        }
 
 
-                    //helps print out small substring of data after putting it back into string form.
-                    for (var i in valueData) {
-                        valTotal = valueData[i] + "," + valTotal;
-                    }
+        // Insert a document into cloudant database specified above.
+        datapoints.insert(msg, function (err, body, header) {
+            if (err) {
+                return console.log('[session.insert] ', err.message);
+            }
+            else{console.log('Insertion completed without error')}
 
-                    console.log("msg." + key + " at pos " + num);
-
-                    num++; // go to next position in arrays
-                }
-
-                //  num = 0; //reset
-
-                var vectx = parseFloat(valueData[0]);
-                var vecty = parseFloat(valueData[1]);
-                var vectz = parseFloat(valueData[2]);
-                var tstmpV = parseFloat(valueData[3]);
-                var gyrox = parseFloat(valueData[4]);
-                var gyroy = parseFloat(valueData[5]);
-                var gyroz = parseFloat(valueData[6]);
-                var tstmpG = parseFloat(valueData[7]);
-                var accelx = parseFloat(valueData[8]);
-                var accely = parseFloat(valueData[9]);
-                var accelz = parseFloat(valueData[10]);
-                var tstmpA = parseFloat(valueData[11]);
-
-
-                //Add code to send to Postgres here
-
-                for (var i in keyNames) {
-                    console.log("msg." + keyNames[i]);
-
-                }
-
-                //io.emit('chat message', msgv); //Sends data to html if exists
-
-                var lo = 0;
-
-
-                conn.prepare("INSERT INTO datapoints (TSTMPA, ACCELX, ACCELY, ACCELZ,  TSTMPG, GYROX, GYROY, GYROZ, TSTMPV, VECTX, VECTY, VECTZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
-                    if (err) {
-                        //could not prepare for some reason
-                        console.log(err);
-                        return conn.closeSync();
-                    }
-
-
-                //Send data to database
-                for (var i = 0; i < tstmpA.length; i++) {
-                    lo++;
-                    try {
-                        //Check if values are null and if so add 0
-                        vectx[i] = vectx[i] != null ? vectx[i] : 0;
-                        vecty[i] = vecty[i] != null ? vecty[i] : 0;
-                        vectz[i] = vectz[i] != null ? vectz[i] : 0;
-                        tstmpV[i] = tstmpV[i] != null ? tstmpV[i] : 0;
-                        gyrox[i] = gyrox[i] != null ? gyrox[i] : 0;
-                        gyroy[i] = gyroy[i] != null ? gyroy[i] : 0;
-                        gyroz[i] = gyroz[i] != null ? gyroz[i] : 0;
-                        tstmpG[i] = tstmpG[i] != null ? tstmpG[i] : 0;
-                        accelx[i] = accelx[i] != null ? accelx[i] : 0;
-                        accely[i] = accely[i] != null ? accely[i] : 0;
-                        accelz[i] = accelz[i] != null ? accelz[i] : 0;
-                        tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : 0;
-
-
-                        stmt.execute([tstmpA[i], accelx[i], accely[i], accelz[i], tstmpG[i], gyroy[i], gyroy[i], gyroz[i], tstmpV[i], vectx[i], vecty[i]], function (err, result) {
-                            if (err) console.log(err);
-                            else result.closeSync();
-
-                            console.log(tstmpA.length + " - - " + lo);
-                        });
-                    } catch (err) {
-                        console.log("ERROR: " + err.message);
-                    }
-
-
-                };
-                });
-            });
         });
-    }
+    });
 });
-*/
-
-//Socket Test ////
-/*
- io.on('connection', function(socket){
- console.log('a user connected');
- socket.on('disconnect', function(){
- console.log('user disconnected');
- });
- });
-
- io.of('/upload').on('connection', function(socket){
- socket.on('data', function(msg){
- //Print keys of object
- console.log('message: ' + Object.keys(msg));
-
- //Print values of object to html
- //console.log('message: ' + msg.VECTX);
- });
- });
- */
-
 
 
 //BlueList Auth Sample Push notification code
