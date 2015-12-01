@@ -425,7 +425,10 @@ ibmdb.open(dsnString, function (err, conn) {
                       //  console.log( i + " - of - " + tstmpA.length);
 
                         stmt.execute([parseFloat(tstmpA[i]), parseFloat(accelx[i]), parseFloat(accely[i]), parseFloat(accelz[i]), parseFloat(tstmpG[i]), parseFloat(gyroy[i]), parseFloat(gyroy[i]), parseFloat(gyroz[i]), parseFloat(tstmpM[i]), parseFloat(magx[i]), parseFloat(magy[i]), parseFloat(magz[i]), String(userID), String(sessionID), String(userInput)], function (err, result) {
-                            if (err) console.log(err);
+                            if (err){
+                                console.log("ERROR: " + lo);
+                                console.log(err);
+                            }
                             else result.closeSync();
 
                         });
