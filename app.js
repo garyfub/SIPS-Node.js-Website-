@@ -280,7 +280,7 @@ ibmdb.open(dsnString, function (err, conn) {
             var valTotal = "";
             //Print out key names to verify session object loaded
             for (var i in keyNames) {
-                console.log("msg." + keyNames[i] + " in Cloudant");
+                console.log("msg." + keyNames[i] + " key found");
             }
 
 
@@ -290,7 +290,7 @@ ibmdb.open(dsnString, function (err, conn) {
                     return console.log('[session.insert] ', err.message);
                 }
                 else {
-                    console.log('Insertion completed without error')
+                    console.log('Insertion completed without error - Cloudant')
                 }
 
             });
@@ -437,6 +437,9 @@ ibmdb.open(dsnString, function (err, conn) {
                         console.log("ERROR: " + err.message);
                     }
                 };
+
+
+                console.log('Insertion script complete');
             });
         });
     });

@@ -12,4 +12,6 @@ applications:
   - utc-vat-MobileData
   - utc-vat-Mobile Quality Assurance
   - Apache Spark-ki
-  - Apache Spark-46_objectstore
+  - Cloudant NoSQL DB-5f
+  - dashDB-4l
+  - SQL Database-lk
