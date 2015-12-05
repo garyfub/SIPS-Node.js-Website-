@@ -38,9 +38,9 @@ ibmbluemix.initialize(config);
 var logger = ibmbluemix.getLogger();
 var ibmconfig = ibmbluemix.getConfig(); //Getting context for app
 //Basic GET test
-app.get("/", function (req, res) {
-    res.status(200).send("GET, OK :D");
-    res.sendfile('public/index.html');
+app.get("/login", function (req, res) {
+  //  res.status(200).send("GET, OK :D");
+    res.sendFile( __dirname + "/public/webapp" + "index.html" );
 });
 
 
@@ -268,9 +268,8 @@ ibmdb.open(dsnString, function (err, conn) {
     }
 
 
-    //COMBINED CODE
-
-
+    //COMBINED ENDPOINT
+    //Uploads to Cloudant and SQL
     io.of('/upload').on('connection', function (socket) {
         socket.on('data', function (msg) {
             console.log("Socket connection made.");
@@ -297,7 +296,6 @@ ibmdb.open(dsnString, function (err, conn) {
 
 
             //SQL code
-
 
             var userID = msg.USERID;
             var sessionID = msg.SESSIONID;
@@ -333,16 +331,11 @@ ibmdb.open(dsnString, function (err, conn) {
             //Preparing to excecute SQL command, ? are placements for values given in the execute command
             conn.prepare("INSERT INTO datapoints (ACCELTIMESTAMP, ACCELX, ACCELY, ACCELZ,  GYROTIMESTAMP, GYROX, GYROY, GYROZ, MAGTIMESTAMP, MAGX, MAGY, MAGZ, USERID, SESSIONID, SESSIONINFO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
-                    //could not prepare for some reason
                     console.log(err);
                     return conn.closeSync();
                 }
 
                 console.log("SQL prepare command  - - DONE");
-
-
-
-
 
                 //Send data to database
                 for (var i = 0; i < tstmpA.length; i++) {
@@ -422,7 +415,7 @@ ibmdb.open(dsnString, function (err, conn) {
                             tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : "0";
                         }
 
-                      //  console.log( i + " - of - " + tstmpA.length);
+                      //  console.log( i + " - of - " + tstmpA.length); //Shows progress when uploading
 
                         stmt.execute([parseFloat(tstmpA[i]), parseFloat(accelx[i]), parseFloat(accely[i]), parseFloat(accelz[i]), parseFloat(tstmpG[i]), parseFloat(gyroy[i]), parseFloat(gyroy[i]), parseFloat(gyroz[i]), parseFloat(tstmpM[i]), parseFloat(magx[i]), parseFloat(magy[i]), parseFloat(magz[i]), String(userID), String(sessionID), String(userInput)], function (err, result) {
                             if (err){
@@ -438,33 +431,16 @@ ibmdb.open(dsnString, function (err, conn) {
                     }
                 };
 
-
                 console.log('Insertion script complete');
             });
         });
     });
 });
+
+
 //BlueList Auth Sample Push notification code
 
-
-//uncomment below code to protect endpoints created afterwards by MAS
-//var mas = require('ibmsecurity')();
-//app.use(mas);
-
 /*
-
- //initialize mbaas-config module
- ibmbluemix.initialize(config);
- var logger = ibmbluemix.getLogger();
-
- app.use(function(req, res, next) {
- req.ibmpush = ibmpush.initializeService(req);
- req.logger = logger;
- next();
- });
-
- //initialize ibmconfig module
- var ibmconfig = ibmbluemix.getConfig();
 
  //get context root to deploy your application
  //the context root is '${appHostName}/v1/apps/${applicationId}'
