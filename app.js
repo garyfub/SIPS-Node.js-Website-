@@ -1,5 +1,6 @@
 //Module Dependencies
-var app = require("express")();
+var express = require("express");
+var app = express();
 var bodyparser = require("body-parser");
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -10,6 +11,16 @@ var ibmbluemix = require('ibmbluemix');
 var ibmpush = require('ibmpush');
 var Cloudant = require('cloudant');
 var ibmdb = require('ibm_db');
+//Web App Dependencies
+var cookieParser = require('cookie-parser');
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var forms = require('./routes/forms');
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
 
 var env = null;
 var key = null;
@@ -23,8 +34,14 @@ var serviceName2 = 'SQLDB';
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({
-    extended: true
+    extended: false
 }))
+app.use(cookieParser());
+
+app.use('/', routes);
+app.use('/users', users);
+app.use('/forms', forms);
+app.use(express.static(path.join(__dirname, 'public')));
 
 var config = {
     // change to real application route assigned for your application        
@@ -40,7 +57,7 @@ var ibmconfig = ibmbluemix.getConfig(); //Getting context for app
 //Basic GET test
 app.get("/login", function (req, res) {
   //  res.status(200).send("GET, OK :D");
-    res.sendFile( __dirname + "/public/webapp" + "index.html" );
+    res.sendFile( __dirname + "/public/webapp/" + "index.html" );
 });
 
 
