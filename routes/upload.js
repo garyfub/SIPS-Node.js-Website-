@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/upload');
-//var http = require('http').Server(app);
-//var io = require('socket.io')(http);
 
 /* Get app data */
 router.get('/', function(req, res, next) {
@@ -16,6 +14,7 @@ io.of('/upload').on('connection', function (socket) {
         console.log("Socket connection made.");
 
         model.taskDataUploadCloudant(msg);
+        model.taskDataUploadSQL(msg);
 
     });
 });
