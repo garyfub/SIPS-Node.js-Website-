@@ -1,9 +1,9 @@
 //Module Dependencies
 var express = require("express");
-var app = express();
+ app = express();
 var bodyparser = require("body-parser");
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+http = require('http').Server(app);
+io = require('socket.io')(http);
 var path = require('path');
 var namespace = require('express-namespace');
 //Bluemix Mobile Cloud dependencies
@@ -16,6 +16,7 @@ var cookieParser = require('cookie-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var forms = require('./routes/forms');
+var upload = require('./routes/upload');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +42,7 @@ app.use(cookieParser());
 app.use('/', routes);
 app.use('/users', users);
 app.use('/forms', forms);
+app.use('/upload', upload);
 app.use(express.static(path.join(__dirname, 'public')));
 
 var config = {
@@ -287,7 +289,7 @@ ibmdb.open(dsnString, function (err, conn) {
 
     //COMBINED ENDPOINT
     //Uploads to Cloudant and SQL
-    io.of('/upload').on('connection', function (socket) {
+    io.of('/uploadold').on('connection', function (socket) {
         socket.on('data', function (msg) {
             console.log("Socket connection made.");
             keyNames = Object.keys(msg); //Gets key names from object in array form
