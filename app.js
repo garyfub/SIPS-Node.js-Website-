@@ -5,18 +5,19 @@ var bodyparser = require("body-parser");
 http = require('http').Server(app);
 io = require('socket.io')(http);
 var path = require('path');
-var namespace = require('express-namespace');
 //Bluemix Mobile Cloud dependencies
 var ibmbluemix = require('ibmbluemix');
-var ibmpush = require('ibmpush');
-var Cloudant = require('cloudant');
-var ibmdb = require('ibm_db');
 //Web App Dependencies
 var cookieParser = require('cookie-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var forms = require('./routes/forms');
 var upload = require('./routes/upload');
+//Google Login Dependencies
+passport = require('passport');
+var session = require('express-session');
+var googleapis = require('googleapis');
+var GooglePlusStrategy = require('passport-google-plus');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,11 +46,6 @@ ibmbluemix.initialize(config);
 var logger = ibmbluemix.getLogger();
 var ibmconfig = ibmbluemix.getConfig(); //Getting context for app
 
-//Basic GET test
-app.get("/login", function (req, res) {
-  //  res.status(200).send("GET, OK :D");
-    res.sendFile( __dirname + "/public/webapp/" + "index.html" );
-});
 
 
 // init service sdks 
@@ -83,6 +79,8 @@ app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
     res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
 
 });
+
+
 
 
 //BlueList Auth Sample Push notification code
