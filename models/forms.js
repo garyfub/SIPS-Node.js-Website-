@@ -38,7 +38,7 @@ module.exports = {
         console.log("USER: " + JSON.stringify(req.user.email, null, 2));
         var data = req.body;
         //Original form data from POST
-        console.log(data);
+        //console.log(data);
 
         var userid = req.user.email;
         var formEntryID = uuid.v1();
@@ -50,119 +50,115 @@ module.exports = {
         var date = year + "-" + month + "-" + day;
 
 
-
-
         //Parse data to Object type
         var question = qs.parse(data);
-        /*
-         console.log('Question 1: ' + question.q1 + '\nQuestion 2: ' + question.q2);
-         console.log('Question 3: ' + question.q3 + '\nQuestion 4: ' + question.q4);
-         console.log('Question 5: ' + question.q5 + '\nQuestion 6: ' + question.q6);
-         console.log('Question 7: ' + question.q7 + '\nQuestion 8: ' + question.q8);
-         console.log('Question 9: ' + question.q9 + '\nQuestion 10: ' + question.q10);
-         console.log('Question 11: ' + question.q11 + '\nQuestion 12: ' + question.q12);
-         console.log('Question 13: ' + question.q13);
-         */
+        console.log(question);
 
-       //prints out static questions
-        for (var i = 1; i < 13; i++) {
-            if (question.arr[i]) {
-                console.log('Question ' + i + ': ' + question.arr[i]);
 
+        //prints out static questions
+        for (var y = 0; i < 12; y++) {
+            if (question.arr[y]) {
+                console.log('Question ' + y + ': ' + question.arr[y]);
             }
         }
 
         //prints out dyanmic injury questions
         var t = 1;
         var injuryCount = 0;
-        for (var i = 13; i > -1; i+5) {
+        for (var i = 12; i > -1; i++) {
             //Collect for each injury that exists
-            if (question.arr[i] == 1) {
-                injuryCount++;
-                var location = question.arr[i + 1];
-                var type = question.arr[i + 2];
-                var typeSpecific = question.arr[i + 3];
-                var customType = "0";
-                if (typeSpecific = 6) {
-                    customType = question.arr[t];
-                    t++;
-                }
-                var timeLoss = question.arr[i + 4];
-
-                console.log("Injury Count: " + injuryCont );
-                console.log("location: " + location );
-                console.log("type: " + type);
-                console.log("customType: " + customType );
-                console.log("Injury timeLoss: " + timeLoss );
-
+            var isInjury = question.arr[i];
+            console.log("i:" + i);
+            if (isInjury == 0 || isInjury === 'undefined' || injuryCount > 30) {
+                console.log("No more injuries entered");
+                break;
             }
+            injuryCount++;
+            var location = question.arr[i + 1];
+            var type = question.arr[i + 2];
+            var typeSpecific = question.arr[i + 3];
+            var customType = "null";
+            if (typeSpecific == 6) {
+                customType = question.arr_1[t];
+                t++;
+            }
+            var timeLoss = question.arr[i + 3];
+
+            console.log("Injury Count: " + injuryCount);
+            console.log("next Injury?: " + isInjury + " at " + i);
+            console.log("location: " + location + " at " + (i + 1));
+            console.log("type: " + type + " at " + (i + 2));
+            console.log("customType: " + customType + " at " + t);
+            console.log("Injury timeLoss: " + timeLoss + " at " + (i + 3));
+            i = i + 3;
+            console.log("i after: " + i);
         }
 
 
-/*
-        ibmdb.open(dsnString, function (err, conn) {
-            if (err) {
-                console.log("SQL ERROR: " + err.message);
-                check = false;
-            } else {
-                console.log("Form is being inserted");
+        /*
+         ibmdb.open(dsnString, function (err, conn) {
+         if (err) {
+         console.log("SQL ERROR: " + err.message);
+         check = false;
+         } else {
+         console.log("Form is being inserted");
 
 
-                //Inserts static Form answers to appropriate table
-                conn.prepare("INSERT INTO SportsFitnessForm (formentryID, dateAdded, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
-                    if (err) {
-                        console.log("ERROR: " + err);
-                        return conn.closeSync();
-                    }
+         //Inserts static Form answers to appropriate table
+         conn.prepare("INSERT INTO SportsFitnessForm (formentryID, dateAdded, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+         if (err) {
+         console.log("ERROR: " + err);
+         return conn.closeSync();
+         }
 
-                    stmt.execute([formEntryID, date, parseInt(question.arr[1]) + ", " + parseInt(question.arr[2]) + ", " + parseInt(question.arr[3]) + ", " + parseInt(question.arr[4]) + ", " + parseInt(question.arr[5]) + ", " + parseInt(question.arr[6]) + ", " + parseInt(question.arr[7]) + ", " + parseInt(question.arr[8]) + ", " + parseInt(question.arr[9]) + ", " + parseInt(question.arr[10]) + ", " + parseInt(question.arr[11]) + ", " + parseInt(question.arr[12])], function (err, result) {
-                        if (err) {
-                            console.log("ERROR: " + err);
-                        }
-                        else {
-                            console.log("New Sport Form Entry made");
-                            result.closeSync();
-                        }
-                    });
-                });
+         stmt.execute([formEntryID, date, parseInt(question.arr[1]) + ", " + parseInt(question.arr[2]) + ", " + parseInt(question.arr[3]) + ", " + parseInt(question.arr[4]) + ", " + parseInt(question.arr[5]) + ", " + parseInt(question.arr[6]) + ", " + parseInt(question.arr[7]) + ", " + parseInt(question.arr[8]) + ", " + parseInt(question.arr[9]) + ", " + parseInt(question.arr[10]) + ", " + parseInt(question.arr[11]) + ", " + parseInt(question.arr[12])], function (err, result) {
+         if (err) {
+         console.log("ERROR: " + err);
+         }
+         else {
+         console.log("New Sport Form Entry made");
+         result.closeSync();
+         }
+         });
+         });
 
 
-                conn.prepare("INSERT INTO Injuries (formentryID, dateAdded, Type, TypeSpecific, CustomType, Location, TimeLoss) VALUES (?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
-                    if (err) {
-                        console.log("ERROR: " + err);
-                        return conn.closeSync();
-                    }
+         conn.prepare("INSERT INTO Injuries (formentryID, dateAdded, Type, TypeSpecific, CustomType, Location, TimeLoss) VALUES (?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+         if (err) {
+         console.log("ERROR: " + err);
+         return conn.closeSync();
+         }
 
-                    var t = 1;
-                    for (var i = 13; i > -1; i+5) {
-                        //Collect for each injury that exists
-                        if(question.arr[i] == 1) {
-                            var location = question.arr[i+1];
-                            var type = question.arr[i+2];
-                            var typeSpecific = question.arr[i+3];
-                            var customType = "0";
-                            if (typeSpecific = 6) {
-                                customType = question.arr[t];
-                                t++;
-                            }
-                            var timeLoss = question.arr[i+4]
+         var t = 1;
+         for (var i = 13; i > -1; i+5) {
+         //Collect for each injury that exists
+         if(question.arr[i] == 1) {
+         var location = question.arr[i+1];
+         var type = question.arr[i+2];
+         var typeSpecific = question.arr[i+3];
+         var customType = "0";
+         if (typeSpecific = 6) {
+         customType = question.arr[t];
+         t++;
+         }
+         var timeLoss = question.arr[i+4]
 
-                            stmt.execute([formEntryID, date, type, typeSpecific, customType, location, timeLoss], function (err, result) {
-                                if (err) {
-                                    console.log("ERROR: " + err);
-                                }
-                                else {
-                                    console.log("New user created");
-                                    result.closeSync();
-                                }
-                            });
-                        }
-                    }
-                });
-            }
+         stmt.execute([formEntryID, date, type, typeSpecific, customType, location, timeLoss], function (err, result) {
+         if (err) {
+         console.log("ERROR: " + err);
+         }
+         else {
+         console.log("New user created");
+         result.closeSync();
+         }
+         });
+         }
+         }
+         });
+         }
 
-        });
- */
+         });
+         */
     }
 };
 
