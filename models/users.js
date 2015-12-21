@@ -32,28 +32,38 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 //TODO: Add actions for interacting with Users
 module.exports = {
+
     //Checks for user in database
     UserCheck: function (profile) {
-        var userid = profile.email;
-        var check = false;
-
+        //TODO: check functionality of UserCheck
+        var userid = profile.emails[0].value;
         ibmdb.open(dsnString, function (err, conn) {
             if (err) {
                 console.log("SQL ERROR: " + err.message);
                 check = false;
             } else {
                 console.log("User - Check");
-                check = true;
+                //checks is user exists in database;
+                var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
+                str = JSON.stringify(obj, null, 2)
+                newUser = str.charAt(15);
+                console.log("New user?: " + newUser);
+
+                return newUser;
             }
         });
 
-
-        return check;
     },
     //Adds user to database
     UserCreate: function (profile) {
+        //TODO: Check if ID is the same on app
+        console.log("id: " + profile.id);
+        console.log("email: " + profile.emails[0].value);
+        console.log("First Name: " + profile.name.givenName);
+        console.log("Last Name: " + profile.name.familyName);
 
-        var userid = profile.email;
+
+        var userid = profile.emails[0].value;
         var name_first = profile.name.givenName;
         var name_last = profile.name.familyName;
 
@@ -63,8 +73,6 @@ module.exports = {
         var year = dateObj.getUTCFullYear();
 
         var date = year + "-" + month + "-" + day;
-      //  var date = null; //new Date().toISOString().slice(0, 19).replace('T', ' ');
-
 
         ibmdb.open(dsnString, function (err, conn) {
             if (err) {
@@ -77,7 +85,7 @@ module.exports = {
                 var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
                 str = JSON.stringify(obj, null, 2)
                 newUser = str.charAt(15);
-                console.log("New user?: position " + newUser + " of " + str.length);
+                console.log("New user?: " + newUser);
 
                 //Inserts new user if doesn't exist
                 if (newUser == 0 || newUser == "0") {
@@ -85,7 +93,6 @@ module.exports = {
                     console.log("First name: " + name_first);
                     console.log("Last name: " + name_last);
                     console.log("Date: " + date);
-
 
                     conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
                         if (err) {
@@ -101,15 +108,12 @@ module.exports = {
                                 console.log("New user created");
                                 result.closeSync();
                             }
-
-
                         });
                     });
                 }
                 else console.log("User exists");
             }
         });
-
     },
     //Edits a User's profile info
     UserEdit: function (profile) {
