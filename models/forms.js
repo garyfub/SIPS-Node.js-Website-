@@ -77,7 +77,7 @@ module.exports = {
         //Original form data from POST
         //console.log(data);
 
-        var userid = req.user.email;
+        var userid = req.user.emails[0].value;
         var formEntryID = uuid.v1();
 
         var dateObj = new Date();
@@ -117,12 +117,13 @@ module.exports = {
                                     return conn.closeSync();
                                 }
 
-                                stmt.execute([formEntryID, date, parseInt(question.arr[0]), parseInt(question.arr[1]), parseInt(question.arr[2]), parseInt(question.arr[3]), parseInt(question.arr[4]), parseInt(question.arr[5]), parseInt(question.arr[6]), parseInt(question.arr[7]), parseInt(question.arr[8]), parseInt(question.arr[9]), parseInt(question.arr[10]), parseInt(question.arr[11]), parseInt(question.arr[12])], function (err, result) {
+                                stmt.execute([formEntryID, date, parseInt(question.arr[1]), parseInt(question.arr[2]), parseInt(question.arr[3]), parseInt(question.arr[4]), parseInt(question.arr[5]), parseInt(question.arr[6]), parseInt(question.arr[7]), parseInt(question.arr[8]), parseInt(question.arr[9]), parseInt(question.arr[10]), parseInt(question.arr[11]), parseInt(question.arr[12]), parseInt(question.arr[13])], function (err, result) {
                                     if (err) {
                                         console.log("ERROR: " + err);
                                     }
                                     else {
                                         console.log("SportFitnessForm table updated");
+
                                         conn.prepare("INSERT INTO Injuries (formentryID, Location, Type, TypeSpecific, CustomType, TimeLoss, dateAdded) VALUES (?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                                             if (err) {
                                                 console.log("ERROR: " + err);
@@ -132,10 +133,9 @@ module.exports = {
                                             //Handle Dynamic injury questions
                                             var t = 0;
                                             var injuryCount = 0;
-                                            for (var i = 12; i > -1; i++) {
+                                            for (var i = 13; i > -1; i++) {
                                                 //Collect for each injury that exists
                                                 var isInjury = parseInt(question.arr[i]);
-                                                injuryCount++;
                                                 if (isInjury == 0 || isInjury === 'undefined' || injuryCount > 30) {
                                                     console.log("No more injuries entered");
                                                     break;
@@ -151,7 +151,7 @@ module.exports = {
                                                 }
                                                 else if(typeSpecific == 6 ){
                                                     console.log("typeSpecific is: " + typeSpecific);
-                                                    customType = question.arr_1[t] + "";
+                                                    customType = question.arr_1[injuryCount] + "";
                                                     type = -1; //custom input
                                                     t++;
                                                 }
@@ -169,6 +169,7 @@ module.exports = {
                                                 console.log("customType: " + customType + " at " + t);
                                                 console.log("Injury timeLoss: " + timeLoss + " at " + (i + 4));
                                                 i = i + 3;
+                                                injuryCount++;
 
                                                 stmt.execute([formEntryID, location, type, typeSpecific, customType, timeLoss, date], function (err, result) {
                                                     if (err) {

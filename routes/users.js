@@ -48,10 +48,9 @@ router.get('/login', function(req, res, next) {
 app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
 //Retrieves Google callback and confirms user is authenticated.
-router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', successRedirect: '/profile' }), function(req, res) {
   console.log("User Authenticated")
 });
-
 
 
 module.exports = router;
