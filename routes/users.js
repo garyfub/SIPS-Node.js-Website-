@@ -53,8 +53,8 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
 
   //TODO:Remove folowing 3 lines when testing is over
   //Print out Google Token/Profile
- // console.log("Callback received: " + JSON.stringify(req.authInfo, null, 2));
- // console.log("Callback received Continued:" + JSON.stringify(req.user, null, 2));
+  console.log("Callback received: " + JSON.stringify(req.authInfo, null, 2));
+  console.log("Callback received Continued:" + JSON.stringify(req.user, null, 2));
 
   req.session.googleCredentials = req.authInfo;
   // Return user profile back to client
