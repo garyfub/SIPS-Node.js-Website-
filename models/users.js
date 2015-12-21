@@ -36,7 +36,8 @@ module.exports = {
     //Checks for user in database
     UserCheck: function (profile) {
         //TODO: check functionality of UserCheck
-        var userid = profile.emails[0].value;
+       // var userid = profile.emails[0].value;
+        var userid = profile.id;
         ibmdb.open(dsnString, function (err, conn) {
             if (err) {
                 console.log("SQL ERROR: " + err.message);

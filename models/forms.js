@@ -204,19 +204,6 @@ module.exports = {
 
             }
         });
-    },
-
-    injuryFormEntry: function (req) {
-
-        ibmdb.open(dsnString, function (err, conn) {
-            if (err) {
-                console.log("SQL ERROR: " + err.message);
-                check = false;
-            } else {
-
-
-            }
-        });
     }
 };
 

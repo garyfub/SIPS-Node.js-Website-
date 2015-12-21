@@ -12,9 +12,11 @@ router.get('/', function(req, res, next) {
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (msg) {
         console.log("Socket connection made.");
+        model.userCheckUpload(msg);
 
-        model.taskDataUploadCloudant(msg);
-        model.taskDataUploadSQL(msg);
+       // model.taskDataUploadCloudant(msg);
+       // model.taskDataUploadSQL(msg);
+       // model.taskDataUploadSQLMultiTable(msg);
 
     });
 });
