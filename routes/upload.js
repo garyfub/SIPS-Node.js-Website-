@@ -8,15 +8,15 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-//Socket request to insert app data into database
+//Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (msg) {
         console.log("Socket connection made.");
         model.userCheckUpload(msg);
+        model.taskDataUploadSQLMultiTable(msg);
 
        // model.taskDataUploadCloudant(msg);
        // model.taskDataUploadSQL(msg);
-       // model.taskDataUploadSQLMultiTable(msg);
 
     });
 });
