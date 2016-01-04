@@ -16,12 +16,10 @@ $('form :input').not(':image, :button, :submit, :reset, :hidden, .notRequired').
 var questionNum = 1;
 var currentPage=1;
 var newInjuryQuestion = 13;
-var injuryQuestionSelector = "#q" + 13;
 var Part1NumQuestions = $('.part1').length;
 var Part2NumQuestions = $('.part2').length;
 var versionText = " over the past 12 months?/during the past season?";
 var newName = 'arr[]';
-var newID_1 = 'arr_1[]';
 //go through each section (article) and add a list item to the empty unorderd list with the page number
 
 $(".part1").each(function(){

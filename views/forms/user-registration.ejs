@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+
+    <link rel='stylesheet' href='/stylesheets/forms.css'/>
+
+    <!-- Latest compiled and minified CSS
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+</head>
+<body>
+
+<%
+postTarget = "http://utc-vat.mybluemix.net/forms/submission-complete";
+%>
+
+
+
+<form action="<%=postTarget%>" method="post" id="slider">
+    <div class="form_description">
+        <h2><%= title %></h2>
+
+        <div id="progress-container">
+            <p id="part_indicator">Part 1: Sports Fitness Index</p>
+        </div>
+
+        <ul id='page' class="progress_counter"></ul>
+    </div>
+    <div class="form-group">
+
+        <!-- Question 1 -->
+        <article id="apage_1" class="part1 visible Question1">
+            <label class=" control-label" for="q1">Over the past several years, how often have moderate-to-severe muscle and/or joint injuries limited your ability to participate fully in sports-related activities?</label>
+
+            <div class="">
+
+
+                <label class="radio-inline" for="q1-0">
+                    <input aria-required="true" name="arr[1]" class="required" id="q1-0" value="0" type="radio">
+                    Never
+                </label>
+
+                <label class="radio-inline" for="q1-1">
+                    <input aria-required="true" name="arr[1]" class="required" id="q1-1" value="1" type="radio">
+                    Rare
+                </label>
+
+                <label class="radio-inline" for="q1-2">
+                    <input aria-required="true" name="arr[1]" class="required" id="q1-2" value="2" type="radio">
+                    Infrequent
+                </label>
+
+                <label class="radio-inline" for="q1-3">
+                    <input aria-required="true" name="arr[1]" class="required" id="q1-3" value="3" type="radio">
+                    Occasional
+                </label>
+
+                <label class="radio-inline" for="q1-4">
+                    <input aria-required="true" name="arr[1]" class="required" id="q1-4" value="4" type="radio">
+                    Frequent
+                </label>
+
+                <label class="radio-inline" for="q1-5">
+                    <input aria-required="true" name="arr[1]" class="required" id="q1-5" value="5" type="radio">
+                    Persistent
+                </label>
+
+
+            </div>
+            <a class="next" href="#">Next</a></article>
+    </div>
+
+    <input name="form_id" value="1079903" type="hidden">
+
+
+</form>
+
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/additional-methods.min.js"></script>
+<script src="/javascripts/Forms.js"></script>
+
+</body>
+</html>

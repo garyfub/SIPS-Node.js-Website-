@@ -32,10 +32,9 @@ questionLabels.push("To what extent have you ever experienced headaches, vision 
 
 postTarget = "http://utc-vat.mybluemix.net/forms/submission-complete";
 versionText = " over the past 12 months?/during the past season?";
-%>
-<% radioText1 = ["Never", "Rare", "Infrequent", "Occasional", "Frequent", "Persistent"]; %>
-<% radioText2 = ["Not at all", "Insignificant", "Marginal", "Moderate", "Substantial", "Severe"]; %>
-<% questionNum = 1; %>
+ radioText1 = ["Never", "Rare", "Infrequent", "Occasional", "Frequent", "Persistent"];
+ radioText2 = ["Not at all", "Insignificant", "Marginal", "Moderate", "Substantial", "Severe"];
+ questionNum = 1; %>
 
 <form action="<%=postTarget%>" method="post" id="slider">
     <div class="form_description">
