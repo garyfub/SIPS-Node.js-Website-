@@ -285,5 +285,20 @@ function addInjuryQuestions(){
     newInjuryQuestion = num; //prepare for next Injury
 }
 
-
 showCurrentTab();  //Show the first tab
+
+
+$(window).keydown(function(event){
+    if(event.keyCode == 13) {
+
+        if(currentPage == Part1NumQuestions){
+            //use default to submit form
+        }
+        else{
+            event.preventDefault();
+            $(".Question"+currentPage + " .next").click();
+        }
+
+        return false;
+    }
+});

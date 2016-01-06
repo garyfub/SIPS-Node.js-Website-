@@ -63,7 +63,7 @@ function checkInput_URF(object)
     switch (object.id) {
         case "fname":
             //console.log("First name is: " + object.value);
-            toast(object.value);
+           // toast(object.value);
             break;
 
         case "lname":
@@ -95,6 +95,7 @@ showCurrentTab();  //Show the first tab
 
 
 //Creates toast message like on android.
+
 var toast=function(msg){
     $("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all'><h3>"+msg+"</h3></div>")
         .css({ display: "block",
@@ -113,3 +114,19 @@ var toast=function(msg){
             $(this).remove();
         });
 }
+
+
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+
+            if(currentPage == Part1NumQuestions){
+                //use default to submit form
+            }
+            else{
+                event.preventDefault();
+                $(".Question"+currentPage + " .next").click();
+            }
+
+            return false;
+        }
+    });

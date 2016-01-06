@@ -32,7 +32,7 @@ router.get('/user-registration', function (req, res, next) {
 /* Retrieves Sports Fitness and Injury Form Data and sends it to be added to the database */
 router.post('/submission-complete', function (req, res, next) {
 
-    model.sportsFormEntry(req);
+    model.addFormEntry(req);
     res.render('forms/submission-complete', {title: 'Sport Fitness and Injury Form'});
 });
 

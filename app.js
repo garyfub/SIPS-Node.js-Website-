@@ -1,8 +1,8 @@
 //Module Dependencies
 var express = require("express");
- app = express();
+app = express();
 var bodyparser = require("body-parser");
-http = require('http').Server(app);
+var http = require('http').Server(app);
 io = require('socket.io')(http);
 var path = require('path');
 //Bluemix Mobile Cloud dependencies
@@ -47,8 +47,7 @@ var logger = ibmbluemix.getLogger();
 var ibmconfig = ibmbluemix.getConfig(); //Getting context for app
 
 
-
-// init service sdks 
+// init service sdks
 app.use(function (req, res, next) {
     // req.data = ibmdata.initializeService(req);
     //    req.ibmpush = ibmpush.initializeService(req);
@@ -74,14 +73,23 @@ http.listen(ibmconfig.getPort(), function () {
     console.log('Express server listening on port ' + ibmconfig.getPort());
 });
 
-//Test of URI using app context
-app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
-    res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
+//Homepage endpoint
+app.get('/', function (req, res, next) {
+    res.render('users/login');
+});
 
+app.get('/logout', function (req, res, next) {
+    req.logout();
+    res.redirect('/users/login');
 });
 
 
 
+//TODO: Deprecated?
+//Test of URI using app context
+app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {
+    res.status(200).send("Test Complete"); //Removing status code affects the android app's response.
+});
 
 //BlueList Auth Sample Push notification code
 
