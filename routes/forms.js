@@ -8,6 +8,10 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 
+router.post('/next', function (req, res, next) {
+    console.log(JSON.stringify(req.body, null, 2));
+    res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form'});
+});
 
 /* Displays Sports Fitness and Injury Form static version */
 router.get('/sport-fitness-injury', function (req, res, next) {

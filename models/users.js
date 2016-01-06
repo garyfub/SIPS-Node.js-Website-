@@ -5,7 +5,7 @@ var env = null;
 var keySql = null;
 
 var serviceName2 = 'SQLDB';
-
+var newUser;
 //VCAP_SERVICES
 function findKey(obj, lookup) {
     for (var i in obj) {
@@ -36,7 +36,7 @@ module.exports = {
     //Checks for user in database
     UserCheck: function (profile) {
         //TODO: check functionality of UserCheck
-       // var userid = profile.emails[0].value;
+        // var userid = profile.emails[0].value;
         var userid = profile.id;
         ibmdb.open(dsnString, function (err, conn) {
             if (err) {
@@ -56,7 +56,7 @@ module.exports = {
 
     },
     //Adds user to database
-    UserCreate: function (profile) {
+    UserCreate: function (profile, req) {
         //TODO: Check if ID is the same on app
         console.log("id: " + profile.id);
         console.log("email: " + profile.emails[0].value);
@@ -64,10 +64,10 @@ module.exports = {
         console.log("Last Name: " + profile.name.familyName);
 
 
-        var userid = profile.emails[0].value;
+        var userid = profile.id;
         var name_first = profile.name.givenName;
         var name_last = profile.name.familyName;
-
+        // var newUser;
         var dateObj = new Date();
         var month = dateObj.getUTCMonth() + 1;
         var day = dateObj.getUTCDate();
@@ -75,53 +75,53 @@ module.exports = {
 
         var date = year + "-" + month + "-" + day;
 
-        ibmdb.open(dsnString, function (err, conn) {
-            if (err) {
-                console.log("SQL ERROR: " + err.message);
-                return false;
-            } else {
-                console.log("User - Check: " + userid);
+        var conn = ibmdb.openSync(dsnString)
 
-                //checks is user exists in database;
-                var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-                str = JSON.stringify(obj, null, 2)
-                newUser = str.charAt(15);
-                console.log("New user?: " + newUser);
+        try {
+            //checks is user exists in database;
+            var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
+            str = JSON.stringify(obj, null, 2)
+            newUser = str.charAt(15);
+            console.log("New user?: " + newUser);
 
-                //Inserts new user if doesn't exist
-                if (newUser == 0 || newUser == "0") {
-                    console.log("New User Create: " + userid);
-                    console.log("First name: " + name_first);
-                    console.log("Last name: " + name_last);
-                    console.log("Date: " + date);
+            //Inserts new user if doesn't exist
+            if (newUser == 0 || newUser == "0") {
+                console.log("New User Create: " + userid);
+                console.log("First name: " + name_first);
+                console.log("Last name: " + name_last);
+                console.log("Date: " + date);
 
-                    conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
+                conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
+                    if (err) {
+                        console.log("ERROR: " + err);
+                        return conn.closeSync();
+                    }
+
+                    stmt.execute([userid, name_first, name_last, date], function (err, result) {
                         if (err) {
                             console.log("ERROR: " + err);
-                            return conn.closeSync();
                         }
-
-                        stmt.execute([userid, name_first, name_last, date], function (err, result) {
-                            if (err) {
-                                console.log("ERROR: " + err);
-                            }
-                            else {
-                                console.log("New user created");
-                                result.closeSync();
-                            }
-                        });
+                        else {
+                            console.log("New user created");
+                            result.closeSync();
+                        }
                     });
-                }
-                else console.log("User exists");
+                });
             }
-        });
+            else console.log("User exists");
+
+            conn.close();
+        } catch (e) {
+            console.log(e.message);
+        }
+        return newUser;
     },
     //Edits a User's profile info
     UserEdit: function (profile) {
         //TODO
     },
     //Deletes a User
-    UserDelete: function (profile) {
-        //TODO
+    isNewUser: function (req) {
+        return newUser;
     }
 };

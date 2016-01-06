@@ -5,30 +5,25 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 
     <link rel='stylesheet' href='/stylesheets/forms.css'/>
-
-    <!-- Latest compiled and minified CSS
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
 
 </head>
 <body>
 
 <%
-postTarget = "http://utc-vat.mybluemix.net/forms/submission-complete";
+postTarget = "/forms/next";
 %>
 
-
-
-<form action="<%=postTarget%>" method="post" id="slider">
+<form action="<%= postTarget %>" method="post" id="slider">
     <div class="form_description">
         <h2><%= title %></h2>
 
         <div id="progress-container">
-            <p id="part_indicator">Part 1: Sports Fitness Index</p>
+            <p id="part_indicator">Please enter basic profile information below.</p>
         </div>
 
         <ul id='page' class="progress_counter"></ul>
@@ -37,54 +32,92 @@ postTarget = "http://utc-vat.mybluemix.net/forms/submission-complete";
 
         <!-- Question 1 -->
         <article id="apage_1" class="part1 visible Question1">
-            <label class=" control-label" for="q1">Over the past several years, how often have moderate-to-severe muscle and/or joint injuries limited your ability to participate fully in sports-related activities?</label>
+            <h3 class="control-label">What is your name? </h3>
 
             <div class="">
-
-
-                <label class="radio-inline" for="q1-0">
-                    <input aria-required="true" name="arr[1]" class="required" id="q1-0" value="0" type="radio">
-                    Never
-                </label>
-
-                <label class="radio-inline" for="q1-1">
-                    <input aria-required="true" name="arr[1]" class="required" id="q1-1" value="1" type="radio">
-                    Rare
-                </label>
-
-                <label class="radio-inline" for="q1-2">
-                    <input aria-required="true" name="arr[1]" class="required" id="q1-2" value="2" type="radio">
-                    Infrequent
-                </label>
-
-                <label class="radio-inline" for="q1-3">
-                    <input aria-required="true" name="arr[1]" class="required" id="q1-3" value="3" type="radio">
-                    Occasional
-                </label>
-
-                <label class="radio-inline" for="q1-4">
-                    <input aria-required="true" name="arr[1]" class="required" id="q1-4" value="4" type="radio">
-                    Frequent
-                </label>
-
-                <label class="radio-inline" for="q1-5">
-                    <input aria-required="true" name="arr[1]" class="required" id="q1-5" value="5" type="radio">
-                    Persistent
-                </label>
-
-
+                <label class=" control-label" for="fname">First: </label>
+                <input id="fname" name="fname" class="element text medium other" maxlength="30" value="" type="text"
+                       oninput="checkInput_URF(this)">
+                <br><br>
+                <label class=" control-label" for="lname">Last: </label>
+                <input id="lname" name="lname" class="element text medium other" maxlength="30" value="" type="text"
+                       oninput="checkInput_URF(this)">
             </div>
-            <a class="next" href="#">Next</a></article>
+        </article>
+
+        <!-- Question 2 -->
+        <article id="apage_2" class="part1 visible Question2">
+            <h3 class="control-label">What is your age? </h3>
+            <div class="">
+                <input id="age" name="age" class="element text medium other" maxlength="3" value="" type="number"
+                       oninput="checkInput_URF(this)">
+            </div>
+        </article>
+
+        <!-- Question 3 -->
+        <article id="apage_3" class="part1 visible Question3">
+            <h3 class="control-label">What is your gender? </h3>
+            <div class="">
+                <select id="gender" style="width:100px;" oninput="checkInput_URF(this)">
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
+                    <option value="2">Other</option>
+                </select>
+            </div>
+        </article>
+
+        <!-- Question 4 -->
+        <article id="apage_4" class="part1 visible Question4">
+            <h3 class="control-label">What is your weight?</h3>
+            <div class="">
+                <input id="weight" name="weight" class="element text medium other" maxlength="3" value="" type="number"
+                       oninput="checkInput_URF(this)">
+            </div>
+        </article>
+
+        <!-- Question 5 -->
+        <article id="apage_5" class="part1 visible Question5">
+            <h3 class="control-label">What is your height?</h3>
+            <div class="">
+                <label class=" control-label" for="ht-ft">ft: </label>
+                <select id="ht-ft" name="ht-ft" style="width:50px;" oninput="checkInput_URF(this)">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+                <br>
+                <label class=" control-label" for="ht-in">in: </label>
+                <select id="ht-in" name="ht-in" style="width:50px;" oninput="checkInput_URF(this)">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+        </article>
     </div>
 
-    <input name="form_id" value="1079903" type="hidden">
+    <input name="form_id" value="registrationform" type="hidden">
 
 
 </form>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/additional-methods.min.js"></script>
-<script src="/javascripts/Forms.js"></script>
+<script src="/javascripts/forms/Forms.js"></script>
 
 </body>
 </html>

@@ -6,6 +6,9 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var session = require('express-session');
 var model = require('../models/users');
 
+var userjson;
+var isNew;
+
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -36,7 +39,11 @@ router.get('/login', function(req, res, next) {
       },
       function(token, refreshToken, profile, done) {
          // console.log("Received User: " + JSON.stringify(profile, null, 2));
-           result =  model.UserCreate(profile);
+          model.UserCreate(profile, req);
+          isNew =  model.isNewUser(req);
+          userjson = profile;
+
+          check = 1;
         //call done() when complete...
         done(null, profile);
       }
@@ -48,8 +55,13 @@ router.get('/login', function(req, res, next) {
 app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
 //Retrieves Google callback and confirms user is authenticated.
-router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login', successRedirect: '/forms/sport-fitness-injury' }), function(req, res) {
-  console.log("User Authenticated")
+router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+
+    console.log("User Authenticated")
+    if(isNew == 1)//located in db
+        res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form'});
+    else
+    res.render('forms/user-registration', {title: 'Basic User Information Form'});
 });
 
 
