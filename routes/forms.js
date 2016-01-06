@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/forms');
+var userMethods = require('../models/users');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -9,8 +10,13 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/next', function (req, res, next) {
-    console.log(JSON.stringify(req.body, null, 2));
-    res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form'});
+    console.log("NEXT: " + JSON.stringify(req.body, null, 2));
+
+    model.addFormEntry(req);
+   // model.registrationform(req);
+    console.log(userMethods.UserCheck(req.user));
+
+    res.redirect('/forms/sport-fitness-injury');
 });
 
 /* Displays Sports Fitness and Injury Form static version */

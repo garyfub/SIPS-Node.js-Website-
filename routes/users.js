@@ -38,12 +38,10 @@ router.get('/login', function(req, res, next) {
           callbackURL: 'http://utc-vat.mybluemix.net/users/auth/google/callback'
       },
       function(token, refreshToken, profile, done) {
-         // console.log("Received User: " + JSON.stringify(profile, null, 2));
-          model.UserCreate(profile, req);
-          isNew =  model.isNewUser(req);
+         //check if user is in database
+          model.UserCheck(profile);
           userjson = profile;
 
-          check = 1;
         //call done() when complete...
         done(null, profile);
       }
@@ -56,12 +54,16 @@ app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'e
 
 //Retrieves Google callback and confirms user is authenticated.
 router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
-
-    console.log("User Authenticated")
-    if(isNew == 1)//located in db
-        res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form'});
-    else
-    res.render('forms/user-registration', {title: 'Basic User Information Form'});
+    //console.log("USER: " + JSON.stringify(req.user.id, null, 2));
+    console.log("User Authenticated");
+    isNew =  model.isNewUser();
+    if(isNew == 1)//if user id is located in db
+        res.redirect('/forms/sport-fitness-injury');
+    else{
+        model.UserCreate(userjson);
+       // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
+        res.redirect('/forms/user-registration');
+    }
 });
 
 

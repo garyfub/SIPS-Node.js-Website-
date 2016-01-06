@@ -33,16 +33,18 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 
 module.exports = {
-    //TODO: Collect data in per-line basis, add sql prep and execute commands in for loop
+    //TODO: addFormEntry needs to work for any form entry using async calls. Has to be called before form data is entered
     addFormEntry: function (req) {
-        var userid = req.user.email;
+        var userid = req.user.id;
         var formEntryID = uuid.v1();
-
+        var formType = req.body.form_id;
         var dateObj = new Date();
         var month = dateObj.getUTCMonth() + 1;
         var day = dateObj.getUTCDate();
         var year = dateObj.getUTCFullYear();
         var date = year + "-" + month + "-" + day;
+
+        //console.log("formType: " + formType);
 
         ibmdb.open(dsnString, function (err, conn) {
             if (err) {
@@ -57,12 +59,12 @@ module.exports = {
                         console.log("ERROR: " + err);
                         return conn.closeSync();
                     }
-                    stmt.execute([formEntryID, userid, 'SPORTSFITNESSINJURY', date], function (err, result) {
+                    stmt.execute([formEntryID, userid, formType.toUpperCase(), date], function (err, result) {
                         if (err) {
                             console.log("ERROR: " + err);
                         }
                         else {
-                            console.log("New Sport Form Entry added to FORMENTRYLIST");
+                            console.log("New " + formType + " Entry added to FORMENTRYLIST");
                             result.closeSync();
                         }
                     });
@@ -72,12 +74,12 @@ module.exports = {
         });
     },
     sportsFormEntry: function (req) {
-        console.log("USER: " + JSON.stringify(req.user.email, null, 2));
+       // console.log("USER: " + JSON.stringify(req.user.id, null, 2));
         var data = req.body;
         //Original form data from POST
         //console.log(data);
 
-        var userid = req.user.emails[0].value;
+        var userid = req.user.id;
         var formEntryID = uuid.v1();
 
         var dateObj = new Date();
@@ -194,16 +196,18 @@ module.exports = {
 
 
                 //prints out static questions
+                /* //TODO: delete when finished debugging
                 for (var y = 0; y < 12; y++) {
                     if (question.arr[y]) {
                         console.log('Question ' + y + ': ' + question.arr[y]);
                     }
-                }
-
-
-
+                } */
             }
         });
+    },
+
+    registrationform: function(reg){
+
     }
 };
 

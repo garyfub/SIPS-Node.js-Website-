@@ -38,26 +38,25 @@ module.exports = {
         //TODO: check functionality of UserCheck
         // var userid = profile.emails[0].value;
         var userid = profile.id;
-        ibmdb.open(dsnString, function (err, conn) {
-            if (err) {
-                console.log("SQL ERROR: " + err.message);
-                check = false;
-            } else {
-                console.log("User - Check");
-                //checks is user exists in database;
-                var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-                str = JSON.stringify(obj, null, 2)
-                newUser = str.charAt(15);
-                console.log("New user?: " + newUser);
+        var conn = ibmdb.openSync(dsnString);
 
-                return newUser;
-            }
-        });
+        try {
+            console.log("User - Check");
+            //checks is user exists in database;
+            var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
+            str = JSON.stringify(obj, null, 2)
+            newUser = str.charAt(15);
+            console.log("New user?: " + newUser);
+
+            conn.close();
+        } catch (e) {
+            console.log(e.message);
+        }
+        return newUser;
 
     },
-    //Adds user to database
-    UserCreate: function (profile, req) {
-        //TODO: Check if ID is the same on app
+    //Adds user to database after checking if they exist
+    UserCreate: function (profile) {
         console.log("id: " + profile.id);
         console.log("email: " + profile.emails[0].value);
         console.log("First Name: " + profile.name.givenName);
@@ -67,7 +66,6 @@ module.exports = {
         var userid = profile.id;
         var name_first = profile.name.givenName;
         var name_last = profile.name.familyName;
-        // var newUser;
         var dateObj = new Date();
         var month = dateObj.getUTCMonth() + 1;
         var day = dateObj.getUTCDate();
@@ -75,53 +73,63 @@ module.exports = {
 
         var date = year + "-" + month + "-" + day;
 
-        var conn = ibmdb.openSync(dsnString)
 
-        try {
-            //checks is user exists in database;
-            var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-            str = JSON.stringify(obj, null, 2)
-            newUser = str.charAt(15);
-            console.log("New user?: " + newUser);
+        //checks is user exists in database;
+        var conn1 = ibmdb.openSync(dsnString);
+        var obj = conn1.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
+        str = JSON.stringify(obj, null, 2);
+        newUser = str.charAt(15);
 
-            //Inserts new user if doesn't exist
-            if (newUser == 0 || newUser == "0") {
-                console.log("New User Create: " + userid);
-                console.log("First name: " + name_first);
-                console.log("Last name: " + name_last);
-                console.log("Date: " + date);
+        conn1.closeSync();
+        console.log("New user?: " + newUser);
 
-                conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
-                    if (err) {
-                        console.log("ERROR: " + err);
-                        return conn.closeSync();
-                    }
+        //Inserts new user if doesn't exist
+        if (newUser == 0 || newUser == "0") {
+            console.log("New User Create: " + userid);
+            console.log("First name: " + name_first);
+            console.log("Last name: " + name_last);
+            console.log("Date: " + date);
 
-                    stmt.execute([userid, name_first, name_last, date], function (err, result) {
+            ibmdb.open(dsnString, function (err, conn) {
+                if (err) {
+                    console.log("SQL ERROR: " + err.message);
+                    return false;
+                } else {
+                    console.log("User - Check: " + userid);
+
+                    conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
                         if (err) {
                             console.log("ERROR: " + err);
+                            return conn.closeSync();
                         }
-                        else {
-                            console.log("New user created");
-                            result.closeSync();
-                        }
-                    });
-                });
-            }
-            else console.log("User exists");
 
-            conn.close();
-        } catch (e) {
-            console.log(e.message);
+                        stmt.execute([userid, name_first, name_last, date], function (err, result) {
+                            if (err) {
+                                console.log("ERROR: " + err);
+                            }
+                            else {
+                                console.log("New user created");
+                                result.closeSync();
+                            }
+                        });
+                    });
+                }
+            });
+
+            ibmdb.close();
         }
+        else console.log("User exists");
+
         return newUser;
     },
     //Edits a User's profile info
     UserEdit: function (profile) {
         //TODO
     },
-    //Deletes a User
-    isNewUser: function (req) {
+
+    //Returns 0 if user id is not in database, 1 if located
+    //Must be run after UserCheck()
+    isNewUser: function () {
         return newUser;
     }
 };
