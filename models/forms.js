@@ -174,7 +174,7 @@ function sportsFormEntry(req, formEntryID, date) {
                                     }
                                     else {
                                         console.log("New injury added by User");
-                                          result.closeSync();
+                                        result.closeSync();
                                     }
                                 });
                             }
@@ -206,18 +206,19 @@ function registrationform(req, formEntryID, date) {
     var weight = form.weight;
     var height_ft = form.ht_ft;
     var height_in = form.ht_in;
+    var sport = form.sport;
 
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
             console.log("SQL ERROR: " + err.message);
             check = false;
         } else {
-            conn.prepare("INSERT INTO BasicUserInfoForm (formentryID, name_first, name_last, age, weight, height_ft, height_in, dateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            conn.prepare("INSERT INTO BasicUserInfoForm (formentryID, name_first, name_last, age, weight, height_ft, height_in, sport, dateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
                     console.log("ERROR: " + err);
                     return conn.closeSync();
                 }
-                stmt.execute([formEntryID, name_first, name_last, age, weight, height_ft, height_in, date], function (err, result) {
+                stmt.execute([formEntryID, name_first, name_last, age, weight, height_ft, height_in, sport, date], function (err, result) {
                     if (err) {
                         console.log("ERROR: " + err);
                     }
@@ -231,6 +232,6 @@ function registrationform(req, formEntryID, date) {
         ibmdb.close();
     });
 
-                    }
+}
 
 

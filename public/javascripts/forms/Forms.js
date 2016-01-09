@@ -24,6 +24,10 @@ $(".part1").each(function () {
 $('#page > li').hide();
 
 $("form").validate({
+    groups: {
+        username: "fname lname",
+        height: "ht_ft ht_in"
+    },
     errorPlacement: function (error, element) {
         error.appendTo('article > div');
     },
@@ -36,13 +40,26 @@ $("form").validate({
 //each time the user clicks the next button, remove the visible class, hide that section, fade in the next question with a new class of visible
 $(document).on("click", '.next', function (e) {
     e.preventDefault();
-    $(".error-required").remove();
 
-    $(this).closest("article").removeClass("visible").hide().next().addClass("visible").fadeIn();
-    currentPage++;
-
-    showCurrentTab();
+    if($(".Question"+currentPage + ' :input').valid()) {
+        $(".error-required").remove();
+        $(this).closest("article").removeClass("visible").hide().next().addClass("visible").fadeIn();
+        currentPage++;
+        showCurrentTab();
+    }
 });
+
+function checkValid() {
+    var result;
+    var currentInputCount = $(".Question" + currentPage + " :input").length;
+    for (var i = 0; i < currentInputCount; i++) {
+        result = $(".Question" + currentPage).find(":input").eq(i).valid();
+
+        if (result == false) {
+            return result
+        }
+    }
+};
 
 //each time the user clicks the next previous, remove the visible class, hide that section, fade in the prior question with a new class of visible
 $(document).on("click", ".prev", function (e) {
@@ -124,9 +141,8 @@ var toast=function(msg){
             }
             else{
                 event.preventDefault();
-                $(".Question"+currentPage + " .next").click();
+                    $(".Question"+currentPage + " .next").click();
             }
-
             return false;
         }
     });

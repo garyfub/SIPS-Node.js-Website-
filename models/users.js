@@ -37,7 +37,12 @@ module.exports = {
     UserCheck: function (profile) {
         //TODO: check functionality of UserCheck
         // var userid = profile.emails[0].value;
-        var userid = profile.id;
+        if(profile.id) {
+            var userid = profile.id;
+        }
+        else if(profile.sub){
+            var userid = profile.sub;
+        }
         var conn = ibmdb.openSync(dsnString);
 
         try {

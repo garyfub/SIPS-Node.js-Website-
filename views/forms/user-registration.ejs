@@ -33,23 +33,23 @@ postTarget = "/forms/next";
         <!-- Question 1 -->
         <article id="apage_1" class="part1 visible Question1">
             <h3 class="control-label">What is your name? </h3>
-
-            <div class="">
-                <label class=" control-label" for="fname">First: </label>
-                <input id="fname" name="fname" class="element text medium other" maxlength="30" value="" type="text"
-                       oninput="checkInput_URF(this)">
-                <br><br>
-                <label class=" control-label" for="lname">Last: </label>
-                <input id="lname" name="lname" class="element text medium other" maxlength="30" value="" type="text"
-                       oninput="checkInput_URF(this)">
-            </div>
+            <span class="q-container">
+                <input id="fname" name="fname" class="element text medium other required" maxlength="30" value=""
+                       type="text"
+                       oninput="checkInput_URF(this)" placeholder="First name">
+                <input id="lname" name="lname" class="element text medium other required" maxlength="30" value=""
+                       type="text"
+                       oninput="checkInput_URF(this)" placeholder="Last name">
+            </span>
+            <div class="" style="float:right;"></div>
         </article>
 
         <!-- Question 2 -->
         <article id="apage_2" class="part1 visible Question2">
             <h3 class="control-label">What is your age? </h3>
             <div class="">
-                <input id="age" name="age" class="element text medium other" maxlength="3" value="" type="number"
+                <input id="age" name="age" class="element text medium other required" maxlength="3" value=""
+                       type="number"
                        oninput="checkInput_URF(this)">
             </div>
         </article>
@@ -58,10 +58,11 @@ postTarget = "/forms/next";
         <article id="apage_3" class="part1 visible Question3">
             <h3 class="control-label">What is your gender? </h3>
             <div class="">
-                <select id="gender" style="width:100px;" oninput="checkInput_URF(this)">
-                    <option value="0">Male</option>
-                    <option value="1">Female</option>
-                    <option value="2">Other</option>
+                <select id="gender" class="required" style="width:100px;" oninput="checkInput_URF(this)">
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">male</option>
+                    <option value="1">female</option>
+                    <option value="2">other</option>
                 </select>
             </div>
         </article>
@@ -70,7 +71,8 @@ postTarget = "/forms/next";
         <article id="apage_4" class="part1 visible Question4">
             <h3 class="control-label">What is your weight?</h3>
             <div class="">
-                <input id="weight" name="weight" class="element text medium other" maxlength="3" value="" type="number"
+                <input id="weight" name="weight" class="element text medium other required" maxlength="3" value=""
+                       type="number"
                        oninput="checkInput_URF(this)">
             </div>
         </article>
@@ -79,33 +81,78 @@ postTarget = "/forms/next";
         <article id="apage_5" class="part1 visible Question5">
             <h3 class="control-label">What is your height?</h3>
             <div class="">
-                <label class=" control-label" for="ht-ft">ft: </label>
-                <select id="ht_ft" name="ht_ft" style="width:50px;" oninput="checkInput_URF(this)">
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
+                <label class=" control-label" for="ht-ft">Height: </label>
+                <select id="ht_ft" name="ht_ft" class="required" style="width:50px;" oninput="checkInput_URF(this)">
+                    <option value="" disabled selected>ft</option>
+                    <option value="2">2 ft</option>
+                    <option value="3">3 ft</option>
+                    <option value="4">4 ft</option>
+                    <option value="5">5 ft</option>
+                    <option value="6">6 ft</option>
+                    <option value="7">7 ft</option>
+                    <option value="8">8 ft</option>
                 </select>
-                <br>
-                <label class=" control-label" for="ht-in">in: </label>
-                <select id="ht_in" name="ht_in" style="width:50px;" oninput="checkInput_URF(this)">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
+                <select id="ht_in" name="ht_in" class="required" style="width:50px; float: initial;"
+                        oninput="checkInput_URF(this)">
+                    <option value="" disabled selected>in</option>
+                    <option value="0">0 in</option>
+                    <option value="1">1 in</option>
+                    <option value="2">2 in</option>
+                    <option value="3">3 in</option>
+                    <option value="4">4 in</option>
+                    <option value="5">5 in</option>
+                    <option value="6">6 in</option>
+                    <option value="7">7 in</option>
+                    <option value="8">8 in</option>
+                    <option value="9">9 in</option>
+                    <option value="10">10 in</option>
+                    <option value="11">11 in</option>
+                    <option value="12">12 in</option>
                 </select>
+            </div>
+        </article>
+
+        <!-- Question 6 -->
+        <article id="apage_6" class="part1 visible Question6">
+            <h3 class="control-label"> <label class="question-label" for="sport">What sport are you in?</label>
+                </h3>
+            <div class="">
+                <label class="radio" for="sport-0">
+                    <input name="sport" class="required" id="sport-0" value="0" type="radio">
+                    Soccer
+                </label>
+                <label class="radio" for="sport-1">
+                    <input name="sport" class="required" id="sport-1" value="1" type="radio">
+                    Volleyball
+                </label>
+                <label class="radio" for="sport-2">
+                    <input name="sport" class="required" id="sport-2" value="2" type="radio">
+                    Basketball
+                </label>
+                <label class="radio" for="sport-3">
+                    <input name="sport" class="required" id="sport-3" value="3" type="radio">
+                    Tennis
+                </label>
+                <label class="radio" for="sport-4">
+                    <input name="sport" class="required" id="sport-4" value="4" type="radio">
+                    Golf
+                </label>
+                <label class="radio" for="sport-5">
+                    <input name="sport" class="required" id="sport-5" value="5" type="radio">
+                    Cross-Country
+                </label>
+                <label class="radio" for="sport-6">
+                    <input name="sport" class="required" id="sport-6" value="6" type="radio">
+                    Softball
+                </label>
+                <label class="radio" for="sport-7">
+                    <input name="sport" class="required" id="sport-7" value="7" type="radio">
+                    Wrestling
+                </label>
+                <label class="radio" for="sport-8">
+                    <input name="sport" class="required" id="sport-8" value="8" type="radio">
+                    Other
+                </label>
             </div>
         </article>
     </div>
