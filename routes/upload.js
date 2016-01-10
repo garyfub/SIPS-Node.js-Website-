@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/upload');
+var modelform = require('../models/forms');
 
 /* Get app data */
 router.get('/', function(req, res, next) {
@@ -22,11 +23,28 @@ io.of('/upload').on('connection', function (socket) {
     });
 });
 
+//TODO: check if Sports Fitness and Injury form includes form_id
 io.of('/upload/form').on('connection', function (socket) {
     socket.on('data', function (msg) {
         console.log("Socket connection made.");
-        model.userCheckUpload(msg);
+       // console.log("O_OO_O " + msg.form_id);
+
+        if(msg.form_id) {
+            switch (msg.form_id) {
+                case "registrationform":
+                    modelform.addFormEntry(msg);
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            model.userCheckUpload(msg);
+        }
+
+
     });
 });
+
+
 
 module.exports = router;

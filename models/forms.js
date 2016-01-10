@@ -40,9 +40,19 @@ module.exports = {
 
 //Adds form entry to FORMENTYLIST table and calls appropriate function to insert form data into db
 function addFormEntry(req) {
-    var userid = req.user.id;
+    var userid;
+    var formType;
+
+    if(req.form_id){
+        userid = req.id;
+        formType = req.form_id;
+    }
+    else{
+        userid = req.user.id;
+        formType = req.body.form_id;
+    }
+
     var formEntryID = uuid.v1();
-    var formType = req.body.form_id;
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1;
     var day = dateObj.getUTCDate();
@@ -199,7 +209,14 @@ function sportsFormEntry(req, formEntryID, date) {
 
 function registrationform(req, formEntryID, date) {
     console.log("Entering Basic User Info Form entry: " + formEntryID + " on " + date);
-    var form = req.body;
+    var form;
+
+    if(req.form_id){
+        form = req;
+    }else{
+        form = req.body;
+    }
+
     var name_first = form.fname;
     var name_last = form.lname;
     var age = form.age;
