@@ -186,7 +186,7 @@ function addInjuryQuestions(){
         '<fieldset><legend>Sudden Event (Acute - Traumatic)</legend>' +
         '<label class="radio" for="' + newID + '-1">'+
         '<input name="' + newName + '" class="required" value="1" type="radio" id="' + newID + '-1" onclick="checkvalue(this)">'+
-        'Joint Strain'+
+        'Joint Sprain'+
         '</label>'+
         '<label class="radio" for="' + newID + '-2">'+
         '<input name="' + newName + '" class="required" value="2" type="radio" id="' + newID + '-2" onclick="checkvalue(this)">'+
@@ -238,14 +238,14 @@ function addInjuryQuestions(){
     $(".form-group").append('<article id="apage_' + num + '" class="part2 Question' + num + '">' +
         ' <label class=" control-label" for="' + newID + '">Was there any time lost as a result of this injury?</label> ' +
         '<div class="">' +
-        '<label class="radio-inline" for="' + newID + '-1">'+
-        '<input name="' + newName + '" class="required" value="0" type="radio" id="' + newID + '-1">'+
-        'No - Able to continue participating, despite reduced capabilities'+
-        '</label>'+
         '<label class="radio-inline" for="' + newID + '-2">'+
         '<input name="' + newName + '" class="required" value="1" type="radio" id="' + newID + '-2">'+
         'Yes - Complete activity restriction for at least one practice or game'+
         '</label>' +
+        '<label class="radio-inline" for="' + newID + '-1">'+
+        '<input name="' + newName + '" class="required" value="0" type="radio" id="' + newID + '-1">'+
+        'No - Able to continue participating, despite reduced capabilities'+
+        '</label>'+
         '</div>' +
         '<a class="next" href="#">Next</a>'+
         '<a class="prev" href="#">Previous</a>'+
