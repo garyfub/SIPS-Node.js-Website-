@@ -73,13 +73,6 @@ http.listen(ibmconfig.getPort(), function () {
     console.log('Express server listening on port ' + ibmconfig.getPort());
 });
 
-app.get('/logout', function (req, res, next) {
-    req.logout();
-    res.redirect('/users/login');
-});
-
-
-
 //TODO: Deprecated?
 //Test of URI using app context
 app.get(ibmconfig.getContextRoot() + '/test', function (req, res) {

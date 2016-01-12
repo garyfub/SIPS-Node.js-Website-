@@ -44,25 +44,13 @@ $("form").validate({
 $(document).on("click", '.next', function (e) {
     e.preventDefault();
 
-    if($(".Question"+currentPage + ' :input').valid()) {
+    if ($(".Question" + currentPage + ' :input').valid()) {
         $(".error-required").remove();
         $(this).closest("article").removeClass("visible").hide().next().addClass("visible").fadeIn();
         currentPage++;
         showCurrentTab();
     }
 });
-
-function checkValid() {
-    var result;
-    var currentInputCount = $(".Question" + currentPage + " :input").length;
-    for (var i = 0; i < currentInputCount; i++) {
-        result = $(".Question" + currentPage).find(":input").eq(i).valid();
-
-        if (result == false) {
-            return result
-        }
-    }
-};
 
 //each time the user clicks the next previous, remove the visible class, hide that section, fade in the prior question with a new class of visible
 $(document).on("click", ".prev", function (e) {
@@ -78,12 +66,11 @@ function showCurrentTab() {
 }
 
 //Checks input of User Registration form when input is entered
-function checkInput_URF(object)
-{
+function checkInput_URF(object) {
     switch (object.id) {
         case "fname":
             //console.log("First name is: " + object.value);
-           // toast(object.value);
+            // toast(object.value);
             break;
 
         case "lname":
@@ -94,7 +81,7 @@ function checkInput_URF(object)
             break;
 
         case "age": //fall-through to ht-in
-            if(object.value < 0 || object.value > 100)
+            if (object.value < 0 || object.value > 100)
                 object.value = "";
             if (object.value.length > object.maxLength)
                 object.value = object.value.slice(0, object.maxLength);
@@ -109,10 +96,10 @@ function checkInput_URF(object)
         case "ht-in":
             break;
         case "sport-8":
-            if($('#sport-8').is(':checked')){
+            if ($('#sport-8').is(':checked')) {
                 $("#sport-other").show();
             }
-            else{
+            else {
                 $("#sport-other").hide();
                 $("#sport-other").val("");
             }
@@ -127,9 +114,10 @@ showCurrentTab();  //Show the first tab
 
 //Creates toast message like on android.
 
-var toast=function(msg){
-    $("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all'><h3>"+msg+"</h3></div>")
-        .css({ display: "block",
+var toast = function (msg) {
+    $("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all'><h3>" + msg + "</h3></div>")
+        .css({
+            display: "block",
             opacity: 1.0,
             position: "fixed",
             padding: "5px",
@@ -138,25 +126,26 @@ var toast=function(msg){
             color: 'white',
             "border-radius": "40px",
             width: "270px",
-            left: ($(window).width() - 284)/2,
-            top: "80%"})
-        .appendTo(".form_description").delay( 1500 )
-        .fadeOut( 300, function(){
+            left: ($(window).width() - 284) / 2,
+            top: "80%"
+        })
+        .appendTo(".form_description").delay(1500)
+        .fadeOut(300, function () {
             $(this).remove();
         });
 }
 
 
-    $(window).keydown(function(event){
-        if(event.keyCode == 13) {
+$(window).keydown(function (event) {
+    if (event.keyCode == 13) {
 
-            if(currentPage == Part1NumQuestions){
-                //use default to submit form
-            }
-            else{
-                event.preventDefault();
-                    $(".Question"+currentPage + " .next").click();
-            }
-            return false;
+        if (currentPage == Part1NumQuestions) {
+            //use default to submit form
         }
-    });
+        else {
+            event.preventDefault();
+            $(".Question" + currentPage + " .next").click();
+        }
+        return false;
+    }
+});

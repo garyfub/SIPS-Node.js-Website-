@@ -42,4 +42,11 @@ router.get('/', function(req, res, next) {
     res.render('users/login');
 });
 
+
+router.get('/logout', function (req, res, next) {
+    req.logout();
+    res.redirect('/');
+});
+
+
 module.exports = router;
