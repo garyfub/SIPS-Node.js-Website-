@@ -27,7 +27,6 @@ io.of('/upload').on('connection', function (socket) {
 io.of('/upload/form').on('connection', function (socket) {
     socket.on('data', function (msg) {
         console.log("Socket connection made.");
-       // console.log("O_OO_O " + msg.form_id);
 
         if(msg.form_id) {
             switch (msg.form_id) {

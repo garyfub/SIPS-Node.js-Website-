@@ -223,19 +223,33 @@ function registrationform(req, formEntryID, date) {
     var weight = form.weight;
     var height_ft = form.ht_ft;
     var height_in = form.ht_in;
-    var sport = form.sport;
+    var soccer = form.sport_soccer ? 1:0;
+    var volleyball = form.sport_volleyball ? 1:0;
+    var football = form.sport_football ? 1:0;
+    var baseball = form.sport_baseball ? 1:0;
+    var basketball = form.sport_basketball ? 1:0;
+    var golf = form.sport_golf ? 1:0;
+    var tennis = form.sport_tennis ? 1:0;
+    var track_cross_country = form.sport_track_cross ? 1:0;
+    var softball = form.sport_softball ? 1:0;
+    var wrestling = form.sport_wrestling ? 1:0;
+    var lacrosse = form.sport_lacrosse ? 1:0;
+    //var isOther = form.sport_isOther ? 1:0;//not needed because functionality is used on the webpage version.
+    var other = form.sport_other ? form.sport_other : "null";
+
+    console.log("MODEL FORMS CHECK: " + wrestling +lacrosse);
 
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
             console.log("SQL ERROR: " + err.message);
             check = false;
         } else {
-            conn.prepare("INSERT INTO BasicUserInfoForm (formentryID, name_first, name_last, age, weight, height_ft, height_in, sport, dateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            conn.prepare("INSERT INTO BasicUserInfoForm (formentryID, name_first, name_last, age, weight, height_ft, height_in, soccer, volleyball, football, baseball, basketball, golf, tennis, track_cross_country, softball, wrestling, lacrosse, OTHER_SPORT, dateAdded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
                     console.log("ERROR: " + err);
                     return conn.closeSync();
                 }
-                stmt.execute([formEntryID, name_first, name_last, age, weight, height_ft, height_in, sport, date], function (err, result) {
+                stmt.execute([formEntryID, name_first, name_last, age, weight, height_ft, height_in, soccer, volleyball, football, baseball, basketball, golf, tennis, track_cross_country, softball, wrestling, lacrosse, other, date], function (err, result) {
                     if (err) {
                         console.log("ERROR: " + err);
                     }

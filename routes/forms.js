@@ -13,7 +13,6 @@ router.post('/next', function (req, res, next) {
     console.log("NEXT: " + JSON.stringify(req.body, null, 2));
 
     model.addFormEntry(req);
-   // model.registrationform(req);
     console.log(userMethods.UserCheck(req.user));
 
     res.redirect('/forms/sport-fitness-injury');

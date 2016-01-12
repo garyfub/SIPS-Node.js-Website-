@@ -70,7 +70,7 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
 router.post('/check', function(req, res, next) {
     var result = model.UserCheck(req.body);
 
-    console.log("CHECK: " + JSON.stringify(req.body, null, 2))
+    //console.log("CHECK: " + JSON.stringify(req.body, null, 2))
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ check: 0 }));
 });

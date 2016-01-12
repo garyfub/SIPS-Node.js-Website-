@@ -9,7 +9,7 @@ $("article:nth-child(1n+2)").hide();
 $("article:first").addClass("visible");
 
 //Make all questions required
-$('form :input').not(':image, :button, :submit, :reset, :hidden, .notRequired').addClass('required');
+$('form :input').not(':checkbox, :image, :button, :submit, :reset, :hidden, .notRequired').addClass('required');
 
 var questionNum = 1;
 var currentPage = 1;
@@ -104,6 +104,16 @@ function checkInput_URF(object)
             break;
 
         case "ht-in":
+            break;
+        case "sport-8":
+            if($('#sport-8').is(':checked')){
+                $("#sport-other").show();
+            }
+            else{
+                $("#sport-other").hide();
+            }
+            break;
+        default:
             break;
     }
 }

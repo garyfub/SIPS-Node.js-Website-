@@ -73,11 +73,6 @@ http.listen(ibmconfig.getPort(), function () {
     console.log('Express server listening on port ' + ibmconfig.getPort());
 });
 
-//Homepage endpoint
-app.get('/', function (req, res, next) {
-    res.render('users/login');
-});
-
 app.get('/logout', function (req, res, next) {
     req.logout();
     res.redirect('/users/login');
