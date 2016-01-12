@@ -15,11 +15,8 @@ io.of('/upload').on('connection', function (socket) {
         console.log("Socket connection made.");
         model.userCheckUpload(msg); //Checks user and then calls to insert data
 
-
        // model.taskDataUploadSQLMultiTable(msg);
        // model.taskDataUploadCloudant(msg);
-       // model.taskDataUploadSQL(msg);
-
     });
 });
 
@@ -27,21 +24,16 @@ io.of('/upload').on('connection', function (socket) {
 io.of('/upload/form').on('connection', function (socket) {
     socket.on('data', function (msg) {
         console.log("Socket connection made.");
-
-        if(msg.form_id) {
-            switch (msg.form_id) {
-                case "registrationform":
                     modelform.addFormEntry(msg);
-                    break;
-                default:
-                    break;
-            }
-        }else{
-            model.userCheckUpload(msg);
-        }
-
-
     });
+});
+
+/* Get app data */
+router.post('/form', function(req, res, next) {
+    console.log("Post connection made:" + JSON.stringify(req.body, null, 2));
+                modelform.addFormEntry(req);
+
+      //  model.userCheckUpload(msg);
 });
 
 

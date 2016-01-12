@@ -43,11 +43,11 @@ function addFormEntry(req) {
     var userid;
     var formType;
 
-    if(req.form_id){
+    if (req.form_id) {
         userid = req.id;
         formType = req.form_id;
     }
-    else{
+    else {
         userid = req.user.id;
         formType = req.body.form_id;
     }
@@ -105,7 +105,12 @@ function addFormEntry(req) {
 
 function sportsFormEntry(req, formEntryID, date) {
     // console.log("USER: " + JSON.stringify(req.user.id, null, 2));
-    var data = req.body;
+    var data;
+    if (req.form_id) {
+        data = req;
+    } else {
+        data = req.body;
+    }
     //Original form data from POST
     //console.log(data);
 
@@ -211,9 +216,9 @@ function registrationform(req, formEntryID, date) {
     console.log("Entering Basic User Info Form entry: " + formEntryID + " on " + date);
     var form;
 
-    if(req.form_id){
+    if (req.form_id) {
         form = req;
-    }else{
+    } else {
         form = req.body;
     }
 
@@ -223,21 +228,21 @@ function registrationform(req, formEntryID, date) {
     var weight = form.weight;
     var height_ft = form.ht_ft;
     var height_in = form.ht_in;
-    var soccer = form.sport_soccer ? 1:0;
-    var volleyball = form.sport_volleyball ? 1:0;
-    var football = form.sport_football ? 1:0;
-    var baseball = form.sport_baseball ? 1:0;
-    var basketball = form.sport_basketball ? 1:0;
-    var golf = form.sport_golf ? 1:0;
-    var tennis = form.sport_tennis ? 1:0;
-    var track_cross_country = form.sport_track_cross ? 1:0;
-    var softball = form.sport_softball ? 1:0;
-    var wrestling = form.sport_wrestling ? 1:0;
-    var lacrosse = form.sport_lacrosse ? 1:0;
+    var soccer = form.sport_soccer ? 1 : 0;
+    var volleyball = form.sport_volleyball ? 1 : 0;
+    var football = form.sport_football ? 1 : 0;
+    var baseball = form.sport_baseball ? 1 : 0;
+    var basketball = form.sport_basketball ? 1 : 0;
+    var golf = form.sport_golf ? 1 : 0;
+    var tennis = form.sport_tennis ? 1 : 0;
+    var track_cross_country = form.sport_track_cross ? 1 : 0;
+    var softball = form.sport_softball ? 1 : 0;
+    var wrestling = form.sport_wrestling ? 1 : 0;
+    var lacrosse = form.sport_lacrosse ? 1 : 0;
     //var isOther = form.sport_isOther ? 1:0;//not needed because functionality is used on the webpage version.
     var other = form.sport_other ? form.sport_other : "null";
 
-    console.log("MODEL FORMS CHECK: " + wrestling +lacrosse);
+    console.log("MODEL FORMS CHECK: " + wrestling + lacrosse);
 
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
@@ -259,7 +264,6 @@ function registrationform(req, formEntryID, date) {
                 });
             });
         }
-
         ibmdb.close();
     });
 
