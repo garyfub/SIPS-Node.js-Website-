@@ -15,6 +15,9 @@ var questionNum = 1;
 var currentPage = 1;
 var Part1NumQuestions = $('.part1').length;
 
+//clear any saved info
+$("#sport-other").val("");
+
 //go through each section (article) and add a list item to the empty unorderd list with the page number
 $(".part1").each(function () {
     $(".progress_counter").append('<li class ="questiontab" id="questiontab_' + questionNum + '"><a href="#">Question: ' + questionNum + ' of ' + Part1NumQuestions + '</a></li>');
@@ -111,6 +114,7 @@ function checkInput_URF(object)
             }
             else{
                 $("#sport-other").hide();
+                $("#sport-other").val("");
             }
             break;
         default:
