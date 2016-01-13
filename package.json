@@ -13,7 +13,7 @@
     "express-session": "^1.12.1",
     "fs": "0.0.2",
     "googleapis": "^2.1.7",
-    "ibm_db": ">=0.0.1",
+    "ibm_db": ">=0.0.17",
     "ibmbluemix": "^1.0.0",
     "ibmcloudcode": "^1.0.0",
     "ibmdata": "^1.0.0",

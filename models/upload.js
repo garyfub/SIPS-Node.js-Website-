@@ -1,4 +1,3 @@
-
 //Model for uploads
 
 var Cloudant = require('cloudant');
@@ -52,22 +51,15 @@ var cloudant = Cloudant({account: me, password: password});
 var datapoints = cloudant.db.use('sampletaskdb');
 
 module.exports = {
-    userCheckUpload: userCheckUpload,
+    userCheckUpload: userCheckUpload, //TODO: User insert is Deprecated because user should already exist. Change to check and not insert if user is not in database?
     taskDataUploadSQLMultiTable: taskDataUploadSQLMultiTable,
-    taskDataUploadCloudant: taskDataUploadCloudant,
-   // sportsFormEntry: sportsFormEntry
+    taskDataUploadCloudant: taskDataUploadCloudant
 }
 
 //Checks of data is form or task data, if user exists, and then calls function based on data type
 function userCheckUpload(msg) {
-    if(msg.type == "Sports Fitness & Injury Form"){
-        var userid = msg.id;
-    }
-    else{
-        var userid = msg.USERID;
-    }
 
-
+    var userid = msg.USERID;
 
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
@@ -111,32 +103,21 @@ function userCheckUpload(msg) {
                             console.log("New user created");
                             result.closeSync();
 
-                            if(msg.type == "Sports Fitness & Injury Form") {
-                                sportsFormEntry(msg);
-                            }
-                            else{
-                                taskDataUploadSQLMultiTable(msg);
-                            }
+                            taskDataUploadSQLMultiTable(msg);
                         }
                     });
                 });
             }
             else {
                 console.log("User exists");
-
-                if(msg.type == "Sports Fitness & Injury Form") {
-                    sportsFormEntry(msg);
-                }
-                else{
-                    //taskDataUploadCloudant(msg);
-                    taskDataUploadSQLMultiTable(msg);
-                }
+                //taskDataUploadCloudant(msg);
+                taskDataUploadSQLMultiTable(msg);
             }
         }
     });
 };
 
-function taskDataUploadCloudant (msg) {
+function taskDataUploadCloudant(msg) {
     var keyNames = Object.keys(msg);
 
     //Print out key names to verify session object loaded
@@ -302,13 +283,12 @@ function taskDataUploadSQLMultiTable(msg) {
 
                                             result.closeSync();
                                         }
-
                                     });
-
                                 } catch (err) {
                                     console.log("ERROR: " + err.message);
                                 }
-                            };
+                            }
+                            ;
                             console.log("Upload completed");
                         })
                     }

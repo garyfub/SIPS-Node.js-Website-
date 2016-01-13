@@ -70,9 +70,16 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
 router.post('/check', function(req, res, next) {
     var result = model.UserCheck(req.body);
 
-    console.log("CHECK: " + result);
+    //TODO: move User creation to when registration form is submitted, instead of initial login.
+    // TODO: User info needs to be send with form json
+    if(result == 0 || result == "0"){
+      //  model.UserCreate(req.body);
+    }
+
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ check: result }));
+
+
 });
 
 module.exports = router;

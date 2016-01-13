@@ -32,24 +32,22 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 //TODO: Add actions for interacting with Users
 module.exports = {
+    UserCheck: UserCheck,
+    UserCreate:UserCreate,
+    isNewUser:isNewUser
+}
 
     //Checks for user in database
-    UserCheck: function (profile) {
-        //TODO: check functionality of UserCheck
-        // var userid = profile.emails[0].value;
-        if(profile.id) {
+function UserCheck(profile) {
             var userid = profile.id;
-        }
-        else if(profile.sub){
-            var userid = profile.sub;
-        }
+
         var conn = ibmdb.openSync(dsnString);
 
         try {
             console.log("User - Check");
             //checks is user exists in database;
             var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-            str = JSON.stringify(obj, null, 2)
+            str = JSON.stringify(obj, null, 2);
             newUser = str.charAt(15);
             console.log("New user?: " + newUser);
 
@@ -59,18 +57,14 @@ module.exports = {
         }
         return newUser;
 
-    },
+    }
+
     //Adds user to database after checking if they exist
-    UserCreate: function (profile) {
-        console.log("id: " + profile.id);
-        console.log("email: " + profile.emails[0].value);
-        console.log("First Name: " + profile.name.givenName);
-        console.log("Last Name: " + profile.name.familyName);
-
-
+function UserCreate(profile) {
+        console.log(JSON.stringify(profile, null, 2))
         var userid = profile.id;
-        var name_first = profile.name.givenName;
-        var name_last = profile.name.familyName;
+        var name_first = profile.name.hasOwnProperty("givenName") ? profile.name.givenName : "";
+        var name_last = profile.name.hasOwnProperty("familyName") ? profile.name.familyName : "";
         var dateObj = new Date();
         var month = dateObj.getUTCMonth() + 1;
         var day = dateObj.getUTCDate();
@@ -126,15 +120,10 @@ module.exports = {
         else console.log("User exists");
 
         return newUser;
-    },
-    //Edits a User's profile info
-    UserEdit: function (profile) {
-        //TODO
-    },
+    }
 
     //Returns 0 if user id is not in database, 1 if located
     //Must be run after UserCheck()
-    isNewUser: function () {
+    function isNewUser() {
         return newUser;
     }
-};

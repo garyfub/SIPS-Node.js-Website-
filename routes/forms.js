@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/forms');
-var userMethods = require('../models/users');
+var modelUsers = require('../models/users');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -11,9 +11,9 @@ router.get('/', function (req, res, next) {
 
 router.post('/next', function (req, res, next) {
     console.log("NEXT: " + JSON.stringify(req.body, null, 2));
-
+    var result = modelUsers.UserCheck(req.user);
     model.addFormEntry(req);
-    console.log(userMethods.UserCheck(req.user));
+    console.log("FORM ENTRY USER CHECK: " + result);
 
     res.redirect('/forms/sport-fitness-injury');
 });

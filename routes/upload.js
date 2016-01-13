@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/upload');
-var modelform = require('../models/forms');
+var modelForm = require('../models/forms');
+var modelUsers = require('../models/users');
 
 /* Get app data */
 router.get('/', function(req, res, next) {
@@ -11,29 +12,36 @@ router.get('/', function(req, res, next) {
 
 //Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
-    socket.on('data', function (msg) {
+    socket.on('data', function (req) {
         console.log("Socket connection made.");
-        model.userCheckUpload(msg); //Checks user and then calls to insert data
+        model.userCheckUpload(req); //Checks user and then calls to insert data
 
-       // model.taskDataUploadSQLMultiTable(msg);
-       // model.taskDataUploadCloudant(msg);
+       // model.taskDataUploadSQLMultiTable(req);
+       // model.taskDataUploadCloudant(req);
     });
 });
 
-//TODO: check if Sports Fitness and Injury form includes form_id
 io.of('/upload/form').on('connection', function (socket) {
-    socket.on('data', function (msg) {
+    socket.on('data', function (req) {
         console.log("Socket connection made.");
-                    modelform.addFormEntry(msg);
+       // console.log("FORM UPLOAD CHECK:" + JSON.stringify(req, null, 2));
+        modelForm.addFormEntry(req);
+
+        //Create user on submission of registration form if not exists
+        var result = modelUsers.UserCheck(req.user);
+        if(result == 0){
+            modelUsers.UserCreate(req.user);
+        }
     });
 });
 
-/* Get app data */
+
+//TODO: Should form data be sent through post requests?
 router.post('/form', function(req, res, next) {
     console.log("Post connection made:" + JSON.stringify(req.body, null, 2));
-                modelform.addFormEntry(req);
+                modelForm.addFormEntry(req);
 
-      //  model.userCheckUpload(msg);
+      //  model.userCheckUpload(req);
 });
 
 
