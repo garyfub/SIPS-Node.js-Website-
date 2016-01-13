@@ -309,7 +309,6 @@ function taskDataUploadSQLMultiTable(msg) {
                                     console.log("ERROR: " + err.message);
                                 }
                             };
-
                             console.log("Upload completed");
                         })
                     }

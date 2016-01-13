@@ -4,7 +4,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var session = require('express-session');
 var passport = require('passport');
 var model_users = require('../models/users');
-
+userjson = null;
 app.use(session({
     resave: true,
     saveUninitialized: true,

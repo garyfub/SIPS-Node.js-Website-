@@ -60,7 +60,7 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
     if(isNew == 1)//if user id is located in db
         res.redirect('/forms/sport-fitness-injury');
     else{
-        model.UserCreate(userjson);
+        model.UserCreate(req.user);
        // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
         res.redirect('/forms/user-registration');
     }
