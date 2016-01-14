@@ -33,7 +33,7 @@
   "repository" : { 
   },
   "scripts": {
-	"start": "node app.js"
+	"start": "node app"
   },  
   "description": "Starts a server which listens for user modules invocation requests.",
   "license": "IBM",
