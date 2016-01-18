@@ -15,6 +15,8 @@ io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
         console.log("Socket connection made for uploading task data");
         model.userCheckUpload(req); //Checks user and then calls to insert data
+
+        socket.disconnect('unauthorized');
     });
 });
 
