@@ -272,7 +272,7 @@ function taskDataUploadSQLMultiTable(msg) {
                                         tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : "0";
                                     }
 
-                                    console.log(i + " - of - " + tstmpA.length); //Shows progress when uploading
+                                    console.log(i + " - of - " + "O_O"); //Shows progress when uploading
 
                                     stmt.execute([taskEntryID, parseFloat(tstmpA[i]), parseFloat(accelx[i]), parseFloat(accely[i]), parseFloat(accelz[i]), parseFloat(tstmpG[i]), parseFloat(gyroy[i]), parseFloat(gyroy[i]), parseFloat(gyroz[i]), parseFloat(tstmpM[i]), parseFloat(magx[i]), parseFloat(magy[i]), parseFloat(magz[i])], function (err, result) {
                                         if (err) {

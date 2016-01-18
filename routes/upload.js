@@ -13,17 +13,14 @@ router.get('/', function(req, res, next) {
 //Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
-        console.log("Socket connection made.");
+        console.log("Socket connection made for uploading task data");
         model.userCheckUpload(req); //Checks user and then calls to insert data
-
-       // model.taskDataUploadSQLMultiTable(req);
-       // model.taskDataUploadCloudant(req);
     });
 });
 
 io.of('/upload/form').on('connection', function (socket) {
     socket.on('data', function (req) {
-        console.log("Socket connection made.");
+        console.log("Socket connection made for uploading form data.");
        // console.log("FORM UPLOAD CHECK:" + JSON.stringify(req, null, 2));
         modelForm.addFormEntry(req);
 
@@ -32,6 +29,8 @@ io.of('/upload/form').on('connection', function (socket) {
         if(result == 0){
             modelUsers.UserCreate(req.user);
         }
+
+        socket.disconnect('unauthorized');
     });
 });
 
@@ -41,7 +40,6 @@ router.post('/form', function(req, res, next) {
     console.log("Post connection made:" + JSON.stringify(req.body, null, 2));
                 modelForm.addFormEntry(req);
 
-      //  model.userCheckUpload(req);
 });
 
 

@@ -146,7 +146,7 @@ function sportsFormEntry(req, formEntryID, date) {
                                 var customType = "null";
                                 var timeLoss = parseInt(question.arr[i + 3]);
                                 if (typeSpecific <= 3) {
-                                    type = 0; //Sudden
+                                    type = 1; //Sudden
                                 }
                                 else if (typeSpecific == 6) {
                                     console.log("typeSpecific is: " + typeSpecific);
@@ -155,16 +155,17 @@ function sportsFormEntry(req, formEntryID, date) {
                                     t++;
                                 }
                                 else {
-                                    type = 1; //Gradual
+                                    type = 2; //Gradual
                                 }
 
-                                console.log("Injury Count: " + injuryCount);
-                                console.log("next Injury?: " + isInjury + " at " + i);
-                                console.log("location: " + location + " at " + (i + 1));
-                                console.log("type: " + type);
-                                console.log("typeSpecific: " + typeSpecific + "at" + (i + 3))
-                                console.log("customType: " + customType + " at " + t);
-                                console.log("Injury timeLoss: " + timeLoss + " at " + (i + 4));
+                                //TODO: remove below logs, used for debugging
+                                //console.log("Injury Count: " + injuryCount);
+                                //console.log("next Injury?: " + isInjury + " at " + i);
+                                //console.log("location: " + location + " at " + (i + 1));
+                                //console.log("type: " + type);
+                                //console.log("typeSpecific: " + typeSpecific + "at" + (i + 3))
+                                //console.log("customType: " + customType + " at " + t);
+                                //console.log("Injury timeLoss: " + timeLoss + " at " + (i + 4));
                                 i = i + 3;
                                 injuryCount++;
 
@@ -185,15 +186,6 @@ function sportsFormEntry(req, formEntryID, date) {
         }
         ibmdb.close();
     });
-
-
-    //prints out static questions
-    /* //TODO: delete when finished debugging
-     for (var y = 0; y < 12; y++) {
-     if (question.arr[y]) {
-     console.log('Question ' + y + ': ' + question.arr[y]);
-     }
-     } */
 
 }
 
@@ -247,7 +239,6 @@ function registrationform(req, formEntryID, date) {
                 });
             });
         }
-
         ibmdb.close();
     });
 
