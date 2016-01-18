@@ -18,6 +18,7 @@ io.of('/upload').on('connection', function (socket) {
     });
 });
 
+/*
 io.of('/upload/form').on('connection', function (socket) {
     socket.on('data', function (req) {
         console.log("Socket connection made for uploading form data.");
@@ -33,12 +34,21 @@ io.of('/upload/form').on('connection', function (socket) {
         socket.disconnect('unauthorized');
     });
 });
+*/
 
 
 //TODO: Should form data be sent through post requests?
 router.post('/form', function(req, res, next) {
     console.log("Post connection made:" + JSON.stringify(req.body, null, 2));
+
+    if(req.body.user){
+        req.user = req.body.user;
+        req.body= req.body.body;
+    }
                 modelForm.addFormEntry(req);
+
+    console.log("Post moved BODY:" + JSON.stringify(req.body, null, 2));
+    console.log("Post added USER:" + JSON.stringify(req.user, null, 2));
 
 });
 
