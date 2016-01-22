@@ -10,6 +10,13 @@ html {
     height: 100%;
 }
 
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 body,
 h1,
 h2,
@@ -22,7 +29,7 @@ h6 {
 }
 
 .topnav {
-    font-size: 14px; 
+    font-size: 14px;
 }
 
 .lead {
@@ -170,23 +177,23 @@ p.copyright {
 }
 
 .btn.red {
-	background-color: #D14836;
-	background-image: -webkit-linear-gradient(top,#dd4b39,#d14836);
-	background-image: -moz-linear-gradient(top,#dd4b39,#d14836);
-	background-image: -ms-linear-gradient(top,#dd4b39,#d14836);
-	background-image: -o-linear-gradient(top,#dd4b39,#d14836);
-	background-image: linear-gradient(top,#dd4b39,#d14836);
-	
-	border: 1px solid transparent;
-	color: white;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+    background-color: #D14836;
+    background-image: -webkit-linear-gradient(top,#dd4b39,#d14836);
+    background-image: -moz-linear-gradient(top,#dd4b39,#d14836);
+    background-image: -ms-linear-gradient(top,#dd4b39,#d14836);
+    background-image: -o-linear-gradient(top,#dd4b39,#d14836);
+    background-image: linear-gradient(top,#dd4b39,#d14836);
+
+    border: 1px solid transparent;
+    color: white;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .btn.red:hover {
-	background-color: #C53727;
-	background-image: -webkit-linear-gradient(top,#dd4b39,#c53727);
-	background-image: -moz-linear-gradient(top,#dd4b39,#c53727);
-	background-image: -ms-linear-gradient(top,#dd4b39,#c53727);
-	background-image: -o-linear-gradient(top,#dd4b39,#c53727);
-	background-image: linear-gradient(top,#dd4b39,#c53727);	
+    background-color: #C53727;
+    background-image: -webkit-linear-gradient(top,#dd4b39,#c53727);
+    background-image: -moz-linear-gradient(top,#dd4b39,#c53727);
+    background-image: -ms-linear-gradient(top,#dd4b39,#c53727);
+    background-image: -o-linear-gradient(top,#dd4b39,#c53727);
+    background-image: linear-gradient(top,#dd4b39,#c53727);
 }
