@@ -51,7 +51,7 @@ var cloudant = Cloudant({account: me, password: password});
 var datapoints = cloudant.db.use('sampletaskdb');
 
 module.exports = {
-    userCheckUpload: userCheckUpload, //TODO: User insert is Deprecated because user should already exist. Change to check and not insert if user is not in database?
+    userCheckUpload: userCheckUpload, //TODO: User check part is Deprecated because users model already has a working version.
     taskDataUploadSQLMultiTable: taskDataUploadSQLMultiTable,
     taskDataUploadCloudant: taskDataUploadCloudant
 }
