@@ -1,33 +1,175 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login with Google</title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Sports Injury & Fitness Screen</title>
+
+    <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <!-- load bootstrap css -->
+
+    <!-- Custom CSS -->
+    <link href="stylesheets/landing-page.css" rel="stylesheet">
+
+
+    <!-- Custom Fonts -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <!-- load fontawesome -->
-    <style>
-        body {
-            padding-top: 80px;
-        }
-    </style>
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
-<body>
-<div class="container">
+<body style="background-color: rgb(160, 188, 239) ! important;">
 
-    <div class="text-center jumbotron">
-        <h1>Sports Injury Prediction & Screening</h1>
-        <span class="fa fa-heartbeat"></span>
-        <p>Login or Register with:</p>
+<!-- Navigation -->
+<nav class="navbar-inverse navbar-default navbar-fixed-top topnav" role="navigation">
+    <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand topnav" href="#">SIPS</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div style="height: 0.8px;" aria-expanded="false" class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="page-scroll" href="#top">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#about">About</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
 
-        <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google</a>
+
+<!-- Header -->
+<a name="top"></a>
+<div class="" id="top">
+    <div class="container" style="padding-top: 90px;">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center jumbotron" style="">
+                    <h1>Sports Injury Prediction &amp; Screen</h1>
+                    <span style="font-size: 57px;" class="fa fa-heartbeat"></span>
+                    <h3>Login/Register here</h3>
+
+                    <hr class="intro-divider"><ul class="list-inline intro-social-buttons">
+                        <li>
+                            <a href="/auth/google" class="btn btn-danger btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name"> Sign in with Google</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
     </div>
+    <!-- /.container -->
 
 </div>
-<script src="/javascripts/login.js"></script>
+<!-- /.intro-header -->
+
+<!-- Page Content -->
+
+<a name="about"></a>
+<div style="margin: 4% 5%;" id="about" class="content-section-a">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 text-center" style="word-wrap: break-word;">
+
+                <h2 class="section-heading">About SIPS</h2><hr class="intro-divider">
+
+                <p class="lead">SIPS utilizes mobile devices running Android during testing. Sensor data is gathered and sent to our servers to go through top of the line analytics. From there realtime results are produced from the collected data and viewable by the user who the data was from.</p>
+            </div>
+
+        </div>
+        <br><br><br>
+        <div class="" id="contact">
+            <div class="col-lg-12 text-center well" style="word-wrap: break-word; margin-bottom: -31px;">
+
+                <h2 class="section-heading" >Contact Us</h2><hr class="intro-divider">
+
+                <p class="lead">Feel free to contact us at: <a href="mailto:contact@sipsapp.org" target="_top">contact@sipsapp.org</a></p>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+
+</div>
+
+
+<!-- /.banner -->
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="list-inline">
+                    <li>
+                        <a class="page-scroll" href="#top">Home</a>
+                    </li>
+                    <li class="footer-menu-divider">⋅</li>
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li class="footer-menu-divider">⋅</li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+                <p class="copyright text-muted small">Copyright © SIPS 2016. All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script src="/javascripts/effects/jquery.js"></script>
+-->
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+<!-- Easing plugin for Scrolling -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+<!-- Scrolling JavaScript -->
+<script src="/javascripts/effects/scrolling-nav.js"></script>
+
+<!-- Google login client JavaScript -->
 <script src="//apis.google.com/js/client:plusone.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
 </body>
+
 </html>
