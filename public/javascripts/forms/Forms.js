@@ -109,9 +109,6 @@ function checkInput_URF(object) {
     }
 }
 
-showCurrentTab();  //Show the first tab
-
-
 //Creates toast message like on android.
 
 var toast = function (msg) {
@@ -149,3 +146,17 @@ $(window).keydown(function (event) {
         return false;
     }
 });
+
+//Adds btn class to radios if on mobile
+function radioToButton() {
+    var width = $(window).width();
+    if (width <= 768) {
+        $('.radio-inline').addClass('btn btn-default');
+    }
+    else {
+        $('.radio-inline').removeClass('btn btn-default');
+    }
+}
+
+showCurrentTab();  //Show the first tab
+radioToButton();

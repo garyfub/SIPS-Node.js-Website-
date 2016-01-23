@@ -2,15 +2,11 @@
 <html>
 <head>
     <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 
     <link rel='stylesheet' href='/stylesheets/forms.css'/>
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-
 </head>
 <body>
 
@@ -18,7 +14,7 @@
 postTarget = "/forms/next";
 %>
 
-<form action="<%= postTarget %>" method="post" id="slider">
+<form action="<%= postTarget %>" method="post" id="slider" class="container">
     <div class="form_description">
         <h2><%= title %></h2>
 
@@ -115,7 +111,7 @@ postTarget = "/forms/next";
         <!-- Question 6 -->
         <article id="apage_6" class="part1 visible Question6">
             <h3 class="control-label"> <label class="question-label">What sport(s) are you in?</label>
-                </h3>
+            </h3>
             <div class="">
                 <label class="radio" for="sport-0">
                     <input name="sport_soccer" class="check_box" id="sport-0" value="Soccer" type="checkbox">
@@ -176,10 +172,15 @@ postTarget = "/forms/next";
 
 
 </form>
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/additional-methods.min.js"></script>
-<script src="/javascripts/forms/Forms.js"></script>
+</script><script src="/javascripts/forms/Forms.js"></script>
 
 </body>
 </html>

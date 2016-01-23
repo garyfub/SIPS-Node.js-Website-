@@ -2,17 +2,17 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
-
-    <link rel='stylesheet' href='/stylesheets/forms.css'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Latest compiled and minified CSS
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
 
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/forms.css'/>
+    -->
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/forms.css'/>
 
 </head>
 <body>
@@ -36,7 +36,7 @@ radioText1 = ["Never", "Rare", "Infrequent", "Occasional", "Frequent", "Persiste
 radioText2 = ["Not at all", "Insignificant", "Marginal", "Moderate", "Substantial", "Severe"];
 questionNum = 1; %>
 
-<form action="<%=postTarget%>" method="post" id="slider">
+<form action="<%=postTarget%>" method="post" id="slider" class="container">
     <div class="form_description">
         <h2><%= title %></h2>
 
@@ -50,7 +50,7 @@ questionNum = 1; %>
 
         <!-- Question 1 -->
         <article id="apage_1" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[0] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[0] %></label>
 
             <div class="">
 
@@ -67,7 +67,7 @@ questionNum = 1; %>
 
         <!-- Question 2 -->
         <article id="apage_2" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[1] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[1] %></label>
 
             <div class="">
 
@@ -84,7 +84,7 @@ questionNum = 1; %>
 
         <!-- Question 3 -->
         <article id="apage_3" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[2] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[2] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -101,7 +101,7 @@ questionNum = 1; %>
         <!-- Question 4 -->
 
         <article id="apage_4" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[3] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[3] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -116,7 +116,7 @@ questionNum = 1; %>
 
         <!-- Question 5 -->
         <article id="apage_5" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[4] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[4] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -131,7 +131,7 @@ questionNum = 1; %>
 
         <!-- Question 6 -->
         <article id="apage_6" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[5] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[5] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -146,7 +146,7 @@ questionNum = 1; %>
 
         <!-- Question 7 -->
         <article id="apage_7" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[6] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[6] %></label>
 
             <div class="">
 
@@ -163,7 +163,7 @@ questionNum = 1; %>
 
         <!-- Question 8 -->
         <article id="apage_8" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[7] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[7] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -178,7 +178,7 @@ questionNum = 1; %>
 
         <!-- Question 9 -->
         <article id="apage_9" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[8] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[8] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -193,7 +193,7 @@ questionNum = 1; %>
 
         <!-- Question 10 -->
         <article id="apage_10" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[9] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[9] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -208,7 +208,7 @@ questionNum = 1; %>
 
         <!-- Question 11 -->
         <article id="apage_11" class="part1">
-            <label class=" control-label" for="q<%= questionNum %>"><%= questionLabels[10] %></label>
+            <label class=" control-label h4" for="q<%= questionNum %>"><%= questionLabels[10] %></label>
 
             <div class="">
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
@@ -223,7 +223,7 @@ questionNum = 1; %>
 
         <!-- Question 12 -->
         <article id="apage_12" class="part2">
-            <label class=" control-label" for="q<%= questionNum %>">Did you experience a
+            <label class=" control-label h4" for="q<%= questionNum %>">Did you experience a
                 concussion <%= versionText %></label>
 
             <div class="">
@@ -241,7 +241,7 @@ questionNum = 1; %>
 
         <!-- Question 13 -->
         <article id="apage_13" class="part2">
-            <label class=" control-label" for="q<%= questionNum %>">Did you sustain a musculoskeletal
+            <label class=" control-label h4" for="q<%= questionNum %>">Did you sustain a musculoskeletal
                 injury <%= versionText %></label>
             <div class="">
                 <label class="radio-inline" for="q<%= questionNum + "-" + 1 %>">
@@ -270,6 +270,12 @@ questionNum = 1; %>
 
 </form>
 
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/additional-methods.min.js"></script>

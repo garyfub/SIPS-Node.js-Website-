@@ -115,7 +115,7 @@ function addInjuryQuestions(){
     newName = 'arr[' + num +']';
     $("article:last").closest("article").removeClass("visible").hide();
     $(".form-group").append('<article id="apage_' + num + '" class="part2 Question' + num + '">' +
-        ' <label class=" control-label" for="' + newID + '">Where was the injury located?</label>' +
+        ' <label class=" control-label h4" for="' + newID + '">Where was the injury located?</label>' +
         '<div class="">' +
         '<label class="radio-inline" for="' + newID + '-1">'+
         '<input name="' + newName + '" class="required" value="1" type="radio" id="' + newID + '-1">'+
@@ -180,7 +180,7 @@ function addInjuryQuestions(){
     newNameCustom = 'arr_1[' + num +']';
     $("article:last").closest("article").removeClass("visible").hide();
     $(".form-group").append('<article id="apage_' + num + '" class="part2 Question' + num + '">' +
-        ' <label class=" control-label" for="' + newID + '">What type of Injury did you sustain? (pick one)</label> ' +
+        ' <label class=" control-label h4" for="' + newID + '">What type of Injury did you sustain? (pick one)</label> ' +
         '<br>' +
         '<div class="">' +
         '<fieldset><legend>Sudden Event (Acute - Traumatic)</legend>' +
@@ -216,13 +216,13 @@ function addInjuryQuestions(){
         '</label>' +
         '<br>' +
         '<div class="other" style="display:none;">' +
-        '<label class=" control-label" for="' + newNameCustom + '">Please Specify here:</label> ' +
+        '<label class=" control-label h4" for="' + newNameCustom + '">Please Specify here:</label> ' +
         '<input id="' + newNameCustom +'" name="' + newNameCustom + '" class="element text medium other" maxlength="30" value="" type="text"> ' +
         '</div>' +
         '</fieldset>' +
         '</div>' +
-            '<a class="next" href="#">Next</a>'+
-            '<a class="prev" href="#">Previous</a>'+
+        '<a class="next" href="#">Next</a>'+
+        '<a class="prev" href="#">Previous</a>'+
         '</article>');
 
     var Part2NumQuestions = $('.part2').length;
@@ -236,7 +236,7 @@ function addInjuryQuestions(){
     newName = 'arr[' + num +']';
     $("article:last").closest("article").removeClass("visible").hide();
     $(".form-group").append('<article id="apage_' + num + '" class="part2 Question' + num + '">' +
-        ' <label class=" control-label" for="' + newID + '">Was there any time lost as a result of this injury?</label> ' +
+        ' <label class=" control-label h4" for="' + newID + '">Was there any time lost as a result of this injury?</label> ' +
         '<div class="">' +
         '<label class="radio-inline" for="' + newID + '-2">'+
         '<input name="' + newName + '" class="required" value="1" type="radio" id="' + newID + '-2">'+
@@ -262,7 +262,7 @@ function addInjuryQuestions(){
     newName = 'arr[' + num +']';
     $("article:last").closest("article").removeClass("visible").hide();
     $(".form-group").append('<article id="apage_' + num + '" class="part2 Question' + num + '" style="display: none;">' +
-        ' <label class=" control-label" for="' + newID + '">Did you sustain any other musculoskeletal injuries '+versionText+' (same or different location)</label> ' +
+        ' <label class=" control-label h4" for="' + newID + '">Did you sustain any other musculoskeletal injuries '+versionText+' (same or different location)</label> ' +
         '<div class="">' +
         '<label class="radio-inline" for="' + newID + '-1">'+
         '<input name="' + newName + '" class="required" value="0" type="radio" id="' + newID + '-1" onclick="switchbtn(this)" >'+
@@ -283,9 +283,9 @@ function addInjuryQuestions(){
     $(".progress_counter").append('<li class ="questiontab" id="questiontab_' + newID + '"><a href="#">Question: '+numP2 + ' of '+Part2NumQuestions+ '</a></li>');
 
     newInjuryQuestion = num; //prepare for next Injury
-}
 
-showCurrentTab();  //Show the first tab
+    radioToButton();
+}
 
 
 $(window).keydown(function(event){
@@ -302,3 +302,37 @@ $(window).keydown(function(event){
         return false;
     }
 });
+
+//Adds btn class to radios if on mobile
+function radioToButton() {
+    var width = $(window).width();
+
+    if (width <= 768) {
+        $('.radio-inline').addClass('btn btn-default');
+    }
+    else {
+        $('.radio-inline').removeClass('btn btn-default');
+    }
+}
+
+$(document).ready(function() {
+
+    if ($(window).innerWidth() <= 768){
+        $('.radio-inline').addClass('btn btn-default');
+    }
+    $(window).resize(function () {
+        var width = $(window).width();
+
+        if (width <= 768) {
+            $('.radio-inline').addClass('btn btn-default');
+        }
+        else {
+            $('.radio-inline').removeClass('btn btn-default');
+        }
+    }).resize();
+
+
+});
+
+showCurrentTab();  //Show the first tab
+radioToButton();

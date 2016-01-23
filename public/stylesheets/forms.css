@@ -1,5 +1,4 @@
 form#slider {
-    width: 524px;
     margin: 0 auto;
     clear: left;
 }
@@ -13,45 +12,6 @@ form#slider article {
     border-radius: 4px
 }
 
-form#slider label {
-   // width: 144px;
-    float: left;
-   // margin-right: 20px;
-    color: #474747;
-}
-form#slider label.question-label, form#slider label.radio {
-    float: initial;
-}
-/*
-form#slider input {
-    float: left;
-   // width: 300px;
-    font-size: 13px;
-    border: none;
-    background: #ececec;
-    padding: 7px 13px;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-}
-*/
-
-form#slider select {
-    float: left;
-    width: 300px;
-}
-
-form#slider textarea {
-    float: left;
-    width: 300px;
-    height: 150px;
-    border: none;
-    background: #ececec;
-    padding: 7px 13px;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-}
 
 .form-item {
     margin-bottom: 10px;
@@ -67,11 +27,11 @@ input.form-submit {
 a.next, a.prev, .submit {
     background: #3F5D72;
     display: block;
-    width: 300px;
-    float: left;
+    float: right;
+    width:180px;
     margin: 10px 0 0 164px;
     text-align: center;
-    clear: left;
+    clear: both;
     padding: 7px 13px;
     border-radius: 4px;
     -moz-border-radius: 4px;
@@ -79,8 +39,9 @@ a.next, a.prev, .submit {
     color: white;
     text-decoration: none
 }
-a.next:hover, a.prev:hover, .submit:hover{
+a.next:focus, a.next:hover, a.prev:focus, a.prev:hover, .submit:hover {
     color: white;
+    text-decoration: underline;
 }
 
 #page {
@@ -114,16 +75,58 @@ a.next:hover, a.prev:hover, .submit:hover{
     font-size: 16px;
 }
 
-.radio {
-    position: relative;
-    display: block;
-    padding-left: 20px;
-    margin-bottom: 0;
-    font-weight: 400;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
 .error-required {
     color:#FF0000 !important;
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 655px;
+    }
+}
+@media (max-width: 768px){
+    .container {
+        width: 100%;
+    }
+    .control-label.h4{
+        padding-bottom: 50px;
+    }
+
+    input[type=radio] {
+        list-style: none;
+    }
+
+    .radio-inline{
+        display: block;
+
+    }
+    .radio-inline.btn{
+    // width: 200px;
+        margin-bottom: 2px;
+        white-space: normal;
+        margin-left: 0px;
+    }
+    .radio-inline.btn input{
+        filter:alpha(opacity=0);
+        -moz-opacity:0;
+        -khtml-opacity: 0;
+        opacity: 0;
+    }
+    .radio-inline.btn input[type="radio"]:checked{
+        background-color: grey;
+    }
+}
+@media (min-width: 992px) {
+    .container {
+        width: 655px;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        width: 655px;
+    }
+}
+
+legend{
+    font-size: 16px;
 }
