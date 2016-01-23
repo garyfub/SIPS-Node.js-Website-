@@ -186,7 +186,7 @@ function addInjuryQuestions(){
         '<fieldset><legend>Sudden Event (Acute - Traumatic)</legend>' +
         '<label class="radio" for="' + newID + '-1">'+
         '<input name="' + newName + '" class="required" value="1" type="radio" id="' + newID + '-1" onclick="checkvalue(this)">'+
-        'Joint Strain'+
+        'Joint Sprain'+
         '</label>'+
         '<label class="radio" for="' + newID + '-2">'+
         '<input name="' + newName + '" class="required" value="2" type="radio" id="' + newID + '-2" onclick="checkvalue(this)">'+
@@ -264,14 +264,14 @@ function addInjuryQuestions(){
     $(".form-group").append('<article id="apage_' + num + '" class="part2 Question' + num + '" style="display: none;">' +
         ' <label class=" control-label" for="' + newID + '">Did you sustain any other musculoskeletal injuries '+versionText+' (same or different location)</label> ' +
         '<div class="">' +
-        '<label class="radio-inline" for="' + newID + '-1">'+
-        '<input name="' + newName + '" class="required" value="0" type="radio" id="' + newID + '-1" onclick="switchbtn(this)" >'+
-        'No'+
-        '</label>'+
         '<label class="radio-inline" for="' + newID + '-2">'+
         '<input name="' + newName + '" class="required" value="1" type="radio" id="' + newID + '-2" onclick="switchbtn(this)">'+
         'Yes'+
         '</label>' +
+        '<label class="radio-inline" for="' + newID + '-1">'+
+        '<input name="' + newName + '" class="required" value="0" type="radio" id="' + newID + '-1" onclick="switchbtn(this)" >'+
+        'No'+
+        '</label>'+
         '<input class="button_text submit" type="submit" name="submit" value="Submit" style="display:none;" />' +
         '</div>' +
         '<a class="next" href="#">Next</a>'+

@@ -32,9 +32,9 @@ questionLabels.push("To what extent have you ever experienced headaches, vision 
 
 postTarget = "http://utc-vat.mybluemix.net/forms/submission-complete";
 versionText = " over the past 12 months?/during the past season?";
- radioText1 = ["Never", "Rare", "Infrequent", "Occasional", "Frequent", "Persistent"];
- radioText2 = ["Not at all", "Insignificant", "Marginal", "Moderate", "Substantial", "Severe"];
- questionNum = 1; %>
+radioText1 = ["Never", "Rare", "Infrequent", "Occasional", "Frequent", "Persistent"];
+radioText2 = ["Not at all", "Insignificant", "Marginal", "Moderate", "Substantial", "Severe"];
+questionNum = 1; %>
 
 <form action="<%=postTarget%>" method="post" id="slider">
     <div class="form_description">
@@ -57,7 +57,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText1[i] %>
+                    <%= radioText1[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -74,7 +74,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText1[i] %>
+                    <%= radioText1[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -90,7 +90,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText2[i] %>
+                    <%= radioText2[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -107,7 +107,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText2[i] %>
+                    <%= radioText2[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -122,7 +122,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText2[i] %>
+                    <%= radioText2[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -137,7 +137,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText2[i] %>
+                    <%= radioText2[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -153,7 +153,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText1[i] %>
+                    <%= radioText1[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -169,7 +169,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText1[i] %>
+                    <%= radioText1[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -184,7 +184,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText2[i] %>
+                    <%= radioText2[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -199,7 +199,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText1[i] %>
+                    <%= radioText1[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -214,7 +214,7 @@ versionText = " over the past 12 months?/during the past season?";
                 <% for(var i = 1; i <= radioText1.length; i++) { %>
                 <label class="radio-inline" for="q<%= questionNum + "-" + i %>">
                     <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum + "-" + i %>" value="<%= i %>" type="radio">
-                    <%= radioText2[i] %>
+                    <%= radioText2[i-1] %>
                 </label>
                 <% } %>
                 <% questionNum++; %>
@@ -244,15 +244,15 @@ versionText = " over the past 12 months?/during the past season?";
             <label class=" control-label" for="q<%= questionNum %>">Did you sustain a musculoskeletal
                 injury <%= versionText %></label>
             <div class="">
-            <label class="radio-inline" for="q<%= questionNum + "-" + 1 %>">
-                <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum %>-1" value="1" type="radio" onclick="switchbtn(this)">
-                Yes
-            </label>
-            <label class="radio-inline" for="q<%= questionNum + "-" + 2 %>">
-                <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum %>-2" value="0" type="radio"  onclick="switchbtn(this)">
-                No
-            </label>
-                </div>
+                <label class="radio-inline" for="q<%= questionNum + "-" + 1 %>">
+                    <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum %>-1" value="1" type="radio" onclick="switchbtn(this)">
+                    Yes
+                </label>
+                <label class="radio-inline" for="q<%= questionNum + "-" + 2 %>">
+                    <input name="arr[<%= questionNum %>]" class="required" id="q<%= questionNum %>-2" value="0" type="radio"  onclick="switchbtn(this)">
+                    No
+                </label>
+            </div>
             <input name="arr[null]" class=""  value="0" type="radio"  style="display:none" checked>
             <% questionNum++; %>
 
