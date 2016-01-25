@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
     passport.use(new GoogleStrategy({
             clientID: '185585020623-o8hdaup59vfnlt18hpbss7utdsjng85j.apps.googleusercontent.com',
             clientSecret: 'vFXPWHiA18ssRJ606AAOERHY',
-            callbackURL: 'http://utc-vat.mybluemix.net/users/auth/google/callback'
+            callbackURL: req.protocol + '://' + req.get('host')+ '/users/auth/google/callback'
         },
         function(token, refreshToken, profile, done) {
             //check if user is in database
