@@ -114,7 +114,6 @@ function UserCreate(profile) {
                     });
                 }
             });
-
             ibmdb.close();
         }
         else console.log("User exists");

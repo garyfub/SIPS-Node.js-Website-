@@ -4,6 +4,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var session = require('express-session');
 var passport = require('passport');
 var model_users = require('../models/users');
+var model_data = require('../models/data');
 userjson = null;
 app.use(session({
     resave: true,
@@ -51,6 +52,36 @@ router.get('/', function(req, res, next) {
 router.get('/logout', function (req, res, next) {
     req.logout();
     res.redirect('/');
+});
+
+router.get('/results', function (req, res, next) {
+    if(req.user) {
+        var results = model_data.getUserTaskList(req);
+
+        res.render('results', {
+            title: 'Results',
+            name: req.user.name.givenName + " " + req.user.name.familyName,
+            id: req.user.id,
+            taskList: results
+        })
+    }
+    else{
+        res.send('404: Page not Found', 404);
+    }
+});
+
+router.post('/results/data', function (req, res, next) {
+    if(req.user) {
+        var data = model_data.getUserTaskData(req);
+
+        console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
+        res.send( {
+            data: data
+        })
+    }
+    else{
+        res.send('404: Page not Found', 404);
+    }
 });
 
 

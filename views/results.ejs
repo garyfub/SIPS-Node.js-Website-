@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title + " for " + name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar-inverse navbar-default navbar-fixed-top topnav" role="navigation">
+    <div class="container topnav">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand topnav" href="#">SIPS</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div style="height: 0.8px;" aria-expanded="false" class="navbar-collapse collapse"
+             id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+<div class="container" style="background: white;">
+
+    <div class="row col-lg-12">
+
+        <h1><%= title %></h1>
+        <p><%= id %></p>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-list fa-fw"></i> Data List
+                    <div class="pull-right">
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <SELECT NAME="task-list" id="task-list" size="1" class="form-control">
+                        <%
+                        for(var i=0;i<taskList.length;i++){
+                            var obj = taskList[i];
+                            var date = obj['DATEADDED'];
+                            var notes = obj['TASKNOTES'];
+                          %>
+                        <OPTION VALUE="<%= obj['TASKENTRYID']%>"><%= notes + " - " + date %>
+                        <%}%>
+                    </SELECT>
+                    <br>
+                    <button id="apply_btn" type="button" class="btn btn-primary">Apply</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Chart
+                    <div class="pull-right">
+                        <ul class="nav panel-tabs">
+                            <li class="active"><a id="init-tab" href="#tab1" data-toggle="tab">Acceleration</a></li>
+                            <li class=""><a href="#tab2" id="tab_gyro" data-toggle="tab">Rotation</a></li>
+                            <li class=""><a href="#tab3" id="tab_mag" data-toggle="tab">Magnetic</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="tab-content" id="data_charts">
+                        <div class="tab-pane active" id="tab1"><div id="results-chart-accel"></div></div>
+                        <div class="tab-pane" id="tab2"><div id="results-chart-gyro"></div></div>
+                        <div class="tab-pane" id="tab3"><div id="results-chart-mag"></div></div>
+                        <div class="modal" styles="display:none;"></div>
+                        </div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Morris.js script with dependency-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+
+<script>
+
+    var data;
+    $("#apply_btn").click(function(){
+
+        $('#init-tab').tab('show');
+        $(".modal").show();
+
+        $.post("/results/data",
+                {
+                    taskID: $( "#task-list" ).val()
+                },
+                function(result,status){
+                    data = result;
+                    console.log(status+ ": "+ JSON.stringify(data, null, 2));
+
+                    $("#data_charts > div > div").empty();
+
+
+                    //Create Accel chart
+                       new Morris.Line({
+                           // ID of the element in which to draw the chart.
+                           element: 'results-chart-accel',
+                           // Chart data records -- each entry in this array corresponds to a point on
+                           // the chart.
+                           data: data['data'],
+                           // The name of the data record attribute that contains x-values.
+                           xkey: 'ACCELTIMESTAMP',
+                           // A list of names of data record attributes that contain y-values.
+                           ykeys: ['ACCELX', 'ACCELY', 'ACCELZ'],
+                           // Labels for the ykeys -- will be displayed when you hover over the
+                           // chart.
+                           labels: ['x', 'y', 'z'],
+                           xLabels: 'time',
+                         //  resize: true,
+                           parseTime: false
+                       });
+
+                    $(".modal").hide();
+                });
+    });
+
+    $("#tab_gyro").click(function(){
+
+        if(data) {
+            $(".modal").show();
+
+            //Create Gyro Chart
+            new Morris.Line({
+                // ID of the element in which to draw the chart.
+                element: 'results-chart-gyro',
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: data['data'],
+                // The name of the data record attribute that contains x-values.
+                xkey: 'GYROTIMESTAMP',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['GYROX', 'GYROY', 'GYROZ'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['x', 'y', 'z'],
+                xLabels: 'time',
+              //  resize: true,
+                parseTime: false
+            });
+            $(".modal").hide();
+        }
+    });
+
+    $("#tab_mag").click(function(){
+        if(data) {
+            $(".modal").show();
+
+            //Create Mag Chart
+            new Morris.Line({
+                // ID of the element in which to draw the chart.
+                element: 'results-chart-mag',
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: data['data'],
+                // The name of the data record attribute that contains x-values.
+                xkey: 'MAGTIMESTAMP',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['MAGX', 'MAGY', 'MAGZ'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['x', 'y', 'z'],
+                xLabels: 'time',
+                // resize: true,
+                parseTime: false
+            });
+
+            $(".modal").hide();
+        }
+    });
+
+
+
+</script>
+<style>
+
+    .modal {
+        display:    none;
+        position:   fixed;
+        z-index:    1000;
+        top:        0;
+        left:       0;
+        height:     100%;
+        width:      100%;
+        background: rgba( 255, 255, 255, .8 )
+        url('http://i.stack.imgur.com/FhHRx.gif')
+        50% 50%
+        no-repeat;
+    }
+
+</style>
+</body>
+</html>

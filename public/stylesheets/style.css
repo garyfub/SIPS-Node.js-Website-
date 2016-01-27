@@ -7,3 +7,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+.pull-right .panel-tabs li {
+  float: left;
+}
+.nav.panel-tabs>li>a {
+  position: relative;
+  display: block;
+  padding: 0px 15px;
+}
