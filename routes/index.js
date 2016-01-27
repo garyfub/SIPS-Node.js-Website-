@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
 
     if (req.user) {
         // logged in
-        res.render('index', { title: "SIPS" }, {message: 'Welcome, '+ req.user.name.givenName + " " + req.user.name.familyName});
+        res.render('index', {title: 'SIPS', name: req.user.name.givenName + " " + req.user.name.familyName})
     } else {
     passport.use(new GoogleStrategy({
             clientID: '185585020623-o8hdaup59vfnlt18hpbss7utdsjng85j.apps.googleusercontent.com',

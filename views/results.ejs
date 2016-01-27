@@ -42,25 +42,28 @@
 </nav>
 
 
-<div class="container" style="background: white;">
+<div class="container-fluid">
 
     <div class="row col-lg-12">
 
-        <h1><%= title %></h1>
-        <p><%= id %></p>
+        <h1><%= title + " for " + name %></h1>
+        <br>
     </div>
     <br>
     <div class="row">
         <div class="col-lg-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-list fa-fw"></i> Data List
+                    <i class="fa fa-list fa-fw"></i> Data Display Options
                     <div class="pull-right">
 
                     </div>
                 </div>
                 <div class="panel-body">
+                    <p>Choose user task and apply to generate data charts.</p>
+                    <br>
                     <SELECT NAME="task-list" id="task-list" size="1" class="form-control">
+                        <option value="" disabled selected>Select task</option>
                         <%
                         for(var i = 0;i < taskList.length;i++){
                             var obj = taskList[i];
@@ -76,7 +79,8 @@
             </div>
         </div>
 
-        <div class="col-lg-10">
+        <div class="row col-lg-10">
+        <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i> Acceleration Chart
@@ -85,13 +89,13 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <div id="results-chart-accel"></div>
+                    <div id="results-chart-accel" class="charts"></div>
                 </div>
                 <!-- /.panel-body -->
             </div>
         </div>
 
-        <div class="col-lg-10">
+        <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i> Rotation Chart
@@ -100,13 +104,13 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <div id="results-chart-gyro"></div>
+                    <div id="results-chart-gyro" class="charts"></div>
                 </div>
             </div>
             <!-- /.panel-body -->
         </div>
 
-        <div class="col-lg-10">
+        <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i> Magnetic Chart
@@ -115,13 +119,13 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <div id="results-chart-mag"></div>
+                    <div id="results-chart-mag" class="charts"></div>
                 </div>
                 <!-- /.panel-body -->
             </div>
         </div>
-
-        <div class="modal" styles="display:none;"></div>
+        </div>
+        <div class="modal" styles="display:none;"><p>Screen may freeze temporarily during chart generation</p></div>
     </div>
 </div>
 
@@ -152,7 +156,7 @@
                     data = result;
                     console.log(status + ": " + JSON.stringify(data, null, 2));
 
-                    $("#data_charts > div > div").empty();
+                    $(".charts").empty();
 
 
                     //Create Accel chart
@@ -171,7 +175,8 @@
                         labels: ['x', 'y', 'z'],
                         xLabels: 'time',
                         //  resize: true,
-                        parseTime: false
+                        parseTime: false,
+                        pointSize: 0
                     });
 
                     update_Gyro();
@@ -201,7 +206,8 @@
                 labels: ['x', 'y', 'z'],
                 xLabels: 'time',
                 //  resize: true,
-                parseTime: false
+                parseTime: false,
+                pointSize: 0
             });
         }
     }
@@ -225,7 +231,8 @@
                 labels: ['x', 'y', 'z'],
                 xLabels: 'time',
                 // resize: true,
-                parseTime: false
+                parseTime: false,
+                pointSize: 0
             });
         }
     }
@@ -243,6 +250,10 @@
         height: 100%;
         width: 100%;
         background: rgba(255, 255, 255, .8) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+        text-align: center;
+    }
+    .modal p{
+        line-height: 55;
     }
 
 </style>

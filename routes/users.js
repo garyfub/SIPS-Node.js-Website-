@@ -58,7 +58,7 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
     console.log("User Authenticated");
     isNew =  model.isNewUser();
     if(isNew == 1)//if user id is located in db
-        res.redirect('/forms/sport-fitness-injury');
+        res.redirect('/');
     else{
         model.UserCreate(req.user);
        // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
