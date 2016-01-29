@@ -34,6 +34,7 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 module.exports = {
     UserCheck: UserCheck,
     UserCreate:UserCreate,
+    isAdmin: isAdmin,
     isNewUser:isNewUser
 }
 
@@ -44,13 +45,10 @@ function UserCheck(profile) {
         var conn = ibmdb.openSync(dsnString);
 
         try {
-            console.log("User - Check");
             //checks is user exists in database;
             var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
             str = JSON.stringify(obj, null, 2);
             newUser = str.charAt(15);
-            console.log("New user?: " + newUser);
-
             conn.close();
         } catch (e) {
             console.log(e.message);
@@ -94,8 +92,6 @@ function UserCreate(profile) {
                     console.log("SQL ERROR: " + err.message);
                     return false;
                 } else {
-                    console.log("User - Check: " + userid);
-
                     conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
                         if (err) {
                             console.log("ERROR: " + err);
@@ -120,6 +116,26 @@ function UserCreate(profile) {
 
         return newUser;
     }
+
+function isAdmin(profile){
+    var userid = profile.id;
+
+    var conn = ibmdb.openSync(dsnString);
+
+    try {
+        console.log("User - Check");
+        //checks is user exists in database;
+        var obj = conn.querySync("select count(*) from ADMIN WHERE gUserID = \'" + userid + "\'");
+        str = JSON.stringify(obj, null, 2);
+        isAdmin = str.charAt(15);
+
+        conn.close();
+    } catch (e) {
+        console.log(e.message);
+    }
+    return isAdmin > 0 ? 1 : 0; //return 1 if user is an admin
+
+}
 
     //Returns 0 if user id is not in database, 1 if located
     //Must be run after UserCheck()

@@ -15,11 +15,11 @@ app.use(passport.session());
 
 
 passport.serializeUser(function(user, done) {
-    done(null, user);
+    return done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
-    done(null, obj);
+        return done(null, obj);
 });
 
 /* GET home page. */
@@ -28,7 +28,9 @@ router.get('/', function(req, res, next) {
 
     if (req.user) {
         // logged in
-        res.render('index', {title: 'SIPS', name: req.user.name.givenName + " " + req.user.name.familyName})
+        res.render('index', {title: 'SIPS',
+            name: req.user.name.givenName + " " + req.user.name.familyName,
+            isAdmin: req.user.isAdmin});
     } else {
     passport.use(new GoogleStrategy({
             clientID: '185585020623-o8hdaup59vfnlt18hpbss7utdsjng85j.apps.googleusercontent.com',
@@ -48,6 +50,21 @@ router.get('/', function(req, res, next) {
     }
 });
 
+router.get('/admin', function (req, res, next) {
+
+
+    if(req.user.isAdmin == 1) {
+        res.render('admin/dash', {
+            title: 'Admin Dashboard',
+            name: req.user.name.givenName + " " + req.user.name.familyName,
+            id: req.user.id,
+            isAdmin: req.user.isAdmin
+        })
+    }
+    else{
+        res.send('404: Page not Found', 404);
+    }
+});
 
 router.get('/logout', function (req, res, next) {
     req.logout();
@@ -55,13 +72,16 @@ router.get('/logout', function (req, res, next) {
 });
 
 router.get('/results', function (req, res, next) {
+
+
     if(req.user) {
         var results = model_data.getUserTaskList(req);
-
+        console.log("CHECK USER:: " + req.user);
         res.render('results', {
             title: 'Results',
             name: req.user.name.givenName + " " + req.user.name.familyName,
             id: req.user.id,
+            isAdmin: req.user.isAdmin,
             taskList: results
         })
     }

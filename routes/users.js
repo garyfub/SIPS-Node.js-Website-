@@ -57,8 +57,18 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
     //console.log("USER: " + JSON.stringify(req.user.id, null, 2));
     console.log("User Authenticated");
     isNew =  model.isNewUser();
-    if(isNew == 1)//if user id is located in db
+    var isAdmin = model.isAdmin(req.user);
+
+    console.log("New user?: " + isNew);
+    console.log("is Admin: " + isAdmin);
+
+    if(isNew == 1) {//if user id is located in db
+        if(isAdmin) req.user.isAdmin = 1;
+        else req.user.isAdmin = 0;
+
+        console.log("Admin value: " + req.user.isAdmin);
         res.redirect('/');
+    }
     else{
         model.UserCreate(req.user);
        // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
@@ -69,10 +79,6 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
 //Check if user is in database
 router.post('/check', function(req, res, next) {
     var result = model.UserCheck(req.body);
-
-    if(result == 0 || result == "0"){
-      //  model.UserCreate(req.body);
-    }
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ check: result }));
