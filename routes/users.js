@@ -56,18 +56,14 @@ app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'e
 router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
     //console.log("USER: " + JSON.stringify(req.user.id, null, 2));
     console.log("User Authenticated");
-    isNew =  model.isNewUser();
+    isNew = model.UserCheck(req.user);
     var isAdmin = model.isAdmin(req.user);
-
-
     if(isNew == 1) {//if user id is located in db
         if(isAdmin != 0) {
             req.user.Admin = isAdmin;
             req.user.isAdmin = 1;
         }
         else req.user.isAdmin = 0;
-
-        console.log("Admin value: " + req.user.isAdmin);
         res.redirect('/');
     }
     else{

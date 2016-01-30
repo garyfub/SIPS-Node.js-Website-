@@ -52,19 +52,19 @@ router.get('/', function(req, res, next) {
 
 router.get('/admin', function (req, res, next) {
 
-    console.log("USER: " + JSON.stringify(req.user.Admin, null, 2));
-    if(req.user.isAdmin != 0) {
+
+    if(req.user.isAdmin != 0 && req.user) {
         var user = req.user;
-        var admin= req.user.Admin;
+        var admin = req.user.Admin;
+      //  console.log("ORG ID value: " + admin.ORGANIZATIONID);
+        var org = model_users.getOrganization(req);
 
         res.render('admin/dash', {
             title: 'Admin Dashboard',
             name: user.name.givenName + " " + user.name.familyName,
             id: user.id,
             isAdmin: user.isAdmin,
-            organizationid: admin.ORGANIZATIONID,
-            adminID: user.adminID,
-
+            organizationid: admin.ORGANIZATIONID
         })
     }
     else{
@@ -82,7 +82,7 @@ router.get('/results', function (req, res, next) {
 
     if(req.user) {
         var results = model_data.getUserTaskList(req);
-        console.log("CHECK USER:: " + req.user);
+       // console.log("CHECK USER:: " + req.user);
         res.render('results', {
             title: 'Results',
             name: req.user.name.givenName + " " + req.user.name.familyName,

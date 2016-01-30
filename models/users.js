@@ -35,7 +35,8 @@ module.exports = {
     UserCheck: UserCheck,
     UserCreate:UserCreate,
     isAdmin: isAdmin,
-    isNewUser:isNewUser
+    isNewUser:isNewUser,
+    getOrganization: getOrganization
 }
 
     //Checks for user in database
@@ -47,8 +48,7 @@ function UserCheck(profile) {
         try {
             //checks is user exists in database;
             var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-            str = JSON.stringify(obj, null, 2);
-            newUser = str.charAt(15);
+            newUser = obj[0][1];
             conn.close();
         } catch (e) {
             console.log(e.message);
@@ -74,8 +74,7 @@ function UserCreate(profile) {
         //checks is user exists in database;
         var conn1 = ibmdb.openSync(dsnString);
         var obj = conn1.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-        str = JSON.stringify(obj, null, 2);
-        newUser = str.charAt(15);
+        newUser = obj[0][1];
 
         conn1.closeSync();
 
@@ -128,14 +127,14 @@ function isAdmin(profile){
         console.log("User - Check");
         //checks is user exists in database;
         var obj = conn.querySync("select COUNT(*) from ADMIN WHERE gUserID = \'" + userid + "\'");
-        str = JSON.stringify(obj, null, 2);
-        isAdmin = str.charAt(15);
-        obj = isAdmin > 0 ? 1 : 0;
+
+        isAdmin = obj[0][1];
 
         results = isAdmin;
         if(isAdmin > 0)
         {
-            admin = conn.querySync("select * from ADMIN WHERE gUserID = \'" + userid + "\'");
+            obj2 = conn.querySync("select * from ADMIN WHERE gUserID = \'" + userid + "\'");
+            admin = obj2[0];
             admin['check'] = isAdmin;
             results = admin;
         }
@@ -143,7 +142,14 @@ function isAdmin(profile){
     } catch (e) {
         console.log(e.message);
     }
+    console.log("OBJECT: " + isAdmin);
     return results; //return 0 if user is an admin, returns json object if user is an admin.
+
+}
+
+//Retrieves data from organization table related to current user
+function getOrganization(req){
+
 
 }
 
