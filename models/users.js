@@ -78,7 +78,6 @@ function UserCreate(profile) {
         newUser = str.charAt(15);
 
         conn1.closeSync();
-        console.log("New user?: " + newUser);
 
         //Inserts new user if doesn't exist
         if (newUser == 0 || newUser == "0") {
@@ -117,23 +116,34 @@ function UserCreate(profile) {
         return newUser;
     }
 
+//Checks if user is an Admin and then retrieves Admin info if applicable
 function isAdmin(profile){
     var userid = profile.id;
-
+    var admin = null;
+    var isAdmin = 0;
     var conn = ibmdb.openSync(dsnString);
+    var results = null;
 
     try {
         console.log("User - Check");
         //checks is user exists in database;
-        var obj = conn.querySync("select count(*) from ADMIN WHERE gUserID = \'" + userid + "\'");
+        var obj = conn.querySync("select COUNT(*) from ADMIN WHERE gUserID = \'" + userid + "\'");
         str = JSON.stringify(obj, null, 2);
         isAdmin = str.charAt(15);
+        obj = isAdmin > 0 ? 1 : 0;
 
+        results = isAdmin;
+        if(isAdmin > 0)
+        {
+            admin = conn.querySync("select * from ADMIN WHERE gUserID = \'" + userid + "\'");
+            admin['check'] = isAdmin;
+            results = admin;
+        }
         conn.close();
     } catch (e) {
         console.log(e.message);
     }
-    return isAdmin > 0 ? 1 : 0; //return 1 if user is an admin
+    return results; //return 0 if user is an admin, returns json object if user is an admin.
 
 }
 

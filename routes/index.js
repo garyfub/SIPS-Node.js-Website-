@@ -24,7 +24,7 @@ passport.deserializeUser(function(obj, done) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
+   // console.log("USER_2: " + JSON.stringify(req.user, null, 2));
 
     if (req.user) {
         // logged in
@@ -52,13 +52,19 @@ router.get('/', function(req, res, next) {
 
 router.get('/admin', function (req, res, next) {
 
+    console.log("USER: " + JSON.stringify(req.user.Admin, null, 2));
+    if(req.user.isAdmin != 0) {
+        var user = req.user;
+        var admin= req.user.Admin;
 
-    if(req.user.isAdmin == 1) {
         res.render('admin/dash', {
             title: 'Admin Dashboard',
-            name: req.user.name.givenName + " " + req.user.name.familyName,
-            id: req.user.id,
-            isAdmin: req.user.isAdmin
+            name: user.name.givenName + " " + user.name.familyName,
+            id: user.id,
+            isAdmin: user.isAdmin,
+            organizationid: admin.ORGANIZATIONID,
+            adminID: user.adminID,
+
         })
     }
     else{

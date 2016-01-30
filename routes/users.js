@@ -59,11 +59,12 @@ router.all('/auth/google/callback', passport.authenticate('google', { failureRed
     isNew =  model.isNewUser();
     var isAdmin = model.isAdmin(req.user);
 
-    console.log("New user?: " + isNew);
-    console.log("is Admin: " + isAdmin);
 
     if(isNew == 1) {//if user id is located in db
-        if(isAdmin) req.user.isAdmin = 1;
+        if(isAdmin != 0) {
+            req.user.Admin = isAdmin;
+            req.user.isAdmin = 1;
+        }
         else req.user.isAdmin = 0;
 
         console.log("Admin value: " + req.user.isAdmin);
