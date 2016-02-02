@@ -135,8 +135,7 @@ function sportsFormEntry(req, formEntryID, date) {
                             for (var i = 13; i > -1; i++) {
                                 //Collect for each injury that exists
                                 var isInjury = parseInt(question.arr[i]);
-                                if (isInjury == 0 || isInjury === 'undefined' || injuryCount > 30) {
-                                    console.log("No more injuries entered");
+                                if (isInjury == 0 || isInjury === 'undefined' || injuryCount > 30) { //TODO: remove/raise injury count limitation?
                                     break;
                                 }
 
@@ -149,7 +148,6 @@ function sportsFormEntry(req, formEntryID, date) {
                                     type = 1; //Sudden
                                 }
                                 else if (typeSpecific == 6) {
-                                    console.log("typeSpecific is: " + typeSpecific);
                                     customType = question.arr_1[injuryCount] + "";
                                     type = -1; //custom input
                                     t++;

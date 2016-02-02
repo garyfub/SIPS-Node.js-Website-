@@ -13,8 +13,24 @@ router.get('/', function (req, res, next) {
 //Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
-        console.log("Socket connection made for uploading task data");
-        model.userCheckUpload(req); //Checks user and then calls to insert data
+        console.log("Socket connection made for uploading app data");
+
+        //checks if certain properties exist
+        if(req.hasOwnProperty("type")){
+            switch(req.type){
+                case "flanker":
+                    console.log("Flanker OBJECT:" + JSON.stringify(req, null, 2));
+                    model.taskEntry(req.user, req.body, req.type);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        if(req.hasOwnProperty("ACCELX")) {
+            console.log("APP SENSOR:" + JSON.stringify(req, null, 2))
+            model.userCheckUpload(req); //Checks user and then calls to insert data
+        }
 
         socket.disconnect('unauthorized');
     });
@@ -39,7 +55,6 @@ io.of('/upload').on('connection', function (socket) {
  */
 
 
-//TODO: Should form data be sent through post requests?
 router.post('/form', function (req, res, next) {
     console.log("Post connection made:" + JSON.stringify(req.body, null, 2));
 
@@ -55,8 +70,7 @@ router.post('/form', function (req, res, next) {
     }
     modelForm.addFormEntry(req);
 
-    console.log("Post moved BODY:" + JSON.stringify(req.body, null, 2));
-    console.log("Post added USER:" + JSON.stringify(req.user, null, 2));
+    console.log("FORM:" + JSON.stringify(req.body, null, 2));
 
 });
 

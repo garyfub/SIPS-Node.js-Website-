@@ -52,8 +52,10 @@ var datapoints = cloudant.db.use('sampletaskdb');
 
 module.exports = {
     userCheckUpload: userCheckUpload, //TODO: User check part is Deprecated because users model already has a working version.
+    taskEntry: taskEntry,
     taskDataUploadSQLMultiTable: taskDataUploadSQLMultiTable,
-    taskDataUploadCloudant: taskDataUploadCloudant
+    taskDataUploadCloudant: taskDataUploadCloudant,
+    flanker:flanker
 }
 
 //Checks of data is form or task data, if user exists, and then calls function based on data type
@@ -117,6 +119,46 @@ function userCheckUpload(msg) {
     });
 };
 
+function taskEntry(user, data, type){
+    var taskEntryID = uuid.v1();
+    var userID = user.id;
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1;
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var date = year + "-" + month + "-" + day;
+
+    //Flankerdata specific properties
+    var flankerdata = type == "flanker"? 1 : 0;
+
+    //App Sensor data specific Properties
+    var appSensorData = data.hasOwnProperty("ACCELX") ? 1 : 0;
+    var userInput = data.hasOwnProperty("USERINPUT")? data.USERINPUT : "null";
+
+    ibmdb.open(dsnString, function (err, conn) {
+        if (err) {
+            console.log("ERROR" + err);
+        } else {
+
+            //Preparing to excecute SQL command, ? are placements for values given in the execute command
+            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, TaskNotes, appsensordata, flankerdata, DateAdded) VALUES ( ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+                if (err) {
+                    console.log(err);
+                    return conn.closeSync();
+                }
+                stmt.execute([taskEntryID, String(userID), String(userInput), appSensorData, flankerdata, date], function (err, result) {
+                    if (err) {
+                        console.log("ERROR: " + err);
+                    }
+                    else {
+                       flanker(data, taskEntryID);
+                    }
+                });
+            });
+        }
+    });
+}
+
 function taskDataUploadCloudant(msg) {
     var keyNames = Object.keys(msg);
 
@@ -144,7 +186,6 @@ function taskDataUploadSQLMultiTable(msg) {
             response.end();
             console.log("ERROR Test of VCAP_SERVICES ERROR");
         } else {
-            console.log("Test of VCAP_SERVICES");
 
             var taskEntryID = uuid.v1();
             var userID = msg.USERID;
@@ -297,3 +338,39 @@ function taskDataUploadSQLMultiTable(msg) {
         }
     });
 };
+
+function flanker (data, taskEntryID){
+    ibmdb.open(dsnString, function (err, conn) {
+        if (err) {
+            console.log("ERROR" + err);
+        } else {
+
+
+            //Preparing to excecute SQL command, ? are placements for values given in the execute command
+            conn.prepare("INSERT INTO FlankerData ( TaskEntryID,num,stimulus, response, responseTime ) VALUES ( ?, ?, ?, ?, ?)", function (err, stmt) {
+                if (err) {
+                    console.log(err);
+                    return conn.closeSync();
+                }
+                var stimulus = (data.STIMULUS.substring(1, data.STIMULUS.length - 1)).split(",");
+                var response = (data.RESPONSE.substring(1, data.RESPONSE.length - 1)).split(",");
+                var responseTime = (data.RESPONSETIME.substring(1, data.RESPONSETIME.length - 1)).split(",");
+                var num;
+                var i = 0;
+
+                for(var i = 0; i < stimulus.length; i++) {
+                    num = i+1;
+                    console.log(num + ": "  + stimulus[i] + ", " + response[i] + ", " + responseTime[i]);
+                    stmt.execute([taskEntryID, num, parseFloat(stimulus[i]), parseFloat(response[i]), parseFloat(responseTime[i])], function (err, result) {
+                        if (err) {
+                            console.log("ERROR: " + err);
+                        }
+                        else {
+                            console.log("FlankerData table updated");
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
