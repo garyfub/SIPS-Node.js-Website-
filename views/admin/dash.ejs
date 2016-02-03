@@ -1,116 +1,174 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= title %></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel='stylesheet' href='/stylesheets/style.css'/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.4.0/metisMenu.min.css">
 
 </head>
 <body>
 <!-- Navigation -->
-<nav class="navbar-inverse navbar-default navbar-fixed-top topnav" role="navigation">
-  <div class="container topnav">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-              data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand topnav" href="#">SIPS</a>
-    </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div style="height: 0.8px;" aria-expanded="false" class="navbar-collapse collapse"
-         id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/results">Results</a>
-        </li>
-        <% if(isAdmin == 1){%>
-        <li>
-          <a href='/admin'>Admin</a>
-        </li>
-        <%} %>
-        <li>
-          <a href="/logout">Logout</a>
-        </li>
+<nav role="navigation">
+    <div class="navbar-inverse navbar-default navbar-fixed-top topnav">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#sideMenu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand topnav" href="#">SIPS</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div style="height: 0.8px;" aria-expanded="false" class="navbar-collapse collapse"
+                 id="bs-example-navbar-collapse-2">
 
-      </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/results">Results</a>
+                    </li>
+                    <% if(isAdmin == 1){ %>
+                    <li>
+                        <a href='/admin'>Admin</a>
+                    </li>
+                    <% } %>
+                    <li>
+                        <a href="/logout">Logout</a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.navbar-collapse -->
-  </div>
-  <!-- /.container -->
+    <div class="col-md-2">
+
+        <ul class="nav nav-pills nav-stacked panel panel-default navbar-collapse collapse" id="sideMenu">
+            <li>
+                <a href="/admin" class="active"><i class="fa fa-dashboard fa-fw"></i> SIPS Dashboard</a>
+            </li>
+            <li>
+                <a href="#">Process One<span class="caret arrow"></span></a>
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#">View One</a></li>
+                    <li><a href="#">View Two</a></li>
+                    <li class="nav-divider"></li>
+                    <li><a href="#">Trash</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Process Two<span class="caret arrow"></span></a>
+
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#">View One</a></li>
+                    <li><a href="#">View Two</a></li>
+                    <li><a href="#">View Three</a></li>
+                    <li class="nav-divider"></li>
+                    <li><a href="#">Trash</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Process Three<span class="caret arrow"></span></a></li>
+            <li><a href="#">Process Four<span class="caret arrow"></span></a></li>
+        </ul>
+
+    </div>
+    <!-- /.container -->
 </nav>
 
 
 <div class=" container-fluid">
-  <div class="container panel page-header">
-    <h1><%= title %></h1>
-    <p><%= 'Welcome, ' + name %></p>
-  </div>
 
-  <div class="container">
-    <div class="col-lg-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">Quick Links</div>
-        <div class="btn-group-vertical" role="group" aria-label="Justified button group" style="display:block;">
-          <a href="/results" class="btn btn-primary btn-block" role="button" style="text-align:left; padding-left:6px">Results</a>
-          <a href="/forms/sport-fitness-injury" class="btn btn-primary btn-block" role="button" style="text-align:left; padding-left:6px">Sports Fitness Index & Injury
-            form</a>
+    <div class="row">
+
+
+        <div class="container-fluid panel page-header col-md-10">
+            <h1><%= title %></h1>
+            <p><%= 'Welcome, ' + name %></p>
         </div>
-      </div>
+
+        <div class="container-fluid">
+            <div class="col-lg-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Quick Links</div>
+                    <div class="btn-group-vertical" role="group" aria-label="Justified button group"
+                         style="display:block;">
+                        <a href="/results" class="btn btn-primary btn-block" role="button"
+                           style="text-align:left; padding-left:6px">Results</a>
+                        <a href="/forms/sport-fitness-injury" class="btn btn-primary btn-block" role="button"
+                           style="text-align:left; padding-left:6px">Sports Fitness Index & Injury
+                            form</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 panel panel-default">
+                <div class="panel-header">Groups for <%= organizationid %></div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Group 1
+                    </li>
+                    <li class="list-group-item">
+                        Group 2
+                    </li>
+                    <li class="list-group-item">
+                        Group 3
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="col-lg-6 panel panel-default">
-      <div class="panel-header">Groups for <%= organizationid %></div>
-      <ul class="list-group">
-        <li class="list-group-item">
-          Group 1
-        </li>
-        <li class="list-group-item">
-          Group 2
-        </li>
-        <li class="list-group-item">
-          Group 3
-        </li>
-        </ul>
-    </div>
-  </div>
 </div>
 
 
 <!-- Footer -->
 
-<footer class="container" style="padding: 35px 0; background-color: #f8f8f8;position: absolute; bottom: 0; width: 100%; height:108px">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <ul class="list-inline">
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li class="footer-menu-divider">⋅</li>
-          <li>
-            <a href="/results">Results</a>
-          </li>
-        </ul>
-        <p class="copyright text-muted small">Copyright © SIPS 2016. All Rights Reserved</p>
-      </div>
+<footer class="container"
+        style="padding: 35px 0; background-color: #f8f8f8;position: absolute; bottom: 0; width: 100%; height:108px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="list-inline">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="footer-menu-divider">⋅</li>
+                    <li>
+                        <a href="/results">Results</a>
+                    </li>
+                </ul>
+                <p class="copyright text-muted small">Copyright © SIPS 2016. All Rights Reserved</p>
+            </div>
+        </div>
     </div>
-  </div>
 </footer>
+
 
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
 <!-- Bootstrap Core JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<!-- MetisMenu JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.4.0/metisMenu.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('#sideMenu').metisMenu();
+        });
+    });
+</script>
+
 </body>
 </html>

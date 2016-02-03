@@ -51,7 +51,7 @@ function getUserTaskList(req) {
     } catch (e) {
         console.log(e.message);
     }
-    console.log("RESULTS: " + JSON.stringify(results, null, 2));
+    console.log("Task Entry RESULTS: " + JSON.stringify(results, null, 2));
     return results;
 }
 
@@ -62,7 +62,7 @@ function getUserTaskData(req){
     console.log("taskID = " + taskID);
     try {
         var conn = ibmdb.openSync(dsnString);
-        results = conn.querySync("select ACCELX, ACCELY, ACCELZ, ACCELTIMESTAMP, GYROX, GYROY, GYROZ, GYROTIMESTAMP, MAGX, MAGY, MAGZ, MAGTIMESTAMP from APPSENSORDATA WHERE TASKENTRYID = \'" + taskID+ "\'");
+        results = conn.querySync("select ACCELX, ACCELY, ACCELZ, ACCELTIMESTAMP, GYROX, GYROY, GYROZ, GYROTIMESTAMP, MAGX, MAGY, MAGZ, MAGTIMESTAMP from APPSENSORDATA WHERE TASKENTRYID = \'" + taskID + "\'");
 
     } catch (e) {
         console.log(e.message);
