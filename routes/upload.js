@@ -21,9 +21,8 @@ io.of('/upload').on('connection', function (socket) {
             modelUsers.UserCreate(req.user);
         }
         model.taskEntry(req.user, req.body);
-
-
-        socket.disconnect('unauthorized');
+         socket.emit('Done');
+        //socket.disconnect('unauthorized');
     });
 });
 
