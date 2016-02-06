@@ -46,7 +46,7 @@ function getUserTaskList(req) {
     var results = null;
     try {
         var conn = ibmdb.openSync(dsnString);
-        results = conn.querySync("select * from TASKENTRYLIST WHERE USERID = " + userid);
+        results = conn.querySync("select * from TASKENTRYLIST WHERE USERID = \'" + userid + "\'");
 
     } catch (e) {
         console.log(e.message);

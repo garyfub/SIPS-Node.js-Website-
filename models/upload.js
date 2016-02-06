@@ -55,7 +55,8 @@ module.exports = {
     taskEntry: taskEntry,
     taskDataUploadSQLMultiTable: taskDataUploadSQLMultiTable,
     taskDataUploadCloudant: taskDataUploadCloudant,
-    flanker:flanker
+    flanker: flanker,
+    appsensor: appsensor
 }
 
 //Checks of data is form or task data, if user exists, and then calls function based on data type
@@ -119,7 +120,7 @@ function userCheckUpload(msg) {
     });
 };
 
-function taskEntry(user, data, type){
+function taskEntry(user, data) {
     var taskEntryID = uuid.v1();
     var userID = user.id;
     var dateObj = new Date();
@@ -129,11 +130,11 @@ function taskEntry(user, data, type){
     var date = year + "-" + month + "-" + day;
 
     //Flankerdata specific properties
-    var flankerdata = type == "flanker"? 1 : 0;
+    var flankerdata = data.hasOwnProperty("flanker") ? 1 : 0;
 
     //App Sensor data specific Properties
-    var appSensorData = data.hasOwnProperty("ACCELX") ? 1 : 0;
-    var userInput = data.hasOwnProperty("USERINPUT")? data.USERINPUT : "null";
+    var appSensorData = data.hasOwnProperty("appsensor") ? 1 : 0;
+    var userInput = data.hasOwnProperty("tasknotes") ? data.tasknotes : "null";
 
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
@@ -151,10 +152,142 @@ function taskEntry(user, data, type){
                         console.log("ERROR: " + err);
                     }
                     else {
-                       flanker(data, taskEntryID);
+                        if (flankerdata == 1)
+                            flanker(data.flanker, taskEntryID);
+
+                        if (appSensorData == 1)
+                            appsensor(data.appsensor, taskEntryID);
                     }
                 });
             });
+        }
+    });
+}
+
+function appsensor(data,taskEntryID) {
+
+    var accelx = (data.ACCELX.substring(1, data.ACCELX.length - 1)).split(",");
+    var accely = (data.ACCELY.substring(1, data.ACCELY.length - 1)).split(",");
+    var accelz = (data.ACCELZ.substring(1, data.ACCELZ.length - 1)).split(",");
+    var tstmpA = (data.ACCELTIMESTAMP.substring(1, data.ACCELTIMESTAMP.length - 1)).split(",");
+    var gyrox = (data.GYROX.substring(1, data.GYROX.length - 1)).split(",");
+    var gyroy = (data.GYROY.substring(1, data.GYROY.length - 1)).split(",");
+    var gyroz = (data.GYROZ.substring(1, data.GYROZ.length - 1)).split(",");
+    var tstmpG = (data.GYROTIMESTAMP.substring(1, data.GYROTIMESTAMP.length - 1)).split(",");
+    var magx = (data.MAGX.substring(1, data.MAGX.length - 1)).split(",");
+    var magy = (data.MAGY.substring(1, data.MAGY.length - 1)).split(",");
+    var magz = (data.MAGZ.substring(1, data.MAGZ.length - 1)).split(",");
+    var tstmpM = (data.MAGTIMESTAMP.substring(1, data.MAGTIMESTAMP.length - 1)).split(",");
+
+    var lo = 0;
+
+    ibmdb.open(dsnString, function (err, conn) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("App Sensor Pre:" + Object.keys(data));
+            //Preparing to excecute SQL command, ? are placements for values given in the execute command
+            conn.prepare("INSERT INTO AppSensorData (TaskEntryID, ACCELTIMESTAMP, ACCELX, ACCELY, ACCELZ,  GYROTIMESTAMP, GYROX, GYROY, GYROZ, MAGTIMESTAMP, MAGX, MAGY, MAGZ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+                if (err) {
+                    console.log(err);
+                    return conn.closeSync();
+                }
+
+                //Send data to database
+                for (var i = 0; i < tstmpA.length; i++) {
+                    lo++;
+                    try {
+                        //Check if values are undefined at the position, if it is defined then check if null and if so add 0
+                        if (magx[i] === 'undefined') {
+                            magx.push("0");
+                        }
+                        else {
+                            magx[i] = magx[i] != null ? magx[i] : "0";
+                        }
+                        if (magy[i] === 'undefined') {
+                            magx.push("0");
+                        }
+                        else {
+                            magy[i] = magy[i] != null ? magy[i] : "0";
+                        }
+                        if (magz[i] === 'undefined') {
+                            magz.push("0");
+                        }
+                        else {
+                            magz[i] = magz[i] != null ? magz[i] : "0";
+                        }
+                        if (tstmpM[i] === 'undefined') {
+                            tstmpM.push("0");
+                        }
+                        else {
+                            tstmpM[i] = tstmpM[i] != null ? tstmpM[i] : "0";
+                        }
+                        if (gyrox[i] === 'undefined') {
+                            gyrox.push("0");
+                        }
+                        else {
+                            gyrox[i] = gyrox[i] != null ? gyrox[i] : "0";
+                        }
+                        if (gyroy[i] === 'undefined') {
+                            gyroy.push("0");
+                        }
+                        else {
+                            gyroy[i] = gyroy[i] != null ? gyroy[i] : "0";
+                        }
+                        if (gyroz[i] === 'undefined') {
+                            gyroz.push("0");
+                        }
+                        else {
+                            gyroz[i] = gyroz[i] != null ? gyroz[i] : "0";
+                        }
+                        if (tstmpG[i] === 'undefined') {
+                            tstmpG.push("0");
+                        }
+                        else {
+                            tstmpG[i] = tstmpG[i] != null ? tstmpG[i] : "0";
+                        }
+                        if (accelx[i] === 'undefined') {
+                            accelx.push("0");
+                        }
+                        else {
+                            accelx[i] = accelx[i] != null ? accelx[i] : "0";
+                        }
+                        if (accely[i] === 'undefined') {
+                            accely.push("0");
+                        }
+                        else {
+                            accely[i] = accely[i] != null ? accely[i] : "0";
+                        }
+                        if (accelz[i] === 'undefined') {
+                            accelz.push("0");
+                        }
+                        else {
+                            accelz[i] = accelz[i] != null ? accelz[i] : "0";
+                        }
+                        if (tstmpA[i] === 'undefined') {
+                            tstmpA.push("0");
+                        }
+                        else {
+                            tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : "0";
+                        }
+
+                        stmt.execute([taskEntryID, parseFloat(tstmpA[i]), parseFloat(accelx[i]), parseFloat(accely[i]), parseFloat(accelz[i]), parseFloat(tstmpG[i]), parseFloat(gyroy[i]), parseFloat(gyroy[i]), parseFloat(gyroz[i]), parseFloat(tstmpM[i]), parseFloat(magx[i]), parseFloat(magy[i]), parseFloat(magz[i])], function (err, result) {
+                            if (err) {
+                                console.log("ERROR: " + lo);
+                                console.log(err);
+                            }
+                            else {
+
+                                result.closeSync();
+                            }
+                        });
+                    } catch (err) {
+                        console.log("ERROR: " + err.message);
+                    }
+                }
+                ;
+                console.log("App sensor upload completed");
+            })
         }
     });
 }
@@ -313,7 +446,7 @@ function taskDataUploadSQLMultiTable(msg) {
                                         tstmpA[i] = tstmpA[i] != null ? tstmpA[i] : "0";
                                     }
 
-                                   // console.log(i + " - of - " + tstmpA.length); //Shows progress when uploading (for debugging)
+                                    // console.log(i + " - of - " + tstmpA.length); //Shows progress when uploading (for debugging)
 
                                     stmt.execute([taskEntryID, parseFloat(tstmpA[i]), parseFloat(accelx[i]), parseFloat(accely[i]), parseFloat(accelz[i]), parseFloat(tstmpG[i]), parseFloat(gyroy[i]), parseFloat(gyroy[i]), parseFloat(gyroz[i]), parseFloat(tstmpM[i]), parseFloat(magx[i]), parseFloat(magy[i]), parseFloat(magz[i])], function (err, result) {
                                         if (err) {
@@ -339,15 +472,15 @@ function taskDataUploadSQLMultiTable(msg) {
     });
 };
 
-function flanker (data, taskEntryID){
+function flanker(data, taskEntryID) {
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
             console.log("ERROR" + err);
         } else {
 
-
+            console.log("FLANKER Pre:" + JSON.stringify(data, null, 2));
             //Preparing to excecute SQL command, ? are placements for values given in the execute command
-            conn.prepare("INSERT INTO FlankerData ( TaskEntryID,num,stimulus, response, responseTime ) VALUES ( ?, ?, ?, ?, ?)", function (err, stmt) {
+            conn.prepare("INSERT INTO FlankerData (TaskEntryID, num, stimulus, response, responseTime ) VALUES ( ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
                     console.log(err);
                     return conn.closeSync();
@@ -358,12 +491,12 @@ function flanker (data, taskEntryID){
                 var num;
                 var i = 0;
 
-                for(var i = 0; i < stimulus.length; i++) {
-                    num = i+1;
-                    console.log(num + ": "  + stimulus[i] + ", " + response[i] + ", " + responseTime[i]);
+                for (var i = 0; i < stimulus.length; i++) {
+                    num = i + 1;
+                    console.log(num + ": " + stimulus[i] + ", " + response[i] + ", " + responseTime[i]);
                     stmt.execute([taskEntryID, num, parseFloat(stimulus[i]), parseFloat(response[i]), parseFloat(responseTime[i])], function (err, result) {
                         if (err) {
-                            console.log("ERROR: " + err);
+                            console.log("ERROR FLANKERDATA: " + err);
                         }
                         else {
                             console.log("FlankerData table updated");

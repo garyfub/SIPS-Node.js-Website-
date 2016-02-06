@@ -14,45 +14,18 @@ router.get('/', function (req, res, next) {
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
         console.log("Socket connection made for uploading app data");
+        console.log("Object keys: " + Object.keys(req));
 
-        //checks if certain properties exist
-        if(req.hasOwnProperty("type")){
-            switch(req.type){
-                case "flanker":
-                    console.log("Flanker OBJECT:" + JSON.stringify(req, null, 2));
-                    model.taskEntry(req.user, req.body, req.type);
-                    break;
-                default:
-                    break;
-            }
+        var result = modelUsers.UserCheck(req.user);
+        if (result == 0) {
+            modelUsers.UserCreate(req.user);
+        }
+        model.taskEntry(req.user, req.body);
 
-        }
-        if(req.hasOwnProperty("ACCELX")) {
-            console.log("APP SENSOR:" + JSON.stringify(req, null, 2))
-            model.userCheckUpload(req); //Checks user and then calls to insert data
-        }
 
         socket.disconnect('unauthorized');
     });
 });
-
-/*
- io.of('/upload/form').on('connection', function (socket) {
- socket.on('data', function (req) {
- console.log("Socket connection made for uploading form data.");
- // console.log("FORM UPLOAD CHECK:" + JSON.stringify(req, null, 2));
- modelForm.addFormEntry(req);
-
- //Create user on submission of registration form if not exists
- var result = modelUsers.UserCheck(req.user);
- if(result == 0){
- modelUsers.UserCreate(req.user);
- }
-
- socket.disconnect('unauthorized');
- });
- });
- */
 
 
 router.post('/form', function (req, res, next) {
