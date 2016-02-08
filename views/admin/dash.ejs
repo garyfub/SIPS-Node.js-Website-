@@ -11,8 +11,9 @@
 
 </head>
 <body>
+
 <!-- Navigation -->
-<nav role="navigation">
+<nav role="navigation col-lg-2">
     <div class="navbar-inverse navbar-default navbar-fixed-top topnav">
         <div class="container topnav">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -58,30 +59,21 @@
 
         <ul class="nav nav-pills nav-stacked panel panel-default navbar-collapse collapse" id="sideMenu">
             <li>
-                <a href="/admin" class="active"><i class="fa fa-dashboard fa-fw"></i> SIPS Dashboard</a>
+                <a href="/admin" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard Menu</a>
+            </li>
+            <li class="nav-divider"></li>
+            <li>
+                <a href="#">Organization</a>
             </li>
             <li>
-                <a href="#">Process One<span class="caret arrow"></span></a>
-                <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">View One</a></li>
-                    <li><a href="#">View Two</a></li>
-                    <li class="nav-divider"></li>
-                    <li><a href="#">Trash</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Process Two<span class="caret arrow"></span></a>
+                <a href="#">Groups<span class="caret arrow"></span></a>
 
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">View One</a></li>
-                    <li><a href="#">View Two</a></li>
+                    <li><a href="#">Users</a></li>
                     <li><a href="#">View Three</a></li>
-                    <li class="nav-divider"></li>
-                    <li><a href="#">Trash</a></li>
                 </ul>
             </li>
-            <li><a href="#">Process Three<span class="caret arrow"></span></a></li>
-            <li><a href="#">Process Four<span class="caret arrow"></span></a></li>
+            <li><a href="/results">Results</a></li>
         </ul>
 
     </div>
@@ -89,43 +81,73 @@
 </nav>
 
 
-<div class=" container-fluid">
+<!-- Page Content -->
+<div id="wrapper" class="container-fluid col-lg-10">
 
     <div class="row">
-
-
-        <div class="container-fluid panel page-header col-md-10">
-            <h1><%= title %></h1>
-            <p><%= 'Welcome, ' + name %></p>
-        </div>
-
         <div class="container-fluid">
-            <div class="col-lg-3">
+
+
+            <div class="col-lg-12">
+
                 <div class="panel panel-default">
-                    <div class="panel-heading">Quick Links</div>
-                    <div class="btn-group-vertical" role="group" aria-label="Justified button group"
-                         style="display:block;">
-                        <a href="/results" class="btn btn-primary btn-block" role="button"
-                           style="text-align:left; padding-left:6px">Results</a>
-                        <a href="/forms/sport-fitness-injury" class="btn btn-primary btn-block" role="button"
-                           style="text-align:left; padding-left:6px">Sports Fitness Index & Injury
-                            form</a>
+                    <div class="content">
+                        <h1>Admin Dashboard</h1>
+                        <p><%= 'Welcome, ' + name %></p>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6 panel panel-default">
-                <div class="panel-header">Groups for <%= organizationid %></div>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Group 1
-                    </li>
-                    <li class="list-group-item">
-                        Group 2
-                    </li>
-                    <li class="list-group-item">
-                        Group 3
-                    </li>
-                </ul>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Groups for Organization</div>
+                    <br>
+                    <div class="content">
+                    <table class="table table-responsive table-striped table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Group Name</th>
+                            <th>Type</th>
+                            <th>Group Members</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input name="group" type="radio"></td>
+                            <td>Group 1</td>
+                            <td>Basketball</td>
+                            <td>7</td>
+                        </tr>
+                        <tr>
+                            <td><input name="group" type="radio"></td>
+                            <td>Group 2</td>
+                            <td>Tennis</td>
+                            <td>40</td>
+                        </tr>
+                        <tr>
+                            <td><input name="group" type="radio"></td>
+                            <td>Group 3</td>
+                            <td>Track</td>
+                            <td>125</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                        <!-- Table button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown">Actions <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" id="add-new-group"><span class="fa fa-plus-square-o "></span> Add new Group</a></li>
+                                <li><a href="#"><span class="fa fa-cog "></span> Group options</a></li>
+                                <li><a href="#"><span class="fa fa-pie-chart "></span> View Results</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#"><span class="fa fa-trash-o "></span> Delete Group</a></li>
+                            </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -133,24 +155,18 @@
 
 
 <!-- Footer -->
-
-<footer class="container"
-        style="padding: 35px 0; background-color: #f8f8f8;position: absolute; bottom: 0; width: 100%; height:108px">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <ul class="list-inline">
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-                    <li class="footer-menu-divider">⋅</li>
-                    <li>
-                        <a href="/results">Results</a>
-                    </li>
-                </ul>
-                <p class="copyright text-muted small">Copyright © SIPS 2016. All Rights Reserved</p>
-            </div>
-        </div>
+<footer id="footer">
+    <div class="col-lg-5">
+        <ul class="list-inline">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="footer-menu-divider">⋅</li>
+            <li>
+                <a href="/results">Results</a>
+            </li>
+        </ul>
+        <p class="copyright text-muted small">Copyright © SIPS 2016. All Rights Reserved</p>
     </div>
 </footer>
 
@@ -167,7 +183,13 @@
         $(function () {
             $('#sideMenu').metisMenu();
         });
+
+
+        $("#add-new-group").click(function() {
+            alert( "Handler for .click() called." );
+        });
     });
+
 </script>
 
 </body>

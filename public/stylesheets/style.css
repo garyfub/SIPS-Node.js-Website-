@@ -1,3 +1,4 @@
+
 body {
   padding-top: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -7,6 +8,32 @@ body {
 a {
   color: #00B7FF;
 }
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin: 0 0 108px !important; /* bottom = footer height */
+}
+
+.content {
+  padding: 10px;
+}
+
+footer {
+  width: 100%;
+  background-color: #F8F8F8;
+  height: 60px !important;
+  left: 0px;
+  bottom: 0px;
+  position: absolute;
+}
+footer ul{
+  margin-bottom: 0px;
+  margin-top: 9px;
+}
+
 
 .pull-right .panel-tabs li {
   float: left;
