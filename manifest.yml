@@ -9,7 +9,6 @@ applications:
   services:
   - utc-vat-MAS
   - utc-vat-Push
-  - utc-vat-MobileData
   - utc-vat-Mobile Quality Assurance
   - Apache Spark-ki
   - Cloudant NoSQL DB-5f
