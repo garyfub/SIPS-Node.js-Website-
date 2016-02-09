@@ -72,6 +72,49 @@ router.get('/admin', function (req, res, next) {
     }
 });
 
+router.get('/admin/create-group', function (req, res, next) {
+
+
+    if(req.user.isAdmin != 0 && req.user) {
+        var user = req.user;
+        var admin = req.user.Admin;
+        var org = model_users.getOrganization(req);
+
+        res.render('admin/create-group', {
+            title: 'Create New Group',
+            name: user.name.givenName + " " + user.name.familyName,
+            id: user.id,
+            isAdmin: user.isAdmin,
+            organizationid: admin.ORGANIZATIONID
+        })
+    }
+    else{
+        res.send('404: Page not Found', 404);
+    }
+});
+
+//TODO:edit post endpoint to call model function for deleting a group, verify admin identity and access to group
+router.post('/admin/delete-group', function (req, res, next) {
+
+
+    if(req.user.isAdmin != 0 && req.user) {
+        var user = req.user;
+        var admin = req.user.Admin;
+        var org = model_users.getOrganization(req);
+
+        res.render('admin', {
+            title: 'Admin Dashboard',
+            name: user.name.givenName + " " + user.name.familyName,
+            id: user.id,
+            isAdmin: user.isAdmin,
+            organizationid: admin.ORGANIZATIONID
+        })
+    }
+    else{
+        res.send('404: Page not Found', 404);
+    }
+});
+
 router.get('/logout', function (req, res, next) {
     req.logout();
     res.redirect('/');

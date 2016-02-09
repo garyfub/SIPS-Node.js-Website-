@@ -92,65 +92,31 @@
 
                 <div class="panel panel-default">
                     <div class="content">
-                        <h1>Admin Dashboard</h1>
-                        <p><%= 'Welcome, ' + name %></p>
+                        <h1><%= title %></h1>
+                        <p>Fill out form below</p>
                     </div>
                 </div>
 
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Groups for Organization</div>
+                    <div class="panel-heading">New Group Info</div>
                     <br>
                     <div class="content">
-                    <table class="table table-responsive table-striped table-hover table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Group Name</th>
-                            <th>Type</th>
-                            <th>Group Members</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><input name="group" type="radio"></td>
-                            <td>Group 1</td>
-                            <td>Basketball</td>
-                            <td>7</td>
-                        </tr>
-                        <tr>
-                            <td><input name="group" type="radio"></td>
-                            <td>Group 2</td>
-                            <td>Tennis</td>
-                            <td>40</td>
-                        </tr>
-                        <tr>
-                            <td><input name="group" type="radio"></td>
-                            <td>Group 3</td>
-                            <td>Track</td>
-                            <td>125</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br>
-                        <!-- Table button -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle"
-                                    data-toggle="dropdown">Actions <span class="caret"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="/admin/create-group" id="add-new-group"><span class="fa fa-plus-square-o "></span> Add new Group</a></li>
-                                <li><a href="#"><span class="fa fa-cog "></span> Group options</a></li>
-                                <li><a href="/results"><span class="fa fa-pie-chart "></span> View Results</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><span class="fa fa-trash-o "></span> Delete Group</a></li>
-                            </ul>
-                            </div>
+                        <form role="form">
+                        <div class="form-group">
+                            <label for="group-name">Name:</label>
+                            <input type="text" class="form-control" id="group-name">
                         </div>
+
+                            <button type="submit" class="btn btn-default">Create Group</button>
+                            </form>
+                        <br>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -183,12 +149,8 @@
         $(function () {
             $('#sideMenu').metisMenu();
         });
-
-
-        $("#add-new-group").click(function() {
-            alert( "Handler for .click() called." );
-        });
     });
+
 
 </script>
 
