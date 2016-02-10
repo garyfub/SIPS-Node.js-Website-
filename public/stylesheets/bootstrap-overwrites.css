@@ -1,0 +1,10 @@
+.btn-primary-outline {
+    color: #0275D8;
+    background-color: transparent;
+    background-image: none;
+    border-color: #0275D8;
+}
+
+.btn.btn-primary-outline:focus, .btn.btn-primary-outline:hover {
+    color: rgb(255, 255, 255);
+}

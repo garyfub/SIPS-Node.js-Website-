@@ -66,7 +66,7 @@
             <li class="nav-divider"></li>
             <li>
                 <a href="#"><i class="fa fa-fort-awesome"></i>
-                     Organization</a>
+                    Organization</a>
             </li>
             <li class="hidden-lg hidden-md">
                 <a href="#">Menu<span class="caret arrow"></span></a>
@@ -106,73 +106,24 @@
 
                 <div class="panel panel-default">
                     <div class="content">
-                        <h1>Admin Dashboard</h1>
-                        <p><%= 'Welcome, ' + name %></p>
+                        <h1><%= title %></h1>
+                        <p>Fill out form below</p>
                     </div>
                 </div>
 
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Groups for Organization</div>
+                    <div class="panel-heading">Group: (name here)</div>
                     <br>
                     <div class="content">
-                        <table class="table table-striped table-hover table-radio">
-                            <thead>
-                            <tr class="active">
-                                <th class="col-lg-1 hidden">Select</th>
-                                <th class="col-lg-2">Group Name</th>
-                                <th class="col-lg-2">Type</th>
-                                <th class="col-lg-1">Group Members</th>
-                                <th class="col-lg-1">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <%
-                            if(groups.length == 0){ %>
-                            <tr class="warning">
-                                <td class="hidden"></td>
-                                <td>Hello! Please add a group</td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <a href="/admin/create-group" class="btn btn-sm invisible"><span
-                                                class="fa fa-plus-square"></span> Add new group
-                                    </a>
-                                </td>
-                            </tr>
-                            <% }
-                            for(var i = 0; i < groups.length; i++){ %>
-                            <tr>
-                                <td class="hidden"><input name="group" type="radio" value="<%= groups[i]["GROUPID"] %>">
-                                </td>
-                                <td><%= groups[i]["NAME"] %></td>
-                                <td><%= groups[i]["ORGANIZATIONID"] %></td>
-                                <td>null</td>
-                                <td>
-                                    <!-- Table button -->
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle invisible"
-                                                data-toggle="dropdown"><span class="fa fa-cog"></span></button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#" class="edit-group"><span class="fa fa-cog "></span> edit</a></li>
-                                            <li><a href="/results"><span class="fa fa-pie-chart "></span> View
-                                                    Results</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#" class="delete-group"><span class="fa fa-trash-o "></span>
-                                                    Delete Group</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <% } %>
-                            </tbody>
-                        </table>
+                        <form role="form" action="update-group" method="post">
+                            <div class="form-group">
+                                <label for="group_name">Name:</label>
+                                <input type="text" class="form-control" id="group_name" name="group_name">
+                            </div>
+                            <input type="submit" value="Create Group"class="btn btn-default">
+                        </form>
                         <br>
-                        <!-- Add new Group -->
-                        <a href="/admin/create-group" class="btn btn-primary-outline"><span
-                                    class="fa fa-plus-square"></span> Add new group
-                        </a>
                     </div>
                 </div>
             </div>
@@ -211,48 +162,8 @@
         $(function () {
             $('#sideMenu').metisMenu();
         });
-
-        $('.table-radio tr').hover(
-                function () {
-                    $(this).find('td .btn').removeClass("invisible");
-                },
-                function () {
-                    $(this).find('td input[type=radio]').prop('checked', true);
-                    $(this).find('td .btn').addClass("invisible");
-                }
-        );
-
-        $(".delete-group").click(function () {
-            var selectedGroup = $('input[name=group]:checked').val()
-            $.ajax({
-                type: 'POST',
-                url: '/admin/delete-group',
-                data: {
-                    group: selectedGroup
-                },
-                complete: function () {
-                    window.location.reload(true);
-                }
-            });
-        });
-
-        $(".edit-group").click(function () {
-            var selectedGroup = $('input[name=group]:checked').val()
-
-            console.log("Post request made for " + selectedGroup);
-
-            var form = document.createElement("form");
-            form.method = 'post';
-            form.action = '/admin/edit-group';
-            var input = document.createElement('input');
-            input.type = "text";
-            input.name = "group";
-            input.value = selectedGroup;
-            form.appendChild(input);
-            $('body').append(form);
-            form.submit();
-        });
     });
+
 
 </script>
 

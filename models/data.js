@@ -56,7 +56,7 @@ function getUserTaskList(req) {
 }
 
 
-function getUserTaskData(req){
+function getUserTaskData(req) {
     var taskID = String(req.body.taskID);
     var results = null;
     console.log("taskID = " + taskID);

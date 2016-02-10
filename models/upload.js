@@ -164,7 +164,7 @@ function taskEntry(user, data) {
     });
 }
 
-function appsensor(data,taskEntryID) {
+function appsensor(data, taskEntryID) {
 
     var accelx = (data.ACCELX.substring(1, data.ACCELX.length - 1)).split(",");
     var accely = (data.ACCELY.substring(1, data.ACCELY.length - 1)).split(",");

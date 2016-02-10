@@ -4,10 +4,9 @@ var model = require('../models/admin')
 var model_users = require('../models/users');
 var model_data = require('../models/data');
 
-
-/* GET home page. */
+/* GET Admin page. */
 router.get('/', function (req, res, next) {
-    if (req.user.isAdmin != 0 && req.user) {
+    if (req.isAuthenticated() && req.user.Admin) {
         var user = req.user;
         var admin = req.user.Admin;
         var orgID = req.user.Admin.ORGANIZATIONID;
@@ -16,14 +15,14 @@ router.get('/', function (req, res, next) {
             console.log("Results: " + JSON.stringify(groups, null, 2));
 
             console.log("OBJECT: " + Object.keys(groups));
-        res.render('admin/dash', {
-            title: 'Admin Dashboard',
-            name: user.name.givenName + " " + user.name.familyName,
-            id: user.id,
-            isAdmin: user.isAdmin,
-            organizationid: admin.ORGANIZATIONID,
-            groups: groups
-        })
+            res.render('admin/dash', {
+                title: 'Admin Dashboard',
+                name: user.name.givenName + " " + user.name.familyName,
+                id: user.id,
+                isAdmin: user.isAdmin,
+                organizationid: admin.ORGANIZATIONID,
+                groups: groups
+            })
         });
     }
     else {
@@ -33,7 +32,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/create-group', function (req, res, next) {
 
-    if (req.user.isAdmin != 0 && req.user) {
+    if (req.isAuthenticated() && req.user.Admin) {
         var user = req.user;
         var admin = req.user.Admin;
         res.render('admin/create-group', {
@@ -50,7 +49,7 @@ router.get('/create-group', function (req, res, next) {
 
 router.post('/create-group', function (req, res, next) {
 
-    if (req.user.isAdmin != 0) {
+    if (req.isAuthenticated() && req.user.Admin) {
         var name = req.body.group_name;
         var orgID = req.user.Admin.ORGANIZATIONID;
 
@@ -63,12 +62,17 @@ router.post('/create-group', function (req, res, next) {
     }
 });
 
-//TODO:edit post endpoint to call model function for deleting a group, verify admin identity and access to group
+/**
+ * TODO
+ * 1. Double check that admin has access to group?
+ *
+ */
+
 router.post('/delete-group', function (req, res, next) {
 
     var groupID = req.body.group;
 
-    if (req.user.isAdmin != 0) {
+    if (req.isAuthenticated() && req.user.Admin) {
         var admin = req.user.Admin;
 
         model.deleteGroup(groupID, function (err) {
@@ -81,12 +85,39 @@ router.post('/delete-group', function (req, res, next) {
     }
 });
 
+/**
+ * TODO
+ * 1. Be able to invite users to group
+ * 2. Remove user from group
+ * 3. Edit Group properties (name, group type, etc)
+ */
+router.post('/edit-group', function (req, res, next) {
+    if (req.isAuthenticated() && req.user.Admin) {
+        var admin = req.user.Admin;
+        var user = req.user;
+        var groupID = req.body.group;
 
-//TODO: Use single results page for users and Admin?
+        res.render('admin/edit-group', {
+            title: 'Edit Group',
+            name: user.name.givenName + " " + user.name.familyName,
+            id: user.id,
+            isAdmin: user.isAdmin,
+            groupID: groupID
+        })
+    }
+    else {
+        res.send('404: Page not Found', 404);
+    }
+});
+
+
+/**
+ * TODO
+ * 1. Should there be a single results page or is it easier to manage a seperate admin version?
+ */
 router.get('/results', function (req, res, next) {
 
-
-    if (req.user.isAdmin != 0) {
+    if (req.isAuthenticated() && req.user.Admin) {
         var results = model_data.getUserTaskList(req);
         // console.log("CHECK USER:: " + req.user);
         res.render('results', {
@@ -102,8 +133,12 @@ router.get('/results', function (req, res, next) {
     }
 });
 
+
+/**
+ * TODO: Need results first
+ */
 router.post('/results/data', function (req, res, next) {
-    if (req.user.isAdmin != 0) {
+    if (req.isAuthenticated() && req.user.Admin) {
         var data = model_data.getUserTaskData(req);
 
         console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));

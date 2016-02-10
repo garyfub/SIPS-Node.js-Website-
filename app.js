@@ -16,18 +16,47 @@ var forms = require('./routes/forms');
 var upload = require('./routes/upload');
 //Google Login Dependencies
 passport = require('passport');
-var session = require('express-session');
+ session = require('express-session');
 
-// view engine setup
+/**
+ *  view engine setup
+ *
+ */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+/**
+ * Configuring app
+ *
+ */
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({
     extended: false
 }))
 app.use(cookieParser());
 
-//Add files in routes directory as routes
+//Setting up passport authentication
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: 'utcisasecret'
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+    done(null, user);
+});
+
+/**
+ * Adding Routes to defined file directories
+ */
 app.use('/', routes);
 app.use('/users', users);
 app.use('/admin', admin);
@@ -35,6 +64,12 @@ app.use('/forms', forms);
 app.use('/upload', upload);
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+/**
+ * Bluemix Configuration Setup
+ *
+ * @type {{applicationRoute: string, applicationId: string}}
+ */
 var config = {
     // change to real application route assigned for your application        
     applicationRoute: "http://utc-vat.mybluemix.net",
@@ -50,7 +85,6 @@ var ibmconfig = ibmbluemix.getConfig(); //Getting context for app
 
 // init service sdks
 app.use(function (req, res, next) {
-    // req.data = ibmdata.initializeService(req);
     //    req.ibmpush = ibmpush.initializeService(req);
     req.logger = logger;
     next();

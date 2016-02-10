@@ -6,8 +6,10 @@
 
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.4.0/metisMenu.min.css">
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/jquery.metismenu/2.4.0/metisMenu.min.css">
+    <link rel='stylesheet' href='/stylesheets/bootstrap-overwrites.css'/>
 
 </head>
 <body>
@@ -57,23 +59,35 @@
     </div>
     <div class="col-md-2">
 
-        <ul class="nav nav-pills nav-stacked panel panel-default navbar-collapse collapse" id="sideMenu">
+        <ul class="metismenu nav nav-pills nav-stacked panel panel-default navbar-collapse collapse" id="sideMenu">
             <li>
                 <a href="/admin" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard Menu</a>
             </li>
             <li class="nav-divider"></li>
             <li>
-                <a href="#">Organization</a>
+                <a href="#"><i class="fa fa-fort-awesome"></i>
+                    Organization</a>
+            </li>
+            <li class="hidden-lg hidden-md">
+                <a href="#">Menu<span class="caret arrow"></span></a>
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/admin">Admin</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
             </li>
             <li>
-                <a href="#">Groups<span class="caret arrow"></span></a>
-
+                <a href="#">
+                    <span class="sidebar-nav-item"><i class="fa fa-users"></i>
+                        Groups</span>
+                    <span class="fa arrow"></span>
+                </a>
                 <ul class="nav nav-pills nav-stacked">
                     <li><a href="#">Users</a></li>
                     <li><a href="#">View Three</a></li>
                 </ul>
             </li>
-            <li><a href="/results">Results</a></li>
+            <li><a href="/results"><i class="fa fa-bar-chart-o fa-fw"></i> Results</a></li>
         </ul>
 
     </div>
@@ -102,14 +116,13 @@
                     <div class="panel-heading">New Group Info</div>
                     <br>
                     <div class="content">
-                        <form role="form"  action="create-group" method="post">
-                        <div class="form-group">
-                            <label for="group_name">Name:</label>
-                            <input type="text" class="form-control" id="group_name" name="group_name">
-                        </div>
-
-                            <button type="submit" class="btn btn-default">Create Group</button>
-                            </form>
+                        <form role="form" action="create-group" method="post">
+                            <div class="form-group">
+                                <label for="group_name">Name:</label>
+                                <input type="text" class="form-control" id="group_name" name="group_name">
+                            </div>
+                            <input type="submit" value="Create Group"class="btn btn-default">
+                        </form>
                         <br>
                     </div>
                 </div>

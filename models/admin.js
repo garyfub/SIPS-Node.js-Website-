@@ -38,12 +38,12 @@ module.exports = {
     deleteGroup: deleteGroup
 }
 
-    //Creates new group
+//Creates new group
 function createGroup(name, orgID, callback) {
 
     var groupID = uuid.v1();
     //console.log(name + ", " + orgID + ", " + JSON.stringify(callback, null, 2));
-    ibmdb.open(dsnString,function(err,conn){
+    ibmdb.open(dsnString, function (err, conn) {
         conn.prepare("insert into GROUPS (groupID, name, organizationID) VALUES (?, ?, ?)", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
@@ -53,14 +53,14 @@ function createGroup(name, orgID, callback) {
 
             //Bind and Execute the statment asynchronously
             stmt.execute([groupID, name, orgID], function (err, result) {
-                if( err ) console.log(err);
-                else conn.close(function (){
+                if (err) console.log(err);
+                else conn.close(function () {
                     return callback(err, result);
                 });
 
 
+            });
         });
-    });
     });
 
 };
@@ -69,7 +69,7 @@ function createGroup(name, orgID, callback) {
 function getGroups(orgID, callback) {
 
     console.log(orgID + ", " + JSON.stringify(callback, null, 2));
-    ibmdb.open(dsnString,function(err,conn){
+    ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM GROUPS WHERE ORGANIZATIONID =  \'" + orgID + "\'", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
@@ -86,7 +86,7 @@ function getGroups(orgID, callback) {
 function deleteGroup(groupID, callback) {
 
     //console.log(orgID + ", " + JSON.stringify(callback, null, 2));
-    ibmdb.open(dsnString,function(err,conn){
+    ibmdb.open(dsnString, function (err, conn) {
         conn.prepare("DELETE FROM GROUPS WHERE groupID = \'" + groupID + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
@@ -95,9 +95,9 @@ function deleteGroup(groupID, callback) {
             }
 
             //Bind and Execute the statment asynchronously
-            stmt.execute( function (err, result) {
-                if( err ) console.log(err);
-                else conn.close(function (){
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
                     return callback(err);
                 });
 

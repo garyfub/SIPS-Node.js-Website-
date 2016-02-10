@@ -9,76 +9,63 @@ var model = require('../models/users');
 var userjson;
 var isNew;
 
-app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: 'utcisasecret' }));
-app.use(passport.initialize());
-app.use(passport.session());
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
 
 /* GET /users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', function (req, res, next) {
+    res.send('respond with a resource');
 });
 
 /* GET /users/login page and handle user login */
-router.get('/login', function(req, res, next) {
+router.get('/login', function (req, res, next) {
 
-  passport.use(new GoogleStrategy({
-        clientID: '185585020623-o8hdaup59vfnlt18hpbss7utdsjng85j.apps.googleusercontent.com',
-        clientSecret: 'vFXPWHiA18ssRJ606AAOERHY',
-          callbackURL: req.protocol + '://' + req.get('host')+ '/users/auth/google/callback'
-      },
-      function(token, refreshToken, profile, done) {
-         //check if user is in database
-          model.UserCheck(profile);
-          userjson = profile;
+    passport.use(new GoogleStrategy({
+            clientID: '185585020623-o8hdaup59vfnlt18hpbss7utdsjng85j.apps.googleusercontent.com',
+            clientSecret: 'vFXPWHiA18ssRJ606AAOERHY',
+            callbackURL: req.protocol + '://' + req.get('host') + '/users/auth/google/callback'
+        },
+        function (token, refreshToken, profile, done) {
+            //check if user is in database
+            model.UserCheck(profile);
+            userjson = profile;
 
-        //call done() when complete...
-        done(null, profile);
-      }
-  ));
-  res.render('users/login');
+            //call done() when complete...
+            done(null, profile);
+        }
+    ));
+    res.render('users/login');
 });
 
 //Sends user to google for authentication
-app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 
 //Retrieves Google callback and confirms user is authenticated.
-router.all('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
+router.all('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/login'}), function (req, res) {
     //console.log("USER: " + JSON.stringify(req.user.id, null, 2));
     console.log("User Authenticated");
     isNew = model.UserCheck(req.user);
     var isAdmin = model.isAdmin(req.user);
-    if(isNew == 1) {//if user id is located in db
-        if(isAdmin != 0) {
+    if (isNew == 1) {//if user id is located in db
+        if (isAdmin != 0) {
             req.user.Admin = isAdmin;
             req.user.isAdmin = 1;
         }
         else req.user.isAdmin = 0;
         res.redirect('/');
     }
-    else{
+    else {
         model.UserCreate(req.user);
-       // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
+        // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
         res.redirect('/forms/user-registration');
     }
 });
 
 //Check if user is in database
-router.post('/check', function(req, res, next) {
+router.post('/check', function (req, res, next) {
     var result = model.UserCheck(req.body);
 
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ check: result }));
+    res.send(JSON.stringify({check: result}));
 
 
 });

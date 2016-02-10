@@ -82,50 +82,50 @@
         </div>
 
         <div class="row col-lg-10">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Acceleration Chart
-                    <div class="pull-right">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Acceleration Chart
+                        <div class="pull-right">
+                        </div>
                     </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div id="results-chart-accel" class="charts"></div>
+                    </div>
+                    <!-- /.panel-body -->
                 </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div id="results-chart-accel" class="charts"></div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Rotation Chart
+                        <div class="pull-right">
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div id="results-chart-gyro" class="charts"></div>
+                    </div>
                 </div>
                 <!-- /.panel-body -->
             </div>
-        </div>
 
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Rotation Chart
-                    <div class="pull-right">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Magnetic Chart
+                        <div class="pull-right">
+                        </div>
                     </div>
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div id="results-chart-gyro" class="charts"></div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div id="results-chart-mag" class="charts"></div>
+                    </div>
+                    <!-- /.panel-body -->
                 </div>
             </div>
-            <!-- /.panel-body -->
-        </div>
-
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Magnetic Chart
-                    <div class="pull-right">
-                    </div>
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div id="results-chart-mag" class="charts"></div>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-        </div>
         </div>
         <div class="modal" styles="display:none;"><p>Screen may freeze temporarily during chart generation</p></div>
     </div>
@@ -206,7 +206,7 @@
                 });
     });
 
-   function update_Gyro() {
+    function update_Gyro() {
 
         if (data) {
 
@@ -232,7 +232,7 @@
         }
     }
 
-   function update_Mag() {
+    function update_Mag() {
         if (data) {
 
             //Create Mag Chart
@@ -272,7 +272,8 @@
         background: rgba(255, 255, 255, .8) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
         text-align: center;
     }
-    .modal p{
+
+    .modal p {
         line-height: 55;
     }
 

@@ -97,7 +97,7 @@ function addFormEntry(req) {
 
 //Adds answers to SPorts Fitness Index and Injury form to database
 function sportsFormEntry(req, formEntryID, date) {
-         data = req.body;
+    data = req.body;
 
     //Parse data to Object type
     var question = qs.parse(data);
@@ -191,9 +191,9 @@ function registrationform(req, formEntryID, date) {
     console.log("Entering Basic User Info Form entry: " + formEntryID + " on " + date);
     var form;
 
-    if(req.form_id){
+    if (req.form_id) {
         form = req;
-    }else{
+    } else {
         form = req.body;
     }
 
@@ -203,17 +203,17 @@ function registrationform(req, formEntryID, date) {
     var weight = form.weight;
     var height_ft = form.ht_ft;
     var height_in = form.ht_in;
-    var soccer = form.sport_soccer ? 1:0;
-    var volleyball = form.sport_volleyball ? 1:0;
-    var football = form.sport_football ? 1:0;
-    var baseball = form.sport_baseball ? 1:0;
-    var basketball = form.sport_basketball ? 1:0;
-    var golf = form.sport_golf ? 1:0;
-    var tennis = form.sport_tennis ? 1:0;
-    var track_cross_country = form.sport_track_cross ? 1:0;
-    var softball = form.sport_softball ? 1:0;
-    var wrestling = form.sport_wrestling ? 1:0;
-    var lacrosse = form.sport_lacrosse ? 1:0;
+    var soccer = form.sport_soccer ? 1 : 0;
+    var volleyball = form.sport_volleyball ? 1 : 0;
+    var football = form.sport_football ? 1 : 0;
+    var baseball = form.sport_baseball ? 1 : 0;
+    var basketball = form.sport_basketball ? 1 : 0;
+    var golf = form.sport_golf ? 1 : 0;
+    var tennis = form.sport_tennis ? 1 : 0;
+    var track_cross_country = form.sport_track_cross ? 1 : 0;
+    var softball = form.sport_softball ? 1 : 0;
+    var wrestling = form.sport_wrestling ? 1 : 0;
+    var lacrosse = form.sport_lacrosse ? 1 : 0;
     //var isOther = form.sport_isOther ? 1:0;//not needed because functionality is used on the webpage version.
     var other = form.sport_other ? form.sport_other : "null";
 
