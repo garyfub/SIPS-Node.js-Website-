@@ -11,13 +11,12 @@ var ibmbluemix = require('ibmbluemix');
 var cookieParser = require('cookie-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var admin = require('./routes/admin');
 var forms = require('./routes/forms');
 var upload = require('./routes/upload');
 //Google Login Dependencies
 passport = require('passport');
 var session = require('express-session');
-var googleapis = require('googleapis');
-var GooglePlusStrategy = require('passport-google-plus');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,9 +26,11 @@ app.use(bodyparser.urlencoded({
     extended: false
 }))
 app.use(cookieParser());
+
 //Add files in routes directory as routes
 app.use('/', routes);
 app.use('/users', users);
+app.use('/admin', admin);
 app.use('/forms', forms);
 app.use('/upload', upload);
 app.use(express.static(path.join(__dirname, 'public')));

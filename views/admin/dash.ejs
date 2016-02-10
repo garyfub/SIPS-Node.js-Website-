@@ -65,6 +65,14 @@
             <li>
                 <a href="#">Organization</a>
             </li>
+            <li class="hidden-lg hidden-md">
+                <a href="#">Menu<span class="caret arrow"></span></a>
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/admin">Admin</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </li>
             <li>
                 <a href="#">Groups<span class="caret arrow"></span></a>
 
@@ -102,55 +110,48 @@
                     <div class="panel-heading">Groups for Organization</div>
                     <br>
                     <div class="content">
-                    <table class="table table-responsive table-striped table-hover table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Group Name</th>
-                            <th>Type</th>
-                            <th>Group Members</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><input name="group" type="radio"></td>
-                            <td>Group 1</td>
-                            <td>Basketball</td>
-                            <td>7</td>
-                        </tr>
-                        <tr>
-                            <td><input name="group" type="radio"></td>
-                            <td>Group 2</td>
-                            <td>Tennis</td>
-                            <td>40</td>
-                        </tr>
-                        <tr>
-                            <td><input name="group" type="radio"></td>
-                            <td>Group 3</td>
-                            <td>Track</td>
-                            <td>125</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br>
+                        <table class="table table-responsive table-striped table-hover table-bordered table-radio">
+                            <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Group Name</th>
+                                <th>Type</th>
+                                <th>Group Members</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% for(var i = 0; i < groups.length; i++){ %>
+                            <tr>
+                                <td><input name="group" type="radio" value="<%= groups[i]["GROUPID"] %>"></td>
+                                <td><%= groups[i]["NAME"] %></td>
+                                <td><%= groups[i]["ORGANIZATIONID"] %></td>
+                                <td>null</td>
+                            </tr>
+
+                            <% } %>
+                            </tbody>
+                        </table>
+                        <br>
                         <!-- Table button -->
-                        <div class="btn-group">
+                        <div class="btn-group dropup">
                             <button type="button" class="btn btn-default dropdown-toggle"
                                     data-toggle="dropdown">Actions <span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="/admin/create-group" id="add-new-group"><span class="fa fa-plus-square-o "></span> Add new Group</a></li>
+                                <li><a href="/admin/create-group" id="add-new-group"><span
+                                                class="fa fa-plus-square-o "></span> Add new Group</a></li>
                                 <li><a href="#"><span class="fa fa-cog "></span> Group options</a></li>
                                 <li><a href="/results"><span class="fa fa-pie-chart "></span> View Results</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#"><span class="fa fa-trash-o "></span> Delete Group</a></li>
+                                <li><a href="#" id="delete-group"><span class="fa fa-trash-o "></span> Delete Group</a>
+                                </li>
                             </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -184,9 +185,22 @@
             $('#sideMenu').metisMenu();
         });
 
+        $('.table-radio tr').click(function() {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
 
-        $("#add-new-group").click(function() {
-            alert( "Handler for .click() called." );
+        $("#delete-group").click(function () {
+            var selectedGroup = $('input[name=group]:checked').val()
+            $.ajax({
+                type: 'POST',
+                url: '/admin/delete-group',
+                data: {
+                    group: selectedGroup
+                },
+                complete: function () {
+                    window.location.reload(true);
+                }
+            });
         });
     });
 
