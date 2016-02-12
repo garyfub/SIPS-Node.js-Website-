@@ -145,9 +145,9 @@
                             <tr>
                                 <td class="hidden"><input name="group" type="radio" value="<%= groups[i]["GROUPID"] %>">
                                 </td>
-                                <td><%= groups[i]["NAME"] %></td>
-                                <td><%= groups[i]["ORGANIZATIONID"] %></td>
-                                <td>null</td>
+                                <td class="group_name"><%= groups[i]["NAME"] %></td>
+                                <td class="group_org"><%= groups[i]["ORGANIZATIONID"] %></td>
+                                <td class="group_member">null</td>
                                 <td>
                                     <!-- Table button -->
                                     <div class="btn-group">
@@ -207,6 +207,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.4.0/metisMenu.min.js"></script>
 
 <script>
+
+    // jquery extend function for sending post request to next page
+    $.extend(
+            {
+                redirectPost: function(location, args)
+                {
+                    var form = '';
+                    $.each( args, function( key, value ) {
+                        console.log("Key: " + key + ", Value: " + value);
+                        form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+                    });
+                    $('<form id="post_form" action="'+location+'" method="POST">'+form+'</form>').appendTo('body').submit();
+
+                    $('#post_form').remove();
+                }
+            });
+
     $(document).ready(function () {
         $(function () {
             $('#sideMenu').metisMenu();
@@ -238,19 +255,11 @@
 
         $(".edit-group").click(function () {
             var selectedGroup = $('input[name=group]:checked').val()
-
+            var groupName =  $(this).closest('tr').find('td:eq(1)').text();
             console.log("Post request made for " + selectedGroup);
 
-            var form = document.createElement("form");
-            form.method = 'post';
-            form.action = '/admin/edit-group';
-            var input = document.createElement('input');
-            input.type = "text";
-            input.name = "group";
-            input.value = selectedGroup;
-            form.appendChild(input);
-            $('body').append(form);
-            form.submit();
+            $.redirectPost('/admin/edit-group', {groupID: selectedGroup, groupName: groupName});
+
         });
     });
 

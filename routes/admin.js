@@ -95,14 +95,19 @@ router.post('/edit-group', function (req, res, next) {
     if (req.isAuthenticated() && req.user.Admin) {
         var admin = req.user.Admin;
         var user = req.user;
-        var groupID = req.body.group;
+        var gid = req.body.group;
+        var gName = req.body.groupName;
+        var org_ID = req.user.Admin.ORGANIZATIONID;
 
+        console.log("Group: " + gid);
         res.render('admin/edit-group', {
             title: 'Edit Group',
             name: user.name.givenName + " " + user.name.familyName,
             id: user.id,
             isAdmin: user.isAdmin,
-            groupID: groupID
+            groupID: gid,
+            groupName: gName,
+            orgID: org_ID
         })
     }
     else {
