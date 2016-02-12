@@ -8,3 +8,7 @@
 .btn.btn-primary-outline:focus, .btn.btn-primary-outline:hover {
     color: rgb(255, 255, 255);
 }
+
+.panel.with-nav-tabs .panel-heading {
+    padding: 5px 5px 0px;
+}

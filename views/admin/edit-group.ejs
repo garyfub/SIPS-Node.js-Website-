@@ -107,58 +107,97 @@
 
                 <div class="panel panel-default">
                     <div class="content">
-                        <h1><%= title + ": " + groupName %></h1>
+                        <h1><%= groupName %></h1>
                         <p></p>
                     </div>
                 </div>
 
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">Group: <%= groupName %></div>
+                <div class="panel with-nav-tabs panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tabGroupInfo" data-toggle="tab">Group Info</a></li>
+                            <li><a href="#tabUsers" data-toggle="tab">Members</a></li>
+                            <li><a href="#tabPositions" data-toggle="tab">Positions</a></li>
+                        </ul>
+                    </div>
                     <br>
-                    <div class="content">
-                        <form role="form" action="update-group" method="post" id="<%= groupID %>">
-                            <div class="form-group">
-                                <label for="group_name col-lg-2">Name:</label>
-                                <input type="text" class="form-control col-lg-7" id="group_name" name="group_name" value="<%= groupName %>">
+                    <div class="panel-body">
+                        <div class="tab-content">
+
+                            <!-- Group Info Tab -->
+                            <div class="tab-pane fade in active" id="tabGroupInfo">
+                                <form role="form" action="update-group" method="post" id="<%= groupID %>">
+                                    <div class="form-group">
+                                        <label for="group_name col-lg-2">Name:</label>
+                                        <input type="text" class="form-control col-lg-7" id="group_name" name="group_name" value="<%= groupName %>">
+                                    </div>
+                                    <br>
+                                    <input type="submit" value="Create Group"class="btn btn-default">
+                                </form>
+                                <br>
                             </div>
-                            <br>
-                            <input type="submit" value="Create Group"class="btn btn-default">
-                        </form>
-                        <br>
-                    </div>
-                </div>
+
+                            <!-- Users Tab -->
+                            <div class="tab-pane fade" id="tabUsers">
+                                <table class="table table-striped table-hover table-radio">
+                                    <thead>
+                                    <tr class="active">
+                                        <th class="col-lg-1 hidden">Select</th>
+                                        <th class="col-lg-3">Name</th>
+                                        <th class="col-lg-3">Position</th>
+                                        <th class="col-lg-1">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="warning">
+                                        <td class="hidden"></td>
+                                        <td>Hello! Please invite members and they will be displayed here</td>
+                                        <td></td>
+                                        <td>
+                                            <a href="#" class="add_user btn btn-sm invisible" ><span
+                                                        class="fa fa-plus-square"></span> Invite New Members
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </div>
 
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">Group Members</div>
-                    <br>
-                    <div class="content">
-                        <table class="table table-striped table-hover table-radio">
-                            <thead>
-                            <tr class="active">
-                                <th class="col-lg-1 hidden">Select</th>
-                                <th class="col-lg-3">Name</th>
-                                <th class="col-lg-3">Position</th>
-                                <th class="col-lg-1">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="warning">
-                                <td class="hidden"></td>
-                                <td>Hello! Please add some users and they will be displayed here</td>
-                                <td></td>
-                                <td>
-                                    <a href="#" class="add_user btn btn-sm invisible" ><span
-                                                class="fa fa-plus-square"></span> Add members
-                                    </a>
-                                </td>
-                            </tr>
-                            </tbody>
-                            </table>
-                        <br>
+                            <!-- Positions Tab -->
+                            <div class="tab-pane fade" id="tabPositions">
+                                <table class="table table-striped table-hover table-radio">
+                                    <thead>
+                                    <tr class="active">
+                                        <th class="col-lg-1 hidden">Select</th>
+                                        <th class="col-lg-3">Position</th>
+                                        <th class="col-lg-3">permission</th>
+                                        <th class="col-lg-1">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="warning">
+                                        <td class="hidden"></td>
+                                        <td>Hello! Please add a position and they will be displayed here</td>
+                                        <td></td>
+                                        <td>
+                                            <a href="#" class="add_position btn btn-sm invisible" ><span
+                                                        class="fa fa-plus-square"></span> Add new position
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </div>
+
+                        </div>
                     </div>
+
                 </div>
+
             </div>
         </div>
     </div>
@@ -166,11 +205,11 @@
 </div>
 
 <!-- popup dialog -->
-<div id="add_user_box" title="Add members to group">
+<div id="add_user_box" title="Invite members to group">
     <span class="ui-state-default"><span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 0 0;"></span></span>
     <div style="margin-left: 23px;">
         <p>
-            Include email addresses to send invites to. Once submitted the default mail client on your device will open a new message with the message specified below.
+            Include email addresses to send the invite message to. Once submitted the default mail client on your device will open a new message with the message specified below.
         </p>
             <br/><br/>
         <form role="form">
