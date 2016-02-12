@@ -5,11 +5,11 @@ var model = require('../models/forms');
 var modelUsers = require('../models/users');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Express'});
+router.get('/', ensureAuthenticated, function (req, res, next) {
+    res.redirect('/');
 });
 
-router.post('/next', function (req, res, next) {
+router.post('/next', ensureAuthenticated, function (req, res, next) {
     console.log("NEXT: " + JSON.stringify(req.body, null, 2));
     var result = modelUsers.UserCheck(req.user);
     model.addFormEntry(req);
@@ -19,22 +19,30 @@ router.post('/next', function (req, res, next) {
 });
 
 /* Displays Sports Fitness and Injury Form static version */
-router.get('/sport-fitness-injury', function (req, res, next) {
+router.get('/sport-fitness-injury', ensureAuthenticated, function (req, res, next) {
     res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form'});
 });
 
 /* Displays Sports Fitness and Injury Form static version */
-router.get('/user-registration', function (req, res, next) {
+router.get('/user-registration', ensureAuthenticated, function (req, res, next) {
     res.render('forms/user-registration', {title: 'Basic User Information Form'});
 });
 
 /* Retrieves Sports Fitness and Injury Form Data and sends it to be added to the database */
-router.post('/submission-complete', function (req, res, next) {
+router.post('/submission-complete', ensureAuthenticated, function (req, res, next) {
 
     model.addFormEntry(req);
     res.render('forms/submission-complete', {title: 'Sport Fitness and Injury Form'});
 });
 
+
+//route functions
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    else
+        res.redirect('/');
+}
 
 module.exports = router;
 

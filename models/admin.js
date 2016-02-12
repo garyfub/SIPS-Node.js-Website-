@@ -1,6 +1,7 @@
 //Model for interacting with Users
 var ibmdb = require('ibm_db');
 var uuid = require('node-uuid');
+var shortid = require('shortid');
 
 var env = null;
 var keySql = null;
@@ -44,7 +45,7 @@ function createGroup(name, orgID, callback) {
     var groupID = uuid.v1();
     //console.log(name + ", " + orgID + ", " + JSON.stringify(callback, null, 2));
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("insert into GROUPS (groupID, name, organizationID) VALUES (?, ?, ?)", function (err, stmt) {
+        conn.prepare("insert into GROUPS (groupID, name, invite_code, organizationID) VALUES (?, ?, ?, ?)", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -52,7 +53,7 @@ function createGroup(name, orgID, callback) {
             }
 
             //Bind and Execute the statment asynchronously
-            stmt.execute([groupID, name, orgID], function (err, result) {
+            stmt.execute([groupID, name, shortid.generate(), orgID], function (err, result) {
                 if (err) console.log(err);
                 else conn.close(function () {
                     return callback(err, result);
@@ -85,7 +86,7 @@ function getGroups(orgID, callback) {
 //Deletes group that matched GroupID
 function deleteGroup(groupID, callback) {
 
-    //console.log(orgID + ", " + JSON.stringify(callback, null, 2));
+    console.log("Deleting: " + JSON.stringify(groupID, null, 2));
     ibmdb.open(dsnString, function (err, conn) {
         conn.prepare("DELETE FROM GROUPS WHERE groupID = \'" + groupID + "\'", function (err, stmt) {
             if (err) {

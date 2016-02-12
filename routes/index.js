@@ -41,9 +41,8 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/');
 });
 
-router.get('/results', function (req, res, next) {
+router.get('/results', ensureAuthenticated, function (req, res, next) {
 
-    if (req.isAuthenticated()) {
         var results = model_data.getUserTaskList(req);
         // console.log("CHECK USER:: " + req.user);
         res.render('results', {
@@ -53,25 +52,25 @@ router.get('/results', function (req, res, next) {
             isAdmin: req.user.isAdmin,
             taskList: results
         })
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
 });
 
-router.post('/results/data', function (req, res, next) {
-    if (req.isAuthenticated()) {
+router.post('/results/data', ensureAuthenticated, function (req, res, next) {
+
         var data = model_data.getUserTaskData(req);
 
         console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
         res.send({
             data: data
         })
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
 });
 
+
+//route functions
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    else
+        res.redirect('/');
+}
 
 module.exports = router;

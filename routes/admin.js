@@ -5,8 +5,8 @@ var model_users = require('../models/users');
 var model_data = require('../models/data');
 
 /* GET Admin page. */
-router.get('/', function (req, res, next) {
-    if (req.isAuthenticated() && req.user.Admin) {
+router.get('/', ensureAuthenticated,  function (req, res, next) {
+    if (req.user.Admin) {
         var user = req.user;
         var admin = req.user.Admin;
         var orgID = req.user.Admin.ORGANIZATIONID;
@@ -30,9 +30,9 @@ router.get('/', function (req, res, next) {
     }
 });
 
-router.get('/create-group', function (req, res, next) {
+router.get('/create-group', ensureAuthenticated, function (req, res, next) {
 
-    if (req.isAuthenticated() && req.user.Admin) {
+    if (req.user.Admin) {
         var user = req.user;
         var admin = req.user.Admin;
         res.render('admin/create-group', {
@@ -47,9 +47,9 @@ router.get('/create-group', function (req, res, next) {
     }
 });
 
-router.post('/create-group', function (req, res, next) {
+router.post('/create-group', ensureAuthenticated, function (req, res, next) {
 
-    if (req.isAuthenticated() && req.user.Admin) {
+    if (req.user.Admin) {
         var name = req.body.group_name;
         var orgID = req.user.Admin.ORGANIZATIONID;
 
@@ -68,11 +68,11 @@ router.post('/create-group', function (req, res, next) {
  *
  */
 
-router.post('/delete-group', function (req, res, next) {
+router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
 
     var groupID = req.body.group;
 
-    if (req.isAuthenticated() && req.user.Admin) {
+    if (req.user.Admin) {
         var admin = req.user.Admin;
 
         model.deleteGroup(groupID, function (err) {
@@ -91,24 +91,30 @@ router.post('/delete-group', function (req, res, next) {
  * 2. Remove user from group
  * 3. Edit Group properties (name, group type, etc)
  */
-router.post('/edit-group', function (req, res, next) {
-    if (req.isAuthenticated() && req.user.Admin) {
-        var admin = req.user.Admin;
-        var user = req.user;
-        var gid = req.body.group;
-        var gName = req.body.groupName;
-        var org_ID = req.user.Admin.ORGANIZATIONID;
+router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
+    if (req.user.Admin) {
 
-        console.log("Group: " + gid);
+        var gid = req.body.groupID;
+        var gName = req.body.groupName;
+
+        console.log("Group: " + gid + ", " + gName);
+        if(typeof gid !== 'undefined' && gid){
+
+
         res.render('admin/edit-group', {
             title: 'Edit Group',
-            name: user.name.givenName + " " + user.name.familyName,
-            id: user.id,
-            isAdmin: user.isAdmin,
-            groupID: gid,
+            name: req.user.name.givenName + " " + req.user.name.familyName,
+            id: req.user.id,
+            isAdmin: req.user.isAdmin,
+            groupID: req.body.group,
             groupName: gName,
-            orgID: org_ID
+            orgID: req.user.Admin.ORGANIZATIONID,
+            inviteCode: req.body.inviteCode
         })
+
+        }
+        else
+            res.redirect('/admin');
     }
     else {
         res.send('404: Page not Found', 404);
@@ -120,9 +126,9 @@ router.post('/edit-group', function (req, res, next) {
  * TODO
  * 1. Should there be a single results page or is it easier to manage a seperate admin version?
  */
-router.get('/results', function (req, res, next) {
+router.get('/results', ensureAuthenticated, function (req, res, next) {
 
-    if (req.isAuthenticated() && req.user.Admin) {
+    if (req.user.Admin) {
         var results = model_data.getUserTaskList(req);
         // console.log("CHECK USER:: " + req.user);
         res.render('results', {
@@ -142,8 +148,8 @@ router.get('/results', function (req, res, next) {
 /**
  * TODO: Need results first
  */
-router.post('/results/data', function (req, res, next) {
-    if (req.isAuthenticated() && req.user.Admin) {
+router.post('/results/data', ensureAuthenticated, function (req, res, next) {
+    if (req.user.Admin) {
         var data = model_data.getUserTaskData(req);
 
         console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
@@ -156,5 +162,13 @@ router.post('/results/data', function (req, res, next) {
     }
 });
 
+
+//route functions
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    else
+    res.redirect('/');
+}
 
 module.exports = router;

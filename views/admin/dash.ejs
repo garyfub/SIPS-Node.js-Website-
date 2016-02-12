@@ -123,6 +123,7 @@
                                 <th class="col-lg-2">Group Name</th>
                                 <th class="col-lg-2">Type</th>
                                 <th class="col-lg-1">Group Members</th>
+                                <th class="col-lg-1 hidden">Invite Code</th>
                                 <th class="col-lg-1">Actions</th>
                             </tr>
                             </thead>
@@ -134,6 +135,7 @@
                                 <td>Hello! Please add a group</td>
                                 <td></td>
                                 <td></td>
+                                <td class="hidden"></td>
                                 <td>
                                     <a href="/admin/create-group" class="btn btn-sm invisible"><span
                                                 class="fa fa-plus-square"></span> Add new group
@@ -143,11 +145,12 @@
                             <% }
                             for(var i = 0; i < groups.length; i++){ %>
                             <tr>
-                                <td class="hidden"><input name="group" type="radio" value="<%= groups[i]["GROUPID"] %>">
+                                <td class="hidden"><input name="group" class="selectedGroup" type="radio" value="<%= groups[i]["GROUPID"] %>">
                                 </td>
                                 <td class="group_name"><%= groups[i]["NAME"] %></td>
                                 <td class="group_org"><%= groups[i]["ORGANIZATIONID"] %></td>
                                 <td class="group_member">null</td>
+                                <td class="group_code hidden"><%= groups[i]["INVITE_CODE"] %></td>
                                 <td>
                                     <!-- Table button -->
                                     <div class="btn-group">
@@ -254,11 +257,12 @@
         });
 
         $(".edit-group").click(function () {
-            var selectedGroup = $('input[name=group]:checked').val()
+            var selectedGroup = $('.selectedGroup:checked').val();
             var groupName =  $(this).closest('tr').find('td:eq(1)').text();
-            console.log("Post request made for " + selectedGroup);
+            var inviteCode =  $(this).closest('tr').find('td:eq(4)').text();
+            console.log("Editing " + inviteCode + ", " + groupName + ", " + selectedGroup);
 
-            $.redirectPost('/admin/edit-group', {groupID: selectedGroup, groupName: groupName});
+            $.redirectPost('/admin/edit-group', {groupID: selectedGroup, groupName: groupName, inviteCode: inviteCode});
 
         });
     });

@@ -43,3 +43,10 @@ footer ul{
   display: block;
   padding: 0px 15px;
 }
+
+/* Dialog box CSS*/
+.ui-dialog {
+  -moz-border-radius: 0 0 8px 8px;
+  -webkit-border-radius: 0 0 8px 8px;
+  border-radius: 0 0 8px 8px; border-width: 0 8px 8px 8px;
+}

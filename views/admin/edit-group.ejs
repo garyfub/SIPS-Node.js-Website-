@@ -6,6 +6,7 @@
 
     <link rel='stylesheet' href='/stylesheets/style.css'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/redmond/jquery-ui.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://cdn.jsdelivr.net/jquery.metismenu/2.4.0/metisMenu.min.css">
@@ -148,7 +149,7 @@
                                 <td>Hello! Please add some users and they will be displayed here</td>
                                 <td></td>
                                 <td>
-                                    <a href="#" class="btn btn-sm invisible"><span
+                                    <a href="#" class="add_user btn btn-sm invisible" ><span
                                                 class="fa fa-plus-square"></span> Add members
                                     </a>
                                 </td>
@@ -162,6 +163,34 @@
         </div>
     </div>
 </div>
+</div>
+
+<!-- popup dialog -->
+<div id="add_user_box" title="Add members to group">
+    <span class="ui-state-default"><span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 0 0;"></span></span>
+    <div style="margin-left: 23px;">
+        <p>
+            Include email addresses to send invites to. Once submitted the default mail client on your device will open a new message with the message specified below.
+        </p>
+            <br/><br/>
+        <form role="form">
+            <div class="form-group">
+                <label for="email_to" class="pull-left">TO:</label>
+                <input type="text" class="form-control" id="email_to" name="email_to" placeholder="example@gmail.com; example2@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="email_subject" class="pull-left">Subject:</label>
+                <input type="text" class="form-control" id="email_subject" name="email_subject" value="SIPS Group Invitation">
+            </div>
+            <div class="form-group">
+                <label for="email_body" >Message body:</label>
+                <p class="well">Hello, this is an invitation to join <%= groupName %> on SIPS. Please enter this code after logging in with the Gmail account you want to use: <%= inviteCode %></p>
+                <textarea type="text" class="form-control" id="email_body" name="email_body" rows="5"></textarea>
+            </div>
+
+        </form>
+        <br/>
+        </div>
 </div>
 
 
@@ -184,6 +213,7 @@
 
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <!-- MetisMenu JavaScript -->
@@ -195,6 +225,31 @@
             $('#sideMenu').metisMenu();
         });
 
+        $("#add_user_box").dialog({
+            autoOpen: false,
+            modal: true,
+            draggable: false,
+            resizable: false,
+            position: {my: "top", at: "bottom", of: '.navbar-fixed-top'},
+            show: 'blind',
+            hide: 'blind',
+            width: 'auto',
+            height: 'auto',
+            dialogClass: 'ui-dialog',
+            buttons: {
+                "Open mail client": function() {
+                    $(this).dialog("close");
+
+                    var email = $('#email_to').val();
+                    var subject = $('#email_subject').val();
+                    var emailBody = 'Hello, this is an invitation to join <%= groupName %> on SIPS. Please enter this code after logging in with the Gmail account you want to use: <%= inviteCode %> . %0D%0A' + $('#email_body').val();
+                    window.location = 'mailto:' + email + '?subject=' + subject + '&body=' +   emailBody;
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
 
         $('.table-radio tr').hover(
                 function () {
@@ -205,6 +260,11 @@
                     $(this).find('td .btn').addClass("invisible");
                 }
         );
+
+
+        $(".add_user").click(function(){
+            $('#add_user_box').dialog('open');
+        })
     });
 
 
