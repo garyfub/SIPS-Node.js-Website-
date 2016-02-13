@@ -6,8 +6,7 @@ var modelUsers = require('../models/users');
 
 /* Get app data */
 router.get('/', function (req, res, next) {
-    console.log("Post connection made.");
-    res.render('index', {title: 'Express'});
+    res.redirect('/');
 });
 
 //Socket request to recieve data from app and calls to model to insert it into database

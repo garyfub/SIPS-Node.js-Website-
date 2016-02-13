@@ -1,99 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title><%= title %></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel='stylesheet' href='/stylesheets/style.css'/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.jsdelivr.net/jquery.metismenu/2.4.0/metisMenu.min.css">
-    <link rel='stylesheet' href='/stylesheets/bootstrap-overwrites.css'/>
-
-</head>
+<%- include ../partials/default_header.ejs %>
 <body>
 
-<!-- Navigation -->
-<nav role="navigation col-lg-2">
-    <div class="navbar-inverse navbar-default navbar-fixed-top topnav">
-        <div class="container topnav">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button aria-expanded="false" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#sideMenu">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand topnav" href="#">SIPS</a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div style="height: 0.8px;" aria-expanded="false" class="navbar-collapse collapse"
-                 id="bs-example-navbar-collapse-2">
-
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-                    <li>
-                        <a href="/results">Results</a>
-                    </li>
-                    <% if(isAdmin == 1){ %>
-                    <li>
-                        <a href='/admin'>Admin</a>
-                    </li>
-                    <% } %>
-                    <li>
-                        <a href="/logout">Logout</a>
-                    </li>
-
-                </ul>
-            </div>
-
-        </div>
-
-        <!-- /.navbar-collapse -->
-    </div>
-    <div class="col-md-2">
-
-        <ul class="metismenu nav nav-pills nav-stacked panel panel-default navbar-collapse collapse" id="sideMenu">
-            <li>
-                <a href="/admin" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard Menu</a>
-            </li>
-            <li class="nav-divider"></li>
-            <li>
-                <a href="#"><i class="fa fa-fort-awesome"></i>
-                     Organization</a>
-            </li>
-            <li class="hidden-lg hidden-md">
-                <a href="#">Menu<span class="caret arrow"></span></a>
-                <ul class="nav nav-pills nav-stacked">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/admin">Admin</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <span class="sidebar-nav-item"><i class="fa fa-users"></i>
-                        Groups</span>
-                    <span class="fa arrow"></span>
-                </a>
-                <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">Users</a></li>
-                    <li><a href="#">View Three</a></li>
-                </ul>
-            </li>
-            <li><a href="/results"><i class="fa fa-bar-chart-o fa-fw"></i> Results</a></li>
-        </ul>
-
-    </div>
-    <!-- /.container -->
-</nav>
-
+<%- include ../partials/admin_navbar.ejs %>
 
 <!-- Page Content -->
 <div id="wrapper" class="container-fluid col-lg-10">
@@ -145,7 +55,8 @@
                             <% }
                             for(var i = 0; i < groups.length; i++){ %>
                             <tr>
-                                <td class="hidden"><input name="group" class="selectedGroup" type="radio" value="<%= groups[i]["GROUPID"] %>">
+                                <td class="hidden"><input name="group" class="selectedGroup" type="radio"
+                                                          value="<%= groups[i]["GROUPID"] %>">
                                 </td>
                                 <td class="group_name"><%= groups[i]["NAME"] %></td>
                                 <td class="group_org"><%= groups[i]["ORGANIZATIONID"] %></td>
@@ -154,10 +65,12 @@
                                 <td>
                                     <!-- Table button -->
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle invisible"
+                                        <button type="button"
+                                                class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
                                                 data-toggle="dropdown"><span class="fa fa-cog"></span></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#" class="edit-group"><span class="fa fa-cog "></span> edit</a></li>
+                                            <li><a href="#" class="edit-group"><span class="fa fa-cog "></span> edit</a>
+                                            </li>
                                             <li><a href="/results"><span class="fa fa-pie-chart "></span> View
                                                     Results</a></li>
                                             <li class="divider"></li>
@@ -185,43 +98,20 @@
 </div>
 
 
-<!-- Footer -->
-<footer id="footer">
-    <div class="col-lg-5">
-        <ul class="list-inline">
-            <li>
-                <a href="/">Home</a>
-            </li>
-            <li class="footer-menu-divider">⋅</li>
-            <li>
-                <a href="/results">Results</a>
-            </li>
-        </ul>
-        <p class="copyright text-muted small">Copyright © SIPS 2016. All Rights Reserved</p>
-    </div>
-</footer>
-
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<!-- MetisMenu JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.4.0/metisMenu.min.js"></script>
+<%- include ../partials/default_footer.ejs %>
 
 <script>
 
     // jquery extend function for sending post request to next page
     $.extend(
             {
-                redirectPost: function(location, args)
-                {
+                redirectPost: function (location, args) {
                     var form = '';
-                    $.each( args, function( key, value ) {
+                    $.each(args, function (key, value) {
                         console.log("Key: " + key + ", Value: " + value);
-                        form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+                        form += '<input type="hidden" name="' + key + '" value="' + value + '">';
                     });
-                    $('<form id="post_form" action="'+location+'" method="POST">'+form+'</form>').appendTo('body').submit();
+                    $('<form id="post_form" action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
 
                     $('#post_form').remove();
                 }
@@ -237,10 +127,16 @@
                     $(this).find('td .btn').removeClass("invisible");
                 },
                 function () {
-                    $(this).find('td input[type=radio]').prop('checked', true);
+
                     $(this).find('td .btn').addClass("invisible");
                 }
         );
+
+        //Checks group on the same row as the action button being clicked
+        $('.action_btn').click(function () {
+            //$(this).find('td input[type=radio]').prop('checked', true);
+            $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
+        });
 
         $(".delete-group").click(function () {
             var selectedGroup = $('input[name=group]:checked').val()
@@ -258,8 +154,8 @@
 
         $(".edit-group").click(function () {
             var selectedGroup = $('.selectedGroup:checked').val();
-            var groupName =  $(this).closest('tr').find('td:eq(1)').text();
-            var inviteCode =  $(this).closest('tr').find('td:eq(4)').text();
+            var groupName = $(this).closest('tr').find('td:eq(1)').text();
+            var inviteCode = $(this).closest('tr').find('td:eq(4)').text();
             console.log("Editing " + inviteCode + ", " + groupName + ", " + selectedGroup);
 
             $.redirectPost('/admin/edit-group', {groupID: selectedGroup, groupName: groupName, inviteCode: inviteCode});

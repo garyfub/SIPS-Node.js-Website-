@@ -5,7 +5,7 @@ var model_users = require('../models/users');
 var model_data = require('../models/data');
 
 /* GET Admin page. */
-router.get('/', ensureAuthenticated,  function (req, res, next) {
+router.get('/', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin) {
         var user = req.user;
         var admin = req.user.Admin;
@@ -98,19 +98,19 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
         var gName = req.body.groupName;
 
         console.log("Group: " + gid + ", " + gName);
-        if(typeof gid !== 'undefined' && gid){
+        if (typeof gid !== 'undefined' && gid) {
 
 
-        res.render('admin/edit-group', {
-            title: 'Edit Group',
-            name: req.user.name.givenName + " " + req.user.name.familyName,
-            id: req.user.id,
-            isAdmin: req.user.isAdmin,
-            groupID: req.body.group,
-            groupName: gName,
-            orgID: req.user.Admin.ORGANIZATIONID,
-            inviteCode: req.body.inviteCode
-        })
+            res.render('admin/edit-group', {
+                title: 'Edit Group',
+                name: req.user.name.givenName + " " + req.user.name.familyName,
+                id: req.user.id,
+                isAdmin: req.user.isAdmin,
+                groupID: req.body.group,
+                groupName: gName,
+                orgID: req.user.Admin.ORGANIZATIONID,
+                inviteCode: req.body.inviteCode
+            })
 
         }
         else
@@ -168,7 +168,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated())
         return next();
     else
-    res.redirect('/');
+        res.redirect('/');
 }
 
 module.exports = router;

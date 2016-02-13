@@ -43,25 +43,25 @@ router.get('/logout', function (req, res, next) {
 
 router.get('/results', ensureAuthenticated, function (req, res, next) {
 
-        var results = model_data.getUserTaskList(req);
-        // console.log("CHECK USER:: " + req.user);
-        res.render('results', {
-            title: 'Results',
-            name: req.user.name.givenName + " " + req.user.name.familyName,
-            id: req.user.id,
-            isAdmin: req.user.isAdmin,
-            taskList: results
-        })
+    var results = model_data.getUserTaskList(req);
+    // console.log("CHECK USER:: " + req.user);
+    res.render('results', {
+        title: 'Results',
+        name: req.user.name.givenName + " " + req.user.name.familyName,
+        id: req.user.id,
+        isAdmin: req.user.isAdmin,
+        taskList: results
+    })
 });
 
 router.post('/results/data', ensureAuthenticated, function (req, res, next) {
 
-        var data = model_data.getUserTaskData(req);
+    var data = model_data.getUserTaskData(req);
 
-        console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
-        res.send({
-            data: data
-        })
+    console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
+    res.send({
+        data: data
+    })
 });
 
 

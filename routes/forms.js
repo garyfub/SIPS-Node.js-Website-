@@ -6,7 +6,9 @@ var modelUsers = require('../models/users');
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function (req, res, next) {
-    res.redirect('/');
+    res.render('forms', {
+        title: 'Forms', isAdmin: req.user.isAdmin
+    });
 });
 
 router.post('/next', ensureAuthenticated, function (req, res, next) {
@@ -20,19 +22,19 @@ router.post('/next', ensureAuthenticated, function (req, res, next) {
 
 /* Displays Sports Fitness and Injury Form static version */
 router.get('/sport-fitness-injury', ensureAuthenticated, function (req, res, next) {
-    res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form'});
+    res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form', isAdmin: req.user.isAdmin});
 });
 
 /* Displays Sports Fitness and Injury Form static version */
 router.get('/user-registration', ensureAuthenticated, function (req, res, next) {
-    res.render('forms/user-registration', {title: 'Basic User Information Form'});
+    res.render('forms/user-registration', {title: 'Basic User Information Form', isAdmin: 0});
 });
 
 /* Retrieves Sports Fitness and Injury Form Data and sends it to be added to the database */
 router.post('/submission-complete', ensureAuthenticated, function (req, res, next) {
 
     model.addFormEntry(req);
-    res.render('forms/submission-complete', {title: 'Sport Fitness and Injury Form'});
+    res.render('forms/submission-complete', {title: 'Sport Fitness and Injury Form', isAdmin: req.user.isAdmin});
 });
 
 
