@@ -60,6 +60,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <% if(groupInfo.users.length == 0){ %>
                                     <tr class="warning">
                                         <td class="hidden"></td>
                                         <td>Hello! Please invite members and they will be displayed here</td>
@@ -70,6 +71,32 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    <% }
+                                    for(var i = 0; i < groupInfo.users.length; i++){
+                                    %>
+                                    <td class="hidden"><input name="user" class="selectedUser" type="radio"
+                                                              value="<%= groupInfo.users[i]["USERID"] %>"></td>
+                                    <td>{get user's name}</td>
+                                    <td><%= groupInfo.users[i]["ROLE_NAME"] %></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                    class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
+                                                    data-toggle="dropdown"><span class="fa fa-cog"></span></button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a href="#" class="edit-user"><span class="fa fa-cog "></span> edit</a>
+                                                </li>
+                                                <li><a href="/results"><span class="fa fa-pie-chart "></span> View
+                                                        User's Results</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#" class="delete-group"><span
+                                                                class="fa fa-trash-o "></span>
+                                                        Remove user from group</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <% } %>
                                     </tbody>
                                 </table>
                                 <br>
@@ -86,12 +113,13 @@
                                     <thead>
                                     <tr class="active">
                                         <th class="col-lg-1 hidden">Select</th>
-                                        <th class="col-lg-3">Position</th>
-                                        <th class="col-lg-3">permission</th>
+                                        <th class="col-lg-3">Position Name</th>
+                                        <th class="col-lg-3">permissions</th>
                                         <th class="col-lg-1">Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <% if(groupInfo.users.length == 0){ %>
                                     <tr class="warning">
                                         <td class="hidden"></td>
                                         <td>Hello! Please add a position and they will be displayed here</td>
@@ -102,6 +130,33 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    <% }
+                                    for(var i = 0; i < groupInfo.perms.length; i++){
+                                    %>
+                                    <tr>
+                                        <td class="hidden"><input name="perm" class="selectedPerm" type="radio"
+                                                                  value="<%= groupInfo.perms[i]["ROLE_NAME"] %>"></td>
+                                        <td><%= groupInfo.perms[i]["ROLE_NAME"] %></td>
+                                        <td>{add permission columns}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button"
+                                                        class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
+                                                        data-toggle="dropdown"><span class="fa fa-cog"></span></button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li><a href="#" class="edit-perm"><span class="fa fa-cog "></span>
+                                                            edit</a>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#" class="delete-perm"><span
+                                                                    class="fa fa-trash-o "></span>
+                                                            Delete Position</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% } %>
                                     </tbody>
                                 </table>
                                 <br>

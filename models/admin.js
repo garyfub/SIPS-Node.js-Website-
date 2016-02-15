@@ -35,7 +35,9 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 module.exports = {
     createGroup: createGroup,
     getGroups: getGroups,
-    deleteGroup: deleteGroup
+    deleteGroup: deleteGroup,
+    getGroupUsers: getGroupUsers,
+    getGroupPermissions: getGroupPermissions
 }
 
 //Creates new group
@@ -68,7 +70,7 @@ function createGroup(name, orgID, callback) {
 //Retrieves list of groups
 function getGroups(orgID, callback) {
 
-    console.log(orgID + ", " + JSON.stringify(callback, null, 2));
+   // console.log(orgID + ", " + JSON.stringify(callback, null, 2));
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM GROUPS WHERE ORGANIZATIONID =  \'" + orgID + "\'", function (err, rows, moreResultSets) {
             if (err) {
@@ -106,3 +108,50 @@ function deleteGroup(groupID, callback) {
         });
     });
 };
+
+
+
+function getGroupUsers(groupID, getPerms,  callback){
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT * FROM MEMBERS WHERE GROUPID =  \'" + groupID + "\'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+                return false;
+            } else {
+                //return results
+                if(getPerms == 1) {
+                    return getGroupPermissions(groupID, rows, callback);
+                }
+                else{
+                    var result = {};
+                    result['users'] = rows;
+                    return callback(result);
+                }
+
+            }
+        });
+    });
+}
+
+function getGroupPermissions(groupID, users, callback){
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+                return false;
+            } else {
+                //return results
+                var result = {};
+                if(users !== undefined){
+                    result['perms'] = rows;
+                    result['users'] = users;
+                    return callback(result);
+                }
+                else
+                    return callback(rows);
+            }
+        });
+    });
+
+
+}

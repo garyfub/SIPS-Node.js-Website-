@@ -96,21 +96,25 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
 
         var gid = req.body.groupID;
         var gName = req.body.groupName;
-
+        var getPermissions = 1;
         console.log("Group: " + gid + ", " + gName);
         if (typeof gid !== 'undefined' && gid) {
 
+            model.getGroupUsers(gid, getPermissions, function(result) {
 
-            res.render('admin/edit-group', {
-                title: 'Edit Group',
-                name: req.user.name.givenName + " " + req.user.name.familyName,
-                id: req.user.id,
-                isAdmin: req.user.isAdmin,
-                groupID: req.body.group,
-                groupName: gName,
-                orgID: req.user.Admin.ORGANIZATIONID,
-                inviteCode: req.body.inviteCode
-            })
+                //console.log("RESULT: " + JSON.stringify(result, null, 2));
+                res.render('admin/edit-group', {
+                    title: 'Edit Group',
+                    name: req.user.name.givenName + " " + req.user.name.familyName,
+                    id: req.user.id,
+                    isAdmin: req.user.isAdmin,
+                    groupID: req.body.group,
+                    groupName: gName,
+                    orgID: req.user.Admin.ORGANIZATIONID,
+                    inviteCode: req.body.inviteCode,
+                    groupInfo: result
+                })
+            });
 
         }
         else

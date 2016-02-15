@@ -97,15 +97,9 @@ function inviteCode(req, callback){
                         else conn.close(function () {
                             return callback(err);
                         });
-
-
                     });
                 });
-
             }
         });
-
     });
-
-
 }
