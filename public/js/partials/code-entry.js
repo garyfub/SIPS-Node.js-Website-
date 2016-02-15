@@ -13,13 +13,13 @@ $( document ).ready(function() {
             success: function (data) {
                 $('#code_form')[0].reset();
                 $('.code-panel').removeClass("panel-default").addClass("panel-success");
-                $('.code-panel .panel-body').append('<p id=\'code-msg\'>Operation succesfull</p>');
+                $('.code-panel .panel-body').append('<p id=\'code-msg\' class"text-danger">Operation succesfull</p>');
 
             },
             error: function (data) {
                 $('#code_form')[0].reset();
                 $('.code-panel').removeClass("panel-default").addClass("panel-danger");
-                $('.code-panel .panel-body').append("<p id='code-msg'>Uh oh, must have been a bad code</p>");
+                $('.code-panel .panel-body').append('<p id="code-msg" class"text-danger">Uh oh, must have been a bad code</p>');
 
             },
             complete: function () {

@@ -126,13 +126,13 @@ function isAdmin(profile) {
     try {
         console.log("Admin - Check");
         //checks is user exists in database;
-        var obj = conn.querySync("select COUNT(*) from ADMIN WHERE gUserID = \'" + userid + "\'");
+        var obj = conn.querySync("select COUNT(*) from Members WHERE UserID = \'" + userid + "\' AND ROLE_NAME = 'Administrator'");
 
         isAdmin = obj[0][1];
 
         results = isAdmin;
         if (isAdmin > 0) {
-            obj2 = conn.querySync("select * from ADMIN WHERE gUserID = \'" + userid + "\'");
+            obj2 = conn.querySync("select * from Members WHERE UserID = \'" + userid + "\' AND ROLE_NAME = 'Administrator'");
             admin = obj2[0];
             admin['check'] = isAdmin;
             results = admin;

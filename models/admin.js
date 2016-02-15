@@ -7,7 +7,6 @@ var env = null;
 var keySql = null;
 
 var serviceName2 = 'SQLDB';
-var newUser;
 //VCAP_SERVICES
 function findKey(obj, lookup) {
     for (var i in obj) {
