@@ -42,40 +42,10 @@
 </div>
 
 
-
 <%- include partials/default_footer.ejs %>
 
+<!-- COde Entry Block JavaScript -->
+<script src="/javascripts/partials/code_entry.js"></script>
 
-<!--suppress JSJQueryEfficiency -->
-<script>
-    $( document ).ready(function() {
-        $(".code_btn").click(function () {
-
-            $(".code-panel").removeClass("panel-success panel-danger").addClass("panel-default");
-            $("#code-msg").remove();
-            $.ajax({
-                url: '/code-submit',
-                type: 'POST',
-                data: $('#code_form').serialize(),
-                success: function (data) {
-                    $('#code_form')[0].reset();
-                    $('.code-panel').removeClass("panel-default").addClass("panel-success");
-                    $('.code-panel .panel-body').append('<p id=\'code-msg\'>Operation succesfull</p>');
-
-                },
-                error: function (data) {
-                    $('#code_form')[0].reset();
-                    $('.code-panel').removeClass("panel-default").addClass("panel-danger");
-                    $('.code-panel .panel-body').append("<p id='code-msg'>Uh oh, must have been a bad code</p>");
-
-                },
-                complete: function () {
-                }
-            });
-
-        });
-    });
-
-</script>
 </body>
 </html>
