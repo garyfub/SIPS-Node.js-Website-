@@ -76,7 +76,7 @@
                                     %>
                                     <td class="hidden"><input name="user" class="selectedUser" type="radio"
                                                               value="<%= groupInfo.users[i]["USERID"] %>"></td>
-                                    <td>{get user's name}</td>
+                                    <td><%= groupInfo.users[i]["NAME_LAST"] + ", " + groupInfo.users[i]["NAME_FIRST"] %></td>
                                     <td><%= groupInfo.users[i]["ROLE_NAME"] %></td>
                                     <td>
                                         <div class="btn-group">

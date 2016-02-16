@@ -31,7 +31,6 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
     credentialsSQL.password + ";HOSTNAME=" + credentialsSQL.hostname + ";port=" + credentialsSQL.port;
 
 
-//TODO: Add actions for interacting with Users
 module.exports = {
     createGroup: createGroup,
     getGroups: getGroups,
@@ -110,10 +109,16 @@ function deleteGroup(groupID, callback) {
 };
 
 
-
+/**
+ * Retrieves list of users in the group from the id used.
+ * Retrieves user's names from User table via inner join.
+ * @param groupID
+ * @param getPerms
+ * @param callback
+ */
 function getGroupUsers(groupID, getPerms,  callback){
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT * FROM MEMBERS WHERE GROUPID =  \'" + groupID + "\'", function (err, rows, moreResultSets) {
+        conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
                 return false;
@@ -133,6 +138,13 @@ function getGroupUsers(groupID, getPerms,  callback){
     });
 }
 
+/**
+ * Retrieve Group role positions and their respective permissions
+ * Attaches to getGroupUsers() if getPerms = 1
+ * @param groupID
+ * @param users
+ * @param callback
+ */
 function getGroupPermissions(groupID, users, callback){
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL", function (err, rows, moreResultSets) {

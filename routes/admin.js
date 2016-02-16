@@ -87,9 +87,10 @@ router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
 
 /**
  * TODO
- * 1. Be able to invite users to group
+ * 1. ✓ Be able to send users invite code via email (using client's email program)
  * 2. Remove user from group
- * 3. Edit Group properties (name, group type, etc)
+ * 3. Create and assign group positions
+ * 4. Edit Group properties (name, group type, etc)
  */
 router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin) {
@@ -102,7 +103,7 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
 
             model.getGroupUsers(gid, getPermissions, function(result) {
 
-                //console.log("RESULT: " + JSON.stringify(result, null, 2));
+                console.log("RESULT: " + JSON.stringify(result, null, 2));
                 res.render('admin/edit-group', {
                     title: 'Edit Group',
                     name: req.user.name.givenName + " " + req.user.name.familyName,
@@ -128,7 +129,7 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
 
 /**
  * TODO
- * 1. Should there be a single results page or is it easier to manage a seperate admin version?
+ * 1. Should there be a single results page or is it easier to manage a separate admin version?
  */
 router.get('/results', ensureAuthenticated, function (req, res, next) {
 
