@@ -83,10 +83,10 @@ function inviteCode(req, callback){
                 console.log(err);
                 return callback(err)
             } else{
-                if(rows[0].GROUPID === 'undefined'){
+                console.log("RESULT: " + JSON.stringify(rows,null,2));
+                if(Object.keys(rows).length == 0){ //if no results
                     return callback(true);
                 }
-                console.log("RESULT: " + rows[0].GROUPID);
 
                 //Add user to single group if code is valid
                 conn.prepare("insert into Members (role_name, UserID, GROUPID, DATEADDED) VALUES (?, ?, ?, ?)", function (err, stmt) {

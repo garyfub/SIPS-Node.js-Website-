@@ -4,8 +4,14 @@
 $( document ).ready(function() {
     $(".code_btn").click(function () {
 
-        $(".code-panel").removeClass("panel-success panel-danger").addClass("panel-default");
+        $(".code-panel").removeClass("panel-success panel-danger panel-warning").addClass("panel-default");
         $("#code-msg").remove();
+
+        if($("#code_insert").val() == ""){
+            $('.code-panel').removeClass("panel-default").addClass("panel-warning");
+            $('.code-panel .panel-body').append('<p id="code-msg" class"text-warning">Please enter a valid code</p>');
+        }
+        else{
         $.ajax({
             url: '/code-submit',
             type: 'POST',
@@ -25,6 +31,6 @@ $( document ).ready(function() {
             complete: function () {
             }
         });
-
+        }
     });
 });

@@ -103,13 +103,14 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
 
             model.getGroupUsers(gid, getPermissions, function(result) {
 
-                console.log("RESULT: " + JSON.stringify(result, null, 2));
+                //console.log("RESULT: " + JSON.stringify(result, null, 2));
+                //console.log("RESULT: " + JSON.stringify(req.body, null, 2));
                 res.render('admin/edit-group', {
                     title: 'Edit Group',
                     name: req.user.name.givenName + " " + req.user.name.familyName,
                     id: req.user.id,
                     isAdmin: req.user.isAdmin,
-                    groupID: req.body.group,
+                    groupID: gid,
                     groupName: gName,
                     orgID: req.user.Admin.ORGANIZATIONID,
                     inviteCode: req.body.inviteCode,
@@ -123,6 +124,32 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
     }
     else {
         res.send('404: Page not Found', 404);
+    }
+});
+
+/**
+ * GROUP
+ * Remove user from group
+ */
+router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
+    if (req.user.Admin) {
+        console.log("RESULT: " + JSON.stringify(req.body, null, 2));
+    }
+    else {
+        res.redirect('/logout');
+    }
+});
+
+/**
+ * GROUP
+ * Remove position
+ */
+router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
+    if (req.user.Admin) {
+        console.log("RESULT: " + JSON.stringify(req.body, null, 2));
+    }
+    else {
+        res.redirect('/logout');
     }
 });
 
