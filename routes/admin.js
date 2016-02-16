@@ -133,7 +133,14 @@ router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
  */
 router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin) {
+        var gid = req.body.groupID;
+        var userID = req.body.userID;
+
         console.log("RESULT: " + JSON.stringify(req.body, null, 2));
+
+        model.groupRemoveUser(gid, userID, function(err) {
+            res.redirect('/admin');
+        });
     }
     else {
         res.redirect('/logout');
@@ -146,7 +153,13 @@ router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
  */
 router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin) {
+        var gid = req.body.groupID;
+        var position = req.body.position;
+
         console.log("RESULT: " + JSON.stringify(req.body, null, 2));
+        model.groupRemovePosition(gid, position, function() {
+            res.sendStatus(200);
+        });
     }
     else {
         res.redirect('/logout');

@@ -56,9 +56,9 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
 
     model_groups.inviteCode(req, function (err) {
         if(!err)
-            res.sendStatus(200) //success
+            res.sendStatus(200); //success
         else
-            res.sendStatus(404)//fail
+            res.sendStatus(404); //fail
     });
 
 });

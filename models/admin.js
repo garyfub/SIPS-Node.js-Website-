@@ -36,7 +36,9 @@ module.exports = {
     getGroups: getGroups,
     deleteGroup: deleteGroup,
     getGroupUsers: getGroupUsers,
-    getGroupPermissions: getGroupPermissions
+    getGroupPermissions: getGroupPermissions,
+    groupRemoveUser: groupRemoveUser,
+    groupRemovePosition : groupRemovePosition
 }
 
 //Creates new group
@@ -164,6 +166,58 @@ function getGroupPermissions(groupID, users, callback){
             }
         });
     });
+}
 
 
+/**
+ * Group
+ * Remove user
+ */
+function groupRemoveUser(groupID, userID, callback){
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("DELETE FROM MEMBERS WHERE groupID = \'" + groupID + "\' AND userID = \'"+ userID + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback(err);
+                });
+            });
+        });
+    });
+
+}
+
+/**
+ * Group
+ * Remove position
+ */
+function groupRemovePosition(groupID, position, callback){
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND position = \'"+ position + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback(err);
+                });
+            });
+        });
+    });
+
+return callback();
 }
