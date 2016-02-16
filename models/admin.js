@@ -147,7 +147,7 @@ function getGroupUsers(groupID, getPerms,  callback){
  */
 function getGroupPermissions(groupID, users, callback){
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL", function (err, rows, moreResultSets) {
+        conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL ORDER BY ROLEPERMISSIONS.ROLE_NAME", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
                 return false;

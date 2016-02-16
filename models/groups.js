@@ -69,6 +69,12 @@ function inviteCode(req, callback){
     var userid = req.user.id;
         console.log("InviteCode: " + code + ", " + userid);
 
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1;
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var date = year + "-" + month + "-" + day;
+
     ibmdb.open(dsnString, function (err, conn) {
 
 
@@ -83,13 +89,13 @@ function inviteCode(req, callback){
                 console.log("RESULT: " + rows[0].GROUPID);
 
                 //Add user to single group if code is valid
-                conn.prepare("insert into Members (role_name, UserID, GROUPID) VALUES (?, ?, ?)", function (err, stmt) {
+                conn.prepare("insert into Members (role_name, UserID, GROUPID, DATEADDED) VALUES (?, ?, ?, ?)", function (err, stmt) {
                     if (err) {
                         console.log(err);
                         conn.closeSync()
                         return callback(err);
                     }
-                    stmt.execute(["Pending", userid, rows[0].GROUPID], function (err, result) {
+                    stmt.execute(["Pending", userid, rows[0].GROUPID, date], function (err, result) {
                         if (err){
                             console.log(err);
                             return callback(err);
