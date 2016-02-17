@@ -102,21 +102,6 @@
 
 <script>
 
-    // jquery extend function for sending post request to next page
-    $.extend(
-            {
-                redirectPost: function (location, args) {
-                    var form = '';
-                    $.each(args, function (key, value) {
-                        console.log("Key: " + key + ", Value: " + value);
-                        form += '<input type="hidden" name="' + key + '" value="' + value + '">';
-                    });
-                    $('<form id="post_form" action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
-
-                    $('#post_form').remove();
-                }
-            });
-
     $(document).ready(function () {
         $(function () {
             $('#sideMenu').metisMenu();
@@ -133,12 +118,14 @@
         );
 
         //Checks group on the same row as the action button being clicked
-        $('.action_btn').click(function () {
+        $('.action_btn').click(function (e) {
+            e.preventDefault();
             //$(this).find('td input[type=radio]').prop('checked', true);
             $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
         });
 
-        $(".delete-group").click(function () {
+        $(".delete-group").click(function (e) {
+            e.preventDefault();
             var selectedGroup = $('input[name=group]:checked').val()
             $.ajax({
                 type: 'POST',
@@ -152,14 +139,10 @@
             });
         });
 
-        $(".edit-group").click(function () {
+        $(".edit-group").click(function (e) {
+            e.preventDefault();
             var selectedGroup = $('.selectedGroup:checked').val();
-            var groupName = $(this).closest('tr').find('td:eq(1)').text();
-            var inviteCode = $(this).closest('tr').find('td:eq(4)').text();
-            console.log("Editing " + inviteCode + ", " + groupName + ", " + selectedGroup);
-
-            $.redirectPost('/admin/edit-group', {groupID: selectedGroup, groupName: groupName, inviteCode: inviteCode});
-
+            window.location.href = "/admin/edit-group/" + selectedGroup;
         });
     });
 

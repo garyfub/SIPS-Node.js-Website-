@@ -373,13 +373,14 @@
         );
 
         //Open add user dialog
-        $(".add_user").click(function () {
+        $(".add_user").click(function (e) {
+            e.preventDefault();
             $('#add_user_box').dialog('open');
         })
 
         //Send post to add position
-        $('#add-position').click(function () {
-
+        $('#add-position').click(function (e) {
+            e.preventDefault();
             $.ajax({
                 type: 'POST',
                 url: '/admin/add-position',
@@ -391,7 +392,8 @@
         });
 
         //Post after confirmation to remove user
-        $('#remove-user-confirmed').click(function () {
+        $('#remove-user-confirmed').click(function (e) {
+            e.preventDefault();
             var selectedUser = $('input[name=user]:checked').val()
             $.ajax({
                 type: 'POST',
@@ -407,7 +409,8 @@
         });
 
         //Post after confirmation to remove position
-        $('#remove-position-confirmed').click(function () {
+        $('#remove-position-confirmed').click(function (e) {
+            e.preventDefault();
             var selectedPos = $('input[name=position]:checked').val()
             $.ajax({
                 type: 'POST',

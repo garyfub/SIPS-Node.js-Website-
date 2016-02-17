@@ -37,8 +37,9 @@ module.exports = {
     deleteGroup: deleteGroup,
     getGroupUsers: getGroupUsers,
     getGroupPermissions: getGroupPermissions,
+    getUserAccessPermissions: getUserAccessPermissions,
     groupRemoveUser: groupRemoveUser,
-    groupRemovePosition : groupRemovePosition
+    groupRemovePosition: groupRemovePosition
 }
 
 //Creates new group
@@ -71,7 +72,7 @@ function createGroup(name, orgID, callback) {
 //Retrieves list of groups
 function getGroups(orgID, callback) {
 
-   // console.log(orgID + ", " + JSON.stringify(callback, null, 2));
+    // console.log(orgID + ", " + JSON.stringify(callback, null, 2));
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM GROUPS WHERE ORGANIZATIONID =  \'" + orgID + "\'", function (err, rows, moreResultSets) {
             if (err) {
@@ -118,7 +119,7 @@ function deleteGroup(groupID, callback) {
  * @param getPerms
  * @param callback
  */
-function getGroupUsers(groupID, getPerms,  callback){
+function getGroupUsers(groupID, getPerms, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, rows, moreResultSets) {
             if (err) {
@@ -126,10 +127,10 @@ function getGroupUsers(groupID, getPerms,  callback){
                 return false;
             } else {
                 //return results
-                if(getPerms == 1) {
+                if (getPerms == 1) {
                     return getGroupPermissions(groupID, rows, callback);
                 }
-                else{
+                else {
                     var result = {};
                     result['users'] = rows;
                     return callback(result);
@@ -147,7 +148,7 @@ function getGroupUsers(groupID, getPerms,  callback){
  * @param users
  * @param callback
  */
-function getGroupPermissions(groupID, users, callback){
+function getGroupPermissions(groupID, users, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL ORDER BY ROLEPERMISSIONS.ROLE_NAME", function (err, rows, moreResultSets) {
             if (err) {
@@ -156,7 +157,7 @@ function getGroupPermissions(groupID, users, callback){
             } else {
                 //return results
                 var result = {};
-                if(users !== undefined){
+                if (users !== undefined) {
                     result['perms'] = rows;
                     result['users'] = users;
                     return callback(result);
@@ -168,15 +169,48 @@ function getGroupPermissions(groupID, users, callback){
     });
 }
 
+/**
+ * ACCEESS PERMISSIONS
+ *Returns all roles and permissions connected to the user ID
+ *
+ * optional: get role and permissions for specific group if groupID isn't null.
+ */
+function getUserAccessPermissions(groupID, userID, callback) {
+
+    ibmdb.open(dsnString, function (err, conn) {
+        if (groupID != null) {//Returns user positions for specified groupID
+            conn.query("SELECT GROUPS.name, GROUPS.invite_code, MEMBERS.role_name, ROLEPERMISSIONS.VIEW_ORG_ADMIN_DASH, ROLEPERMISSIONS.group_creation, ROLEPERMISSIONS.group_editing, ROLEPERMISSIONS.remove_users, ROLEPERMISSIONS.view_group_results, ROLEPERMISSIONS.give_tests, ROLEPERMISSIONS.organizationID FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON MEMBERS.role_name = ROLEPERMISSIONS.role_name INNER JOIN GROUPS ON MEMBERS.GROUPID = GROUPS.GROUPID WHERE (ROLEPERMISSIONS.GROUPID =  \'" + groupID + "\' OR ROLEPERMISSIONS.GROUPID IS NULL) and USERID =  \'" + userID + "\';", function (err, rows, moreResultSets) {
+                if (err) {
+                    console.log(err);
+                    return false;
+                } else {
+                    return callback(rows);
+                }
+            });
+        }
+        else {//Returns all positions/permissions the user has
+            conn.query("SELECT MEMBERS.role_name, ROLEPERMISSIONS.groupID, ROLEPERMISSIONS.VIEW_ORG_ADMIN_DASH, ROLEPERMISSIONS.group_creation, ROLEPERMISSIONS.group_editing, ROLEPERMISSIONS.remove_users, ROLEPERMISSIONS.view_group_results, ROLEPERMISSIONS.give_tests, ROLEPERMISSIONS.organizationID FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON MEMBERS.role_name = ROLEPERMISSIONS.role_name WHERE USERID =  \'" + userID + "\';", function (err, rows, moreResultSets) {
+                if (err) {
+                    console.log(err);
+                    return false;
+                } else {
+                    return callback(rows);
+                }
+            });
+
+        }
+    });
+
+}
 
 /**
  * Group
  * Remove user
  */
-function groupRemoveUser(groupID, userID, callback){
+function groupRemoveUser(groupID, userID, callback) {
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("DELETE FROM MEMBERS WHERE groupID = \'" + groupID + "\' AND userID = \'"+ userID + "\'", function (err, stmt) {
+        conn.prepare("DELETE FROM MEMBERS WHERE groupID = \'" + groupID + "\' AND userID = \'" + userID + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -199,10 +233,10 @@ function groupRemoveUser(groupID, userID, callback){
  * Group
  * Remove position
  */
-function groupRemovePosition(groupID, position, callback){
+function groupRemovePosition(groupID, position, callback) {
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND position = \'"+ position + "\'", function (err, stmt) {
+        conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND position = \'" + position + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -219,5 +253,5 @@ function groupRemovePosition(groupID, position, callback){
         });
     });
 
-return callback();
+    return callback();
 }

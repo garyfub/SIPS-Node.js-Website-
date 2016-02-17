@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var model = require('../models/admin')
+var model = require('../models/admin');
 var model_users = require('../models/users');
 var model_data = require('../models/data');
 
@@ -88,39 +88,47 @@ router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
 /**
  * TODO
  * 1. ✓ Be able to send users invite code via email (using client's email program)
- * 2. Remove user from group
- * 3. Create and assign group positions
- * 4. Edit Group properties (name, group type, etc)
+ * 2. ✓ Remove user from group
+ * 3. Make the route dynamic based on the url
+ * 4. Check user's permissions to see if they have access to group
+ * 5. Create and assign group positions
+ * 6. Edit Group properties (name, group type, etc)
  */
-router.all('/edit-group', ensureAuthenticated, function (req, res, next) {
+router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin) {
 
-        var gid = req.body.groupID;
-        var gName = req.body.groupName;
-        var getPermissions = 1;
-        console.log("Group: " + gid + ", " + gName);
-        if (typeof gid !== 'undefined' && gid) {
+        var gid = req.params.groupID;
+        var userID = req.user.id;
+        model.getUserAccessPermissions(gid, userID, function(result){
+            var access = result[0];
 
-            model.getGroupUsers(gid, getPermissions, function(result) {
+            console.log("RESULT: " + JSON.stringify(access, null, 2));
 
-                //console.log("RESULT: " + JSON.stringify(result, null, 2));
-                //console.log("RESULT: " + JSON.stringify(req.body, null, 2));
-                res.render('admin/edit-group', {
-                    title: 'Edit Group',
-                    name: req.user.name.givenName + " " + req.user.name.familyName,
-                    id: req.user.id,
-                    isAdmin: req.user.isAdmin,
-                    groupID: gid,
-                    groupName: gName,
-                    orgID: req.user.Admin.ORGANIZATIONID,
-                    inviteCode: req.body.inviteCode,
-                    groupInfo: result
-                })
-            });
+            var gName = access["NAME"];
 
-        }
-        else
-            res.redirect('/admin');
+            console.log("Group: " + gid + ", " + gName);
+            if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
+
+                model.getGroupUsers(gid, 1, function(result) {
+
+                    res.render('admin/edit-group', {
+                        title: 'Edit Group',
+                        name: req.user.name.givenName + " " + req.user.name.familyName,
+                        id: req.user.id,
+                        isAdmin: req.user.isAdmin,
+                        access: access,
+                        groupID: gid,
+                        groupName: gName,
+                        orgID: req.user.Admin.ORGANIZATIONID,
+                        inviteCode: access["INVITE_CODE"],
+                        groupInfo: result
+                    })
+                });
+            }
+            else
+                res.redirect('/admin');
+
+        });
     }
     else {
         res.send('404: Page not Found', 404);
