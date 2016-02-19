@@ -40,7 +40,7 @@ module.exports = {
 }
 
 //Checks for user in database
-function UserCheck(profile) {
+function UserCheck(profile, callback) {
     var userid = profile.id;
 
     var conn = ibmdb.openSync(dsnString);
@@ -53,12 +53,12 @@ function UserCheck(profile) {
     } catch (e) {
         console.log(e.message);
     }
-    return newUser;
+    return callback(newUser);
 
 }
 
 //Adds user to database after checking if they exist
-function UserCreate(profile) {
+function UserCreate(profile, callback) {
     console.log(JSON.stringify(profile, null, 2))
     var userid = profile.id;
     var name_first = profile.name.hasOwnProperty("givenName") ? profile.name.givenName : "";
@@ -112,11 +112,11 @@ function UserCreate(profile) {
     }
     else console.log("User exists");
 
-    return newUser;
+    return callback(newUser);
 }
 
 //Checks if user is an Admin and then retrieves Admin info if applicable
-function isAdmin(profile) {
+function isAdmin(profile, callback) {
     var userid = profile.id;
     var admin = null;
     var isAdmin = 0;
@@ -141,7 +141,7 @@ function isAdmin(profile) {
     } catch (e) {
         console.log(e.message);
     }
-    return results; //return 0 if user is an admin, returns json object if user is an admin.
+    return callback(results); //return 0 if user is an admin, returns json object if user is an admin.
 
 }
 

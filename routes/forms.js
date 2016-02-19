@@ -13,11 +13,15 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
 
 router.post('/next', ensureAuthenticated, function (req, res, next) {
     console.log("NEXT: " + JSON.stringify(req.body, null, 2));
-    var result = modelUsers.UserCheck(req.user);
-    model.addFormEntry(req);
-    console.log("FORM ENTRY USER CHECK: " + result);
 
-    res.redirect('/forms/sport-fitness-injury');
+    modelUsers.UserCheck(req.user, function(result){
+        model.addFormEntry(req, function(){
+        console.log("FORM ENTRY USER CHECK: " + result);
+        res.redirect('/forms/sport-fitness-injury');
+        });
+    });
+
+
 });
 
 /* Displays Sports Fitness and Injury Form static version */
@@ -33,8 +37,9 @@ router.get('/user-registration', ensureAuthenticated, function (req, res, next) 
 /* Retrieves Sports Fitness and Injury Form Data and sends it to be added to the database */
 router.post('/submission-complete', ensureAuthenticated, function (req, res, next) {
 
-    model.addFormEntry(req);
-    res.render('forms/submission-complete', {title: 'Sport Fitness and Injury Form', isAdmin: req.user.isAdmin});
+    model.addFormEntry(req, function(){
+        res.render('forms/submission-complete', {title: 'Sport Fitness and Injury Form', isAdmin: req.user.isAdmin});
+    });
 });
 
 

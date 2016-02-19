@@ -27,9 +27,6 @@ router.get('/', function (req, res, next) {
                 callbackURL: req.protocol + '://' + req.get('host') + '/users/auth/google/callback'
             },
             function (token, refreshToken, profile, done) {
-                //check if user is in database
-                model_users.UserCheck(profile);
-                userjson = profile;
 
                 //call done() when complete...
                 done(null, profile);
@@ -55,7 +52,7 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
 
 
     model_groups.inviteCode(req, function (err) {
-        if(!err)
+        if (!err)
             res.sendStatus(200); //success
         else
             res.sendStatus(404); //fail
@@ -70,26 +67,26 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
  */
 router.get('/results', ensureAuthenticated, function (req, res, next) {
 
-    var results = model_data.getUserTaskList(req);
-    // console.log("CHECK USER:: " + req.user);
-    res.render('results', {
-        title: 'Results',
-        name: req.user.name.givenName + " " + req.user.name.familyName,
-        id: req.user.id,
-        isAdmin: req.user.isAdmin,
-        taskList: results
-    })
+    model_data.getUserTaskList(req, function (results) {
+        res.render('results', {
+            title: 'Results',
+            name: req.user.name.givenName + " " + req.user.name.familyName,
+            id: req.user.id,
+            isAdmin: req.user.isAdmin,
+            taskList: results
+        })
+    });
 });
 
 //Retrieves data requested from Results page
 router.post('/results/data', ensureAuthenticated, function (req, res, next) {
 
-    var data = model_data.getUserTaskData(req);
-
-    console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
-    res.send({
-        data: data
-    })
+    model_data.getUserTaskData(req, function (data) {
+        console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
+        res.send({
+            data: data
+        })
+    });
 });
 
 

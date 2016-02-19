@@ -60,7 +60,7 @@ module.exports = {
 }
 
 //Checks of data is form or task data, if user exists, and then calls function based on data type
-function userCheckUpload(msg) {
+function userCheckUpload(msg, callback) {
 
     var userid = msg.USERID;
 
@@ -106,7 +106,7 @@ function userCheckUpload(msg) {
                             console.log("New user created");
                             result.closeSync();
 
-                            taskDataUploadSQLMultiTable(msg);
+                            taskDataUploadSQLMultiTable(msg, callback);
                         }
                     });
                 });
@@ -114,13 +114,13 @@ function userCheckUpload(msg) {
             else {
                 console.log("User exists");
                 //taskDataUploadCloudant(msg);
-                taskDataUploadSQLMultiTable(msg);
+                taskDataUploadSQLMultiTable(msg, callback);
             }
         }
     });
 };
 
-function taskEntry(user, data) {
+function taskEntry(user, data, callback) {
     var taskEntryID = uuid.v1();
     var userID = user.id;
     var dateObj = new Date();
@@ -153,10 +153,10 @@ function taskEntry(user, data) {
                     }
                     else {
                         if (flankerdata == 1)
-                            flanker(data.flanker, taskEntryID);
+                            flanker(data.flanker, taskEntryID, callbak);
 
                         if (appSensorData == 1)
-                            appsensor(data.appsensor, taskEntryID);
+                            appsensor(data.appsensor, taskEntryID, callback);
                     }
                 });
             });
@@ -164,7 +164,7 @@ function taskEntry(user, data) {
     });
 }
 
-function appsensor(data, taskEntryID) {
+function appsensor(data, taskEntryID, callback) {
 
     var accelx = (data.ACCELX.substring(1, data.ACCELX.length - 1)).split(",");
     var accely = (data.ACCELY.substring(1, data.ACCELY.length - 1)).split(",");
@@ -277,8 +277,8 @@ function appsensor(data, taskEntryID) {
                                 console.log(err);
                             }
                             else {
-
                                 result.closeSync();
+                                return callback();
                             }
                         });
                     } catch (err) {
@@ -292,7 +292,7 @@ function appsensor(data, taskEntryID) {
     });
 }
 
-function taskDataUploadCloudant(msg) {
+function taskDataUploadCloudant(msg , callback) {
     var keyNames = Object.keys(msg);
 
     //Print out key names to verify session object loaded
@@ -303,16 +303,15 @@ function taskDataUploadCloudant(msg) {
     datapoints.insert(msg, function (err, body, header) {
         if (err) {
             console.log('[session.insert] ', err.message);
-            return false;
         }
         else {
             console.log('Insertion completed without error')
-            return true;
+            return callback();
         }
     });
 };
 
-function taskDataUploadSQLMultiTable(msg) {
+function taskDataUploadSQLMultiTable(msg, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
             response.write("error: ", err.message + "<br>\n");
@@ -454,8 +453,8 @@ function taskDataUploadSQLMultiTable(msg) {
                                             console.log(err);
                                         }
                                         else {
-
                                             result.closeSync();
+                                            return callback();
                                         }
                                     });
                                 } catch (err) {
@@ -472,7 +471,7 @@ function taskDataUploadSQLMultiTable(msg) {
     });
 };
 
-function flanker(data, taskEntryID) {
+function flanker(data, taskEntryID, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
             console.log("ERROR" + err);
@@ -500,6 +499,7 @@ function flanker(data, taskEntryID) {
                         }
                         else {
                             console.log("FlankerData table updated");
+                            return callback();
                         }
                     });
                 }

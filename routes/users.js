@@ -6,9 +6,6 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var session = require('express-session');
 var model = require('../models/users');
 
-var userjson;
-var isNew;
-
 
 /* GET /users listing. */
 router.get('/', function (req, res, next) {
@@ -25,10 +22,6 @@ router.get('/login', function (req, res, next) {
             callbackURL: req.protocol + '://' + req.get('host') + '/users/auth/google/callback'
         },
         function (token, refreshToken, profile, done) {
-            //check if user is in database
-            model.UserCheck(profile);
-            userjson = profile;
-
             //call done() when complete...
             done(null, profile);
         }
@@ -41,33 +34,37 @@ app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'ema
 
 //Retrieves Google callback and confirms user is authenticated.
 router.all('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/login'}), function (req, res) {
-    //console.log("USER: " + JSON.stringify(req.user.id, null, 2));
+
     console.log("User Authenticated");
-    isNew = model.UserCheck(req.user);
-    var isAdmin = model.isAdmin(req.user);
-    if (isNew == 1) {//if user id is located in db
-        if (isAdmin != 0) {
-            req.user.Admin = isAdmin;
-            req.user.isAdmin = 1;
+    model.UserCheck(req.user, function (isNew) {
+
+        if (isNew == 1) {//if user id is located in db
+            model.isAdmin(req.user, function (isAdmin) {
+
+                if (isAdmin != 0) {
+                    req.user.Admin = isAdmin;
+                    req.user.isAdmin = 1;
+                }
+                else req.user.isAdmin = 0;
+
+                res.redirect('/');
+            });
         }
-        else req.user.isAdmin = 0;
-        res.redirect('/');
-    }
-    else {
-        model.UserCreate(req.user);
-        // console.log("Received UserJSON: " + JSON.stringify(userjson, null, 2))
-        res.redirect('/forms/user-registration');
-    }
+        else {
+            model.UserCreate(req.user, function () {
+                res.redirect('/forms/user-registration');
+            });
+        }
+    });
 });
 
 //Check if user is in database
 router.post('/check', function (req, res, next) {
-    var result = model.UserCheck(req.body);
 
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({check: result}));
-
-
+    model.UserCheck(req.body, function (result) {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({check: result}));
+    });
 });
 
 module.exports = router;

@@ -41,7 +41,7 @@ module.exports = {
 }
 
 //Adds form entry to FORMENTYLIST table and calls appropriate function to insert form data into db
-function getUserTaskList(req) {
+function getUserTaskList(req, callback) {
     var userid = req.user.id;
     var results = null;
     try {
@@ -52,11 +52,11 @@ function getUserTaskList(req) {
         console.log(e.message);
     }
     console.log("Task Entry RESULTS: " + JSON.stringify(results, null, 2));
-    return results;
+    return callback(results);
 }
 
 
-function getUserTaskData(req) {
+function getUserTaskData(req, callback) {
     var taskID = String(req.body.taskID);
     var results = null;
     console.log("taskID = " + taskID);
@@ -67,7 +67,7 @@ function getUserTaskData(req) {
     } catch (e) {
         console.log(e.message);
     }
-    return results;
+    return callback(results);
 }
 
 

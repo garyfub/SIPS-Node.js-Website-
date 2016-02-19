@@ -99,7 +99,7 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
 
         var gid = req.params.groupID;
         var userID = req.user.id;
-        model.getUserAccessPermissions(gid, userID, function(result){
+        model.getUserAccessPermissions(gid, userID, function (result) {
             var access = result[0];
 
             console.log("RESULT: " + JSON.stringify(access, null, 2));
@@ -109,7 +109,7 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
             console.log("Group: " + gid + ", " + gName);
             if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
 
-                model.getGroupUsers(gid, 1, function(result) {
+                model.getGroupUsers(gid, 1, function (result) {
 
                     res.render('admin/edit-group', {
                         title: 'Edit Group',
@@ -146,7 +146,7 @@ router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
 
         console.log("RESULT: " + JSON.stringify(req.body, null, 2));
 
-        model.groupRemoveUser(gid, userID, function(err) {
+        model.groupRemoveUser(gid, userID, function (err) {
             res.redirect('/admin');
         });
     }
@@ -165,7 +165,7 @@ router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
         var position = req.body.position;
 
         console.log("RESULT: " + JSON.stringify(req.body, null, 2));
-        model.groupRemovePosition(gid, position, function() {
+        model.groupRemovePosition(gid, position, function () {
             res.sendStatus(200);
         });
     }
@@ -182,15 +182,16 @@ router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
 router.get('/results', ensureAuthenticated, function (req, res, next) {
 
     if (req.user.Admin) {
-        var results = model_data.getUserTaskList(req);
-        // console.log("CHECK USER:: " + req.user);
-        res.render('results', {
-            title: 'Results',
-            name: req.user.name.givenName + " " + req.user.name.familyName,
-            id: req.user.id,
-            isAdmin: req.user.isAdmin,
-            taskList: results
-        })
+        model_data.getUserTaskList(req, function (results) {
+
+            res.render('results', {
+                title: 'Results',
+                name: req.user.name.givenName + " " + req.user.name.familyName,
+                id: req.user.id,
+                isAdmin: req.user.isAdmin,
+                taskList: results
+            })
+        });
     }
     else {
         res.send('404: Page not Found', 404);
@@ -203,12 +204,15 @@ router.get('/results', ensureAuthenticated, function (req, res, next) {
  */
 router.post('/results/data', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin) {
-        var data = model_data.getUserTaskData(req);
+        model_data.getUserTaskData(req, function (data) {
 
-        console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
-        res.send({
-            data: data
-        })
+            console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));
+            res.send({
+                data: data
+            })
+        });
+
+
     }
     else {
         res.send('404: Page not Found', 404);

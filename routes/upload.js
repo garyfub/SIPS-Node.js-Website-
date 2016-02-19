@@ -15,13 +15,16 @@ io.of('/upload').on('connection', function (socket) {
         console.log("Socket connection made for uploading app data");
         console.log("Object keys: " + Object.keys(req));
 
-        var result = modelUsers.UserCheck(req.user);
-        if (result == 0) {
-            modelUsers.UserCreate(req.user);
-        }
-        model.taskEntry(req.user, req.body);
-        socket.emit('Done');
-        //socket.disconnect('unauthorized');
+        modelUsers.UserCheck(req.user, function (result) {
+            if (result == 0) {
+                modelUsers.UserCreate(req.user, function (user) {
+                });
+            }
+            model.taskEntry(req.user, req.body, function () {
+                socket.emit('Done');
+                //socket.disconnect('unauthorized');
+            });
+        });
     });
 });
 
@@ -35,14 +38,16 @@ router.post('/form', function (req, res, next) {
     }
 
     //Create user on submission of registration form if not exists
-    var result = modelUsers.UserCheck(req.user);
+    modelUsers.UserCheck(req.user, function(result){
+
     if (result == 0) {
-        modelUsers.UserCreate(req.user);
+        modelUsers.UserCreate(req.user, function(result){});
     }
-    modelForm.addFormEntry(req);
+    modelForm.addFormEntry(req, function(){
 
     console.log("FORM:" + JSON.stringify(req.body, null, 2));
-
+    });
+    });
 });
 
 

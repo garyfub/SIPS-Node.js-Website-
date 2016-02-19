@@ -39,7 +39,7 @@ module.exports = {
 }
 
 //Adds form entry to FORMENTYLIST table and calls appropriate function to insert form data into db
-function addFormEntry(req) {
+function addFormEntry(req, callback) {
     var userid = req.user.id;
     var formType = req.body.form_id;
 
@@ -77,11 +77,11 @@ function addFormEntry(req) {
                         //Add calls to function based on form id here
                         switch (formType) {
                             case "registrationform":
-                                registrationform(req, formEntryID, date);
+                                registrationform(req, formEntryID, date, callback);
                                 break;
 
                             case "SPORTSFITNESSINJURY":
-                                sportsFormEntry(req, formEntryID, date);
+                                sportsFormEntry(req, formEntryID, date, callback);
                                 break;
 
                             default:
@@ -96,7 +96,7 @@ function addFormEntry(req) {
 }
 
 //Adds answers to SPorts Fitness Index and Injury form to database
-function sportsFormEntry(req, formEntryID, date) {
+function sportsFormEntry(req, formEntryID, date, callback) {
     data = req.body;
 
     //Parse data to Object type
@@ -132,11 +132,15 @@ function sportsFormEntry(req, formEntryID, date) {
                             //Handle Dynamic injury questions
                             var t = 0;
                             var injuryCount = 0;
+
+
                             for (var i = 13; i > -1; i++) {
                                 //Collect for each injury that exists
                                 var isInjury = parseInt(question.arr[i]);
                                 if (isInjury == 0 || isInjury === 'undefined' || injuryCount > 30) { //TODO: remove/raise injury count limitation?
+                                    return callback();
                                     break;
+
                                 }
 
                                 var location = parseInt(question.arr[i + 1]);
@@ -174,6 +178,9 @@ function sportsFormEntry(req, formEntryID, date) {
                                     else {
                                         console.log("New injury added by User");
                                         result.closeSync();
+
+                                        if(!parseInt(question.arr[i + 1]))
+                                        return callback();
                                     }
                                 });
                             }
@@ -187,7 +194,7 @@ function sportsFormEntry(req, formEntryID, date) {
 
 }
 
-function registrationform(req, formEntryID, date) {
+function registrationform(req, formEntryID, date, callback) {
     console.log("Entering Basic User Info Form entry: " + formEntryID + " on " + date);
     var form;
 
@@ -233,6 +240,7 @@ function registrationform(req, formEntryID, date) {
                     }
                     else {
                         result.closeSync();
+                        return callback();
                     }
                 });
             });
