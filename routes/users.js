@@ -40,7 +40,9 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
 
         if (isNew == 1) {//if user id is located in db
             model.isAdmin(req.user, function (isAdmin) {
-
+                model.getPositions(req.user, function(positions){
+                    console.log("Positions: " + JSON.stringify( positions, null, 2));
+                });
                 if (isAdmin != 0) {
                     req.user.Admin = isAdmin;
                     req.user.isAdmin = 1;

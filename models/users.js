@@ -35,8 +35,8 @@ module.exports = {
     UserCheck: UserCheck,
     UserCreate: UserCreate,
     isAdmin: isAdmin,
-    isNewUser: isNewUser,
-    getOrganization: getOrganization
+    getOrganization: getOrganization,
+    getPositions: getPositions
 }
 
 //Checks for user in database
@@ -145,14 +145,23 @@ function isAdmin(profile, callback) {
 
 }
 
-//Retrieves data from organization table related to current user
-function getOrganization(req) {
+//Retrieves list of all groups a user is related to and the subsequent permissions for each one
+function getPositions(user, callback){
 
-
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, GROUPS.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN GROUPS On Groups.groupid = MEMBERS.groupid WHERE MEMBERS.userid =  \'" + user.id + "\'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                //return results
+                return callback(rows);
+            }
+        });
+    });
 }
 
-//Returns 0 if user id is not in database, 1 if located
-//Must be run after UserCheck()
-function isNewUser() {
-    return newUser;
+//Retrieves data from organization table related to current user
+function getOrganization(req, callback) {
+
+
 }
