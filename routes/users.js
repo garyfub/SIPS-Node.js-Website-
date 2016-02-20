@@ -43,6 +43,9 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
                 model.getPositions(req.user, function(positions){
                     console.log("Positions: " + JSON.stringify( positions, null, 2));
                 });
+
+                console.log("ISADMIN: " + JSON.stringify(isAdmin, null, 2));
+
                 if (isAdmin != 0) {
                     req.user.Admin = isAdmin;
                     req.user.isAdmin = 1;

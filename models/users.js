@@ -43,18 +43,16 @@ module.exports = {
 function UserCheck(profile, callback) {
     var userid = profile.id;
 
-    var conn = ibmdb.openSync(dsnString);
-
-    try {
-        //checks is user exists in database;
-        var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
-        newUser = obj[0][1];
-        conn.close();
-    } catch (e) {
-        console.log(e.message);
-    }
-    return callback(newUser);
-
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("select count(*) from USER WHERE UserID = \'" + userid + "\'", function (err, result, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                conn.close();
+                return callback(result[0][1]);
+            }
+        });
+    });
 }
 
 //Adds user to database after checking if they exist

@@ -99,10 +99,12 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
 
         var gid = req.params.groupID;
         var userID = req.user.id;
+
+        console.log("EDIT GROUP: " + gid);
         model.getUserAccessPermissions(gid, userID, function (result) {
             var access = result[0];
 
-            console.log("RESULT: " + JSON.stringify(access, null, 2));
+            console.log("RESULT: " + JSON.stringify(result, null, 2));
 
             var gName = access["NAME"];
 
@@ -110,6 +112,7 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
             if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
 
                 model.getGroupUsers(gid, 1, function (result) {
+
 
                     res.render('admin/edit-group', {
                         title: 'Edit Group',
