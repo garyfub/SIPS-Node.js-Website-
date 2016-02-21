@@ -177,11 +177,7 @@ function getAdminAccessPositions(req, callback) {
                             if (err) {
                                 console.log(err);
                             } else {
-                               // console.log("ADMIN: " + JSON.stringify(admin, null, 2));
-                                for(var t = 0; t < Object.keys(rows).length; t++){
-
-                                    console.log("GROUP LENGTH: " + Object.keys(rows).length + ", " + t);
-                                    console.log("ROW: " + JSON.stringify(rows[t]["GROUPID"], null, 2));
+                                for (var t = 0; t < Object.keys(rows).length; t++) {
                                     admin["GROUPS"][t] = rows[t]["GROUPID"];
                                 }
                                 console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
@@ -192,6 +188,7 @@ function getAdminAccessPositions(req, callback) {
                 }
                 else {
                     req.user.Admin.GroupID = null;
+                    conn.closeSync()
                     return callback(req);
                 }
             }
@@ -210,6 +207,7 @@ function getGroups(req, callback) {
             } else {
                 console.log("GROUP ROWS: " + JSON.stringify(rows, null, 2));
                 req.user.Groups = rows;
+                conn.closeSync()
                 return callback(req);
             }
         });

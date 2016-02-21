@@ -33,38 +33,10 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 
 module.exports = {
-    getGroups: getGroups,
     inviteCode: inviteCode,
     getGroupInfo: getGroupInfo,
     getGroupPermissions: getGroupPermissions
 }
-
-
-/**
- * Retrieves list of groups user is in
- * TODO: Add query to GroupMember table to find groups user is connected to
- */
-function getGroups(userID, callback) {
-/*
-    console.log(orgID + ", " + JSON.stringify(callback, null, 2));
-    ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT * FROM GROUPS WHERE ORGANIZATIONID =  \'" + orgID + "\'", function (err, rows, moreResultSets) {
-            if (err) {
-                console.log(err);
-            } else {
-                //return results
-                return callback(err, rows);
-            }
-        });
-    });
-    */
-
-}
-
-/**
- * Checks if submitted code is an active group invitation code.
- * Adds user to group if connection is found
- */
 
 function inviteCode(req, callback){
     var code = req.body.code_insert;
@@ -94,7 +66,7 @@ function inviteCode(req, callback){
                 conn.prepare("insert into Members (role_name, UserID, GROUPID, DATEADDED) VALUES (?, ?, ?, ?)", function (err, stmt) {
                     if (err) {
                         console.log(err);
-                        conn.closeSync()
+                        conn.closeSync();
                         return callback(err);
                     }
                     stmt.execute(["Pending", userid, rows[0].GROUPID, date], function (err, result) {
@@ -121,6 +93,7 @@ function getGroupInfo(groupID, callback){
                 console.log(err);
             } else {
                 //return results
+                conn.closeSync()
                 return callback(rows[0]);
             }
         });
@@ -139,15 +112,17 @@ function getGroupInfo(groupID, callback){
  * @returns {*}
  */
 function getGroupPermissions(user, groupID, callback){
-    var permissions = null;
+    var permissions = {};
     var isAdmin = false;
+
+    //console.log("USER" + JSON.stringify(user, null, 2));
 
     //Admin Check
     for(var i = 0; i < Object.keys(user.Admin).length; i++){
 
-        for(var t = 0; t < Object.keys(user.Admin[i].GroupID).length; t++){
-            if(user.Admin[i].GroupID[t] == groupID){
-                premissions = user.Admin[i];
+        for(var t = 0; t < Object.keys(user.Admin[i].GROUPS).length; t++){
+            if(user.Admin[i].GROUPS[t] == groupID){
+                permissions = user.Admin[i];
                 isAdmin = true;
                 break;
             }
@@ -155,7 +130,7 @@ function getGroupPermissions(user, groupID, callback){
     }
 
     //Member Check
-    if(isAdmin){
+    if(!isAdmin){
         for(var i = 0; i < Object.keys(user.Groups).length; i++){
             if(user.Groups[i].GroupID == groupID){
                 permissions = user.Groups[i];
@@ -164,5 +139,6 @@ function getGroupPermissions(user, groupID, callback){
         }
     }
 
+    console.log("PERMISSIONS" + JSON.stringify(permissions, null, 2));
     return callback(permissions);
 }

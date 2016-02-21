@@ -116,10 +116,11 @@ function deleteGroup(groupID, callback) {
  * Retrieves list of users in the group from the id used.
  * Retrieves user's names from User table via inner join.
  * @param groupID
- * @param getPerms
+ * @param getPos
  * @param callback
  */
-function getGroupUsers(groupID, getPositions, callback) {
+function getGroupUsers(groupID, getPos, callback) {
+
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, rows, moreResultSets) {
             if (err) {
@@ -127,15 +128,16 @@ function getGroupUsers(groupID, getPositions, callback) {
                 return false;
             } else {
                 //return results
-                if (getPositions == 1) {
+                if (getPos == 1) {
                     return getGroupPositions(groupID, rows, callback);
                 }
                 else {
                     var result = {};
                     result['users'] = rows;
+                    conn.closeSync();
+                    console.log("O_O_O_O_O");
                     return callback(result);
                 }
-
             }
         });
     });

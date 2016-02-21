@@ -104,7 +104,7 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
         console.log("EDIT GROUP: " + gid);
 
         model_groups.getGroupPermissions(req.user, gid,  function (result) {
-            if(result == null){ res.redirect('/');}
+            if(result == {}){ res.redirect('/');}
             var access = result;
 
             model_groups.getGroupInfo(gid, function (result) { //TODO: Move getGroupUsers into getGroupInfo for n all-in-one function call
@@ -115,10 +115,9 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
                // console.log("Group: " + gid + ", " + groupInfo.name);
                 if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
 
-
                     model.getGroupUsers(gid, 1, function (result) {
 
-
+                    console.log("GROUP-EDIT: " + JSON.stringify(groupInfo, null, 2));
                         res.render('admin/edit-group', {
                             title: 'Edit Group',
                             name: req.user.name.givenName + " " + req.user.name.familyName,
@@ -126,7 +125,7 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
                             isAdmin: req.user.isAdmin,
                             access: access,
                             groupID: gid,
-                            groupName: groupInfo.name,
+                            groupName: groupInfo["NAME"],
                             orgID: admin.ORGANIZATIONID,
                             inviteCode: groupInfo["INVITE_CODE"],
                             groupInfo: result
