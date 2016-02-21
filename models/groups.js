@@ -34,7 +34,9 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 module.exports = {
     getGroups: getGroups,
-    inviteCode: inviteCode
+    inviteCode: inviteCode,
+    getGroupInfo: getGroupInfo,
+    getGroupPermissions: getGroupPermissions
 }
 
 
@@ -108,4 +110,59 @@ function inviteCode(req, callback){
             }
         });
     });
+}
+
+
+function getGroupInfo(groupID, callback){
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT * FROM GROUPS WHERE GROUPID =  \'" + groupID + "\'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                //return results
+                return callback(rows[0]);
+            }
+        });
+    });
+}
+
+/**
+ * Retrieves user's permissions for a specific group.
+ *
+ * Admin check: If user is an admin then a check is made to see if the group is under the Organization(s) the Admin is under.
+ *  If yes then the group member check will be skipped
+ * Group Member check: If user is a group member then the permissions for that will be returned
+ * @param user
+ * @param groupID
+ * @param callback
+ * @returns {*}
+ */
+function getGroupPermissions(user, groupID, callback){
+    var permissions = null;
+    var isAdmin = false;
+
+    //Admin Check
+    for(var i = 0; i < Object.keys(user.Admin).length; i++){
+
+        for(var t = 0; t < Object.keys(user.Admin[i].GroupID).length; t++){
+            if(user.Admin[i].GroupID[t] == groupID){
+                premissions = user.Admin[i];
+                isAdmin = true;
+                break;
+            }
+        }
+    }
+
+    //Member Check
+    if(isAdmin){
+        for(var i = 0; i < Object.keys(user.Groups).length; i++){
+            if(user.Groups[i].GroupID == groupID){
+                permissions = user.Groups[i];
+                break;
+            }
+        }
+    }
+
+    return callback(permissions);
 }

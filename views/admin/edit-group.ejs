@@ -125,7 +125,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <% if(groupInfo.perms.length == 0){ %>
+                                    <% if(groupInfo.pos.length == 0){ %>
                                     <tr class="warning">
                                         <td class="hidden"></td>
                                         <td>Hello! Please add a position and they will be displayed here</td>
@@ -141,17 +141,17 @@
                                         </td>
                                     </tr>
                                     <% }
-                                    for(var i = 0; i < groupInfo.perms.length; i++){
+                                    for(var i = 0; i < groupInfo.pos.length; i++){
                                     %>
                                     <tr>
                                         <td class="hidden"><input name="position" class="selectedPos" type="radio"
-                                                                  value="<%= groupInfo.perms[i]["ROLE_NAME"] %>"></td>
-                                        <td><%= groupInfo.perms[i]["ROLE_NAME"] %></td>
-                                        <td><%= groupInfo.perms[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.perms[i]["GROUP_EDITING"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.perms[i]["REMOVE_USERS"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.perms[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.perms[i]["GIVE_TESTS"] == 1 ? "Yes":"No"%></td>
+                                                                  value="<%= groupInfo.pos[i]["ROLE_NAME"] %>"></td>
+                                        <td><%= groupInfo.pos[i]["ROLE_NAME"] %></td>
+                                        <td><%= groupInfo.pos[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes":"No"%></td>
+                                        <td><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes":"No"%></td>
+                                        <td><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes":"No"%></td>
+                                        <td><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes":"No"%></td>
+                                        <td><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes":"No"%></td>
 
                                         <td>
                                             <div class="btn-group">
@@ -159,7 +159,7 @@
                                                         class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
                                                         data-toggle="dropdown"><span class="fa fa-cog"></span></button>
                                                 <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="#" class="edit-perms"><span class="fa fa-cog "></span>
+                                                    <li><a href="#" class="edit-pos"><span class="fa fa-cog "></span>
                                                             edit</a>
                                                     </li>
                                                     <li class="divider"></li>

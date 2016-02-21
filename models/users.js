@@ -35,8 +35,9 @@ module.exports = {
     UserCheck: UserCheck,
     UserCreate: UserCreate,
     isAdmin: isAdmin,
-    getOrganization: getOrganization,
-    getPositions: getPositions
+    getPositions: getPositions,
+    getAdminAccessPositions: getAdminAccessPositions,
+    getGroups: getGroups
 }
 
 //Checks for user in database
@@ -144,22 +145,73 @@ function isAdmin(profile, callback) {
 }
 
 //Retrieves list of all groups a user is related to and the subsequent permissions for each one
-function getPositions(user, callback){
+function getPositions(req, callback) {
 
+    getAdminAccessPositions(req, function (req) {
+        getGroups(req, function (req) {
+            return callback(req);
+        });
+    });
+
+
+}
+
+//Retrieves data from organization table related to current user
+function getAdminAccessPositions(req, callback) {
+    user = req.user;
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, GROUPS.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN GROUPS On Groups.groupid = MEMBERS.groupid WHERE MEMBERS.userid =  \'" + user.id + "\'", function (err, rows, moreResultSets) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, ORGANIZATION.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN ORGANIZATION On ORGANIZATION.organizationid = MEMBERS.organizationid WHERE MEMBERS.userid =  \'" + user.id + "\' and MEMBERS.role_name = 'Administrator'", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
             } else {
-                //return results
-                return callback(rows);
+                req.user.isAdmin = Object.keys(rows).length > 0 ? 1 : 0;
+                req.user.Admin = rows;
+                if (req.user.isAdmin == 1) {
+                    //retrieve list of group id's within each Organization under req.user.Admin and adds them to a nested object GroupID.
+                    for (var i = 0; i < Object.keys(req.user.Admin).length; i++) {
+                        var admin = req.user.Admin[i];
+                        admin.GROUPS = {};
+                        groups = admin.GROUPS;
+
+                        conn.query("SELECT GROUPID FROM GROUPS WHERE ORGANIZATIONID =  \'" + req.user.Admin[i].ORGANIZATIONID + "\'", function (err, rows, moreResultSets) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                               // console.log("ADMIN: " + JSON.stringify(admin, null, 2));
+                                for(var t = 0; t < Object.keys(rows).length; t++){
+
+                                    console.log("GROUP LENGTH: " + Object.keys(rows).length + ", " + t);
+                                    console.log("ROW: " + JSON.stringify(rows[t]["GROUPID"], null, 2));
+                                    admin["GROUPS"][t] = rows[t]["GROUPID"];
+                                }
+                                console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
+                            }
+                        });
+                    }
+                    return callback(req);
+                }
+                else {
+                    req.user.Admin.GroupID = null;
+                    return callback(req);
+                }
             }
         });
     });
 }
 
-//Retrieves data from organization table related to current user
-function getOrganization(req, callback) {
 
-
+//retrieves all groups and group positions connected to user
+function getGroups(req, callback) {
+    user = req.user;
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, GROUPS.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN GROUPS On Groups.groupid = MEMBERS.groupid WHERE MEMBERS.userid =  \'" + user.id + "\'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("GROUP ROWS: " + JSON.stringify(rows, null, 2));
+                req.user.Groups = rows;
+                return callback(req);
+            }
+        });
+    });
 }

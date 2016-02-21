@@ -1,20 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/admin');
-var model_users = require('../models/users');
+var model_groups = require('../models/groups');
 var model_data = require('../models/data');
 
 /* GET Admin page. */
 router.get('/', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         var user = req.user;
-        var admin = req.user.Admin;
-        var orgID = req.user.Admin.ORGANIZATIONID;
+        var admin = req.user.Admin[0];//TODO: Need to add ability to switch between organizations if more than one result
+        var orgID = admin.ORGANIZATIONID;
 
+        console.log("OBJECt-OrgID: " + orgID);
         model.getGroups(orgID, function (err, groups) {
             console.log("Results: " + JSON.stringify(groups, null, 2));
 
-            console.log("OBJECT: " + Object.keys(groups));
+
             res.render('admin/dash', {
                 title: 'Admin Dashboard',
                 name: user.name.givenName + " " + user.name.familyName,
@@ -32,9 +33,9 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
 
 router.get('/create-group', ensureAuthenticated, function (req, res, next) {
 
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         var user = req.user;
-        var admin = req.user.Admin;
+        var admin = req.user.Admin[0];
         res.render('admin/create-group', {
             title: 'Create New Group',
             name: user.name.givenName + " " + user.name.familyName,
@@ -49,9 +50,9 @@ router.get('/create-group', ensureAuthenticated, function (req, res, next) {
 
 router.post('/create-group', ensureAuthenticated, function (req, res, next) {
 
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         var name = req.body.group_name;
-        var orgID = req.user.Admin.ORGANIZATIONID;
+        var orgID = req.user.Admin[0].ORGANIZATIONID;
 
         model.createGroup(name, orgID, function (err, data) {
             res.redirect('/admin');
@@ -72,8 +73,8 @@ router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
 
     var groupID = req.body.group;
 
-    if (req.user.Admin) {
-        var admin = req.user.Admin;
+    if (req.user.Admin[0]) {
+        var admin = req.user.Admin[0];
 
         model.deleteGroup(groupID, function (err) {
             res.redirect('/admin');
@@ -95,42 +96,47 @@ router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
  * 6. Edit Group properties (name, group type, etc)
  */
 router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
 
+        var admin = req.user.Admin[0];
         var gid = req.params.groupID;
-        var userID = req.user.id;
 
         console.log("EDIT GROUP: " + gid);
-        model.getUserAccessPermissions(gid, userID, function (result) {
-            var access = result[0];
 
-            console.log("RESULT: " + JSON.stringify(result, null, 2));
+        model_groups.getGroupPermissions(req.user, gid,  function (result) {
+            if(result == null){ res.redirect('/');}
+            var access = result;
 
-            var gName = access["NAME"];
+            model_groups.getGroupInfo(gid, function (result) { //TODO: Move getGroupUsers into getGroupInfo for n all-in-one function call
 
-            console.log("Group: " + gid + ", " + gName);
-            if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
+                var groupInfo = result;
 
-                model.getGroupUsers(gid, 1, function (result) {
+               // console.log("ACCESS RESULT: " + JSON.stringify(result, null, 2));
+               // console.log("Group: " + gid + ", " + groupInfo.name);
+                if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
 
 
-                    res.render('admin/edit-group', {
-                        title: 'Edit Group',
-                        name: req.user.name.givenName + " " + req.user.name.familyName,
-                        id: req.user.id,
-                        isAdmin: req.user.isAdmin,
-                        access: access,
-                        groupID: gid,
-                        groupName: gName,
-                        orgID: req.user.Admin.ORGANIZATIONID,
-                        inviteCode: access["INVITE_CODE"],
-                        groupInfo: result
-                    })
-                });
-            }
-            else
-                res.redirect('/admin');
+                    model.getGroupUsers(gid, 1, function (result) {
 
+
+                        res.render('admin/edit-group', {
+                            title: 'Edit Group',
+                            name: req.user.name.givenName + " " + req.user.name.familyName,
+                            id: req.user.id,
+                            isAdmin: req.user.isAdmin,
+                            access: access,
+                            groupID: gid,
+                            groupName: groupInfo.name,
+                            orgID: admin.ORGANIZATIONID,
+                            inviteCode: groupInfo["INVITE_CODE"],
+                            groupInfo: result
+                        })
+                    });
+                }
+                else
+                    res.redirect('/admin');
+
+            });
         });
     }
     else {
@@ -143,7 +149,7 @@ router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next
  * Remove user from group
  */
 router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         var gid = req.body.groupID;
         var userID = req.body.userID;
 
@@ -163,7 +169,7 @@ router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
  * Remove position
  */
 router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         var gid = req.body.groupID;
         var position = req.body.position;
 
@@ -184,7 +190,7 @@ router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
  */
 router.get('/results', ensureAuthenticated, function (req, res, next) {
 
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         model_data.getUserTaskList(req, function (results) {
 
             res.render('results', {
@@ -206,7 +212,7 @@ router.get('/results', ensureAuthenticated, function (req, res, next) {
  * TODO: Need results first
  */
 router.post('/results/data', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin) {
+    if (req.user.Admin[0]) {
         model_data.getUserTaskData(req, function (data) {
 
             console.log("RESULTS_AJAX: " + JSON.stringify(data, null, 2));

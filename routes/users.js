@@ -39,18 +39,11 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
     model.UserCheck(req.user, function (isNew) {
 
         if (isNew == 1) {//if user id is located in db
-            model.isAdmin(req.user, function (isAdmin) {
-                model.getPositions(req.user, function(positions){
-                    console.log("Positions: " + JSON.stringify( positions, null, 2));
-                });
 
-                console.log("ISADMIN: " + JSON.stringify(isAdmin, null, 2));
+            model.getPositions(req, function (req) {
+                console.log("ADMIN: " + Object.keys(req.user.Admin));
+                console.log("GROUP: " + Object.keys(req.user.Groups));
 
-                if (isAdmin != 0) {
-                    req.user.Admin = isAdmin;
-                    req.user.isAdmin = 1;
-                }
-                else req.user.isAdmin = 0;
 
                 res.redirect('/');
             });

@@ -36,7 +36,7 @@ module.exports = {
     getGroups: getGroups,
     deleteGroup: deleteGroup,
     getGroupUsers: getGroupUsers,
-    getGroupPermissions: getGroupPermissions,
+    getGroupPositions: getGroupPositions,
     getUserAccessPermissions: getUserAccessPermissions,
     groupRemoveUser: groupRemoveUser,
     groupRemovePosition: groupRemovePosition
@@ -119,7 +119,7 @@ function deleteGroup(groupID, callback) {
  * @param getPerms
  * @param callback
  */
-function getGroupUsers(groupID, getPerms, callback) {
+function getGroupUsers(groupID, getPositions, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, rows, moreResultSets) {
             if (err) {
@@ -127,8 +127,8 @@ function getGroupUsers(groupID, getPerms, callback) {
                 return false;
             } else {
                 //return results
-                if (getPerms == 1) {
-                    return getGroupPermissions(groupID, rows, callback);
+                if (getPositions == 1) {
+                    return getGroupPositions(groupID, rows, callback);
                 }
                 else {
                     var result = {};
@@ -148,7 +148,7 @@ function getGroupUsers(groupID, getPerms, callback) {
  * @param users
  * @param callback
  */
-function getGroupPermissions(groupID, users, callback) {
+function getGroupPositions(groupID, users, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL ORDER BY ROLEPERMISSIONS.ROLE_NAME", function (err, rows, moreResultSets) {
             if (err) {
@@ -158,7 +158,7 @@ function getGroupPermissions(groupID, users, callback) {
                 //return results
                 var result = {};
                 if (users !== undefined) {
-                    result['perms'] = rows;
+                    result['pos'] = rows;
                     result['users'] = users;
                     return callback(result);
                 }
@@ -170,7 +170,7 @@ function getGroupPermissions(groupID, users, callback) {
 }
 
 /**
- * ACCEESS PERMISSIONS
+ * ACCESS PERMISSIONS
  *Returns all roles and permissions connected to the user ID
  *
  * optional: get role and permissions for specific group if groupID isn't null.
