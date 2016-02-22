@@ -135,7 +135,6 @@ function getGroupUsers(groupID, getPos, callback) {
                     var result = {};
                     result['users'] = rows;
                     conn.closeSync();
-                    console.log("O_O_O_O_O");
                     return callback(result);
                 }
             }

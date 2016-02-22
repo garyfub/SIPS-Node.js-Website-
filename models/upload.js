@@ -153,7 +153,7 @@ function taskEntry(user, data, callback) {
                     }
                     else {
                         if (flankerdata == 1)
-                            flanker(data.flanker, taskEntryID, callbak);
+                            flanker(data.flanker, taskEntryID, callback);
 
                         if (appSensorData == 1)
                             appsensor(data.appsensor, taskEntryID, callback);

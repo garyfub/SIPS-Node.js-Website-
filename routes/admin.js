@@ -153,7 +153,6 @@ router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
         var userID = req.body.userID;
 
         console.log("RESULT: " + JSON.stringify(req.body, null, 2));
-
         model.groupRemoveUser(gid, userID, function (err) {
             res.redirect('/admin');
         });
