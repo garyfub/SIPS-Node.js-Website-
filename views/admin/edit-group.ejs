@@ -43,7 +43,9 @@
                                                name="group_name" value="<%= groupName %>" disabled>
                                     </div>
                                     <br><br>
-                                    <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i> Edit</button>
+                                    <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i>
+                                        Edit
+                                    </button>
                                 </form>
                                 <br>
                             </div>
@@ -75,28 +77,30 @@
                                     for(var i = 0; i < groupInfo.users.length; i++){
                                     %>
                                     <tr>
-                                    <td class="hidden"><input name="user" class="selectedUser" type="radio"
-                                                              value="<%= groupInfo.users[i]["USERID"] %>"></td>
-                                    <td><%= groupInfo.users[i]["NAME_LAST"] + ", " + groupInfo.users[i]["NAME_FIRST"] %></td>
-                                    <td><%= groupInfo.users[i]["ROLE_NAME"] %></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button"
-                                                    class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
-                                                    data-toggle="dropdown"><span class="fa fa-cog"></span></button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li><a href="#" class="edit-user"><span class="fa fa-cog "></span> edit</a>
-                                                </li>
-                                                <li><a href="/results"><span class="fa fa-pie-chart "></span> View
-                                                        User's Results</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#" class="remove-user" data-toggle="modal" data-target="#remove-user-modal"><span
-                                                                class="fa fa-trash-o "></span>
-                                                        Remove user from group</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
+                                        <td class="hidden"><input name="user" class="selectedUser" type="radio"
+                                                                  value="<%= groupInfo.users[i]["USERID"] %>"></td>
+                                        <td><%= groupInfo.users[i]["NAME_LAST"] + ", " + groupInfo.users[i]["NAME_FIRST"] %></td>
+                                        <td><%= groupInfo.users[i]["ROLE_NAME"] %></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button"
+                                                        class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
+                                                        data-toggle="dropdown"><span class="fa fa-cog"></span></button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li><a href="#" class="edit-user"><span class="fa fa-cog "></span>
+                                                            edit</a>
+                                                    </li>
+                                                    <li><a href="/results"><span class="fa fa-pie-chart "></span> View
+                                                            User's Results</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#" class="remove-user" data-toggle="modal"
+                                                           data-target="#remove-user-modal"><span
+                                                                    class="fa fa-trash-o "></span>
+                                                            Remove user from group</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <% } %>
                                     </tbody>
@@ -147,11 +151,11 @@
                                         <td class="hidden"><input name="position" class="selectedPos" type="radio"
                                                                   value="<%= groupInfo.pos[i]["ROLE_NAME"] %>"></td>
                                         <td><%= groupInfo.pos[i]["ROLE_NAME"] %></td>
-                                        <td><%= groupInfo.pos[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes":"No"%></td>
-                                        <td><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes":"No"%></td>
+                                        <td><%= groupInfo.pos[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes" : "No" %></td>
+                                        <td><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes" : "No" %></td>
+                                        <td><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes" : "No" %></td>
+                                        <td><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes" : "No" %></td>
+                                        <td><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes" : "No" %></td>
 
                                         <td>
                                             <div class="btn-group">
@@ -163,7 +167,8 @@
                                                             edit</a>
                                                     </li>
                                                     <li class="divider"></li>
-                                                    <li><a href="#" class="delete-position" data-toggle="modal" data-target="#remove-position-modal"><span
+                                                    <li><a href="#" class="delete-position" data-toggle="modal"
+                                                           data-target="#remove-position-modal"><span
                                                                     class="fa fa-trash-o "></span>
                                                             Delete Position</a>
                                                     </li>
@@ -176,7 +181,8 @@
                                 </table>
                                 <br>
                                 <!-- Add new Position -->
-                                <a href="#" class="add-position btn btn-primary-outline" data-toggle="modal" data-target="#add-position-modal"><span
+                                <a href="#" class="add-position btn btn-primary-outline" data-toggle="modal"
+                                   data-target="#add-position-modal"><span
                                             class="fa fa-plus-square"></span> Add new position
                                 </a>
                             </div>
@@ -241,7 +247,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
-                <button type="button" id="remove-user-confirmed" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                <button type="button" id="remove-user-confirmed" class="btn btn-danger" data-dismiss="modal">Yes
+                </button>
             </div>
         </div>
     </div>
@@ -262,7 +269,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
-                <button type="button" id="remove-position-confirmed" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                <button type="button" id="remove-position-confirmed" class="btn btn-danger" data-dismiss="modal">Yes
+                </button>
             </div>
         </div>
     </div>
@@ -291,7 +299,8 @@
                     <label class="control-label">Permissions</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox"> Access to the Admin Dashboard <p class="text-danger pull-right"> (complete access)</p>
+                            <input type="checkbox"> Access to the Admin Dashboard <p class="text-danger pull-right">
+                                (complete access)</p>
                         </label>
                     </div>
 
@@ -322,7 +331,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" id="remove-position-confirmed" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                <button type="button" id="add-position-confirmed" class="btn btn-primary" data-dismiss="modal">Add
+                </button>
             </div>
         </div>
     </div>
@@ -381,51 +391,37 @@
         })
 
         //Send post to add position
-        $('#add-position').click(function (e) {
+        $('#add-position-confirmed').click(function (e) {
             e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '/admin/add-position',
-                data: $('#new_position_form').serialize(),
-                complete: function () {
-                    window.location.reload(true);
-                }
-            });
+
+            ajaxGroupEdit('add', 'position', $('#new_position_form').serialize());
         });
 
         //Post after confirmation to remove user
         $('#remove-user-confirmed').click(function (e) {
             e.preventDefault();
-            var selectedUser = $('input[name=user]:checked').val()
-            $.ajax({
-                type: 'POST',
-                url: '/admin/remove-user',
-                data: {
-                    userID: selectedUser,
-                    groupID: '<%= groupID %>'
-                },
-                complete: function () {
-                    window.location.reload(true);
-                }
-            });
+            var selectedUser = $('input[name=user]:checked').val();
+
+            ajaxGroupEdit('remove', 'user', selectedUser);
         });
 
         //Post after confirmation to remove position
         $('#remove-position-confirmed').click(function (e) {
             e.preventDefault();
-            var selectedPos = $('input[name=position]:checked').val()
+            var selectedPos = $('input[name=position]:checked').val();
+
+            ajaxGroupEdit('remove', 'position', selectedPos);
+        });
+
+
+        function ajaxGroupEdit(action, type, data) {
             $.ajax({
                 type: 'POST',
-                url: '/admin/remove-position',
-                data: {
-                    position: selectedPos,
-                    groupID: '<%= groupID %>'
-                },
-                complete: function () {
-                    window.location.reload(true);
-                }
-            });
-        });
+                url: '/group/<%= groupID %>/edit/' + action + '/' + type,
+                data: {groupID: '<%= groupID %>', data: data}
+            })
+        }
+
     });
 
 

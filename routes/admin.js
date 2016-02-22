@@ -226,7 +226,6 @@ router.post('/results/data', ensureAuthenticated, function (req, res, next) {
     }
 });
 
-
 //route functions
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated())

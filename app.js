@@ -11,6 +11,7 @@ var ibmbluemix = require('ibmbluemix');
 var cookieParser = require('cookie-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var group = require('./routes/group');
 var admin = require('./routes/admin');
 var forms = require('./routes/forms');
 var upload = require('./routes/upload');
@@ -59,6 +60,7 @@ passport.deserializeUser(function (user, done) {
  */
 app.use('/', routes);
 app.use('/users', users);
+app.use('/group', group);
 app.use('/admin', admin);
 app.use('/forms', forms);
 app.use('/upload', upload);

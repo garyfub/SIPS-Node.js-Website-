@@ -35,7 +35,8 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 module.exports = {
     inviteCode: inviteCode,
     getGroupInfo: getGroupInfo,
-    getGroupPermissions: getGroupPermissions
+    getGroupPermissions: getGroupPermissions,
+    editAction: editAction
 }
 
 function inviteCode(req, callback){
@@ -141,4 +142,11 @@ function getGroupPermissions(user, groupID, callback){
 
     console.log("PERMISSIONS" + JSON.stringify(permissions, null, 2));
     return callback(permissions);
+}
+
+
+function editAction(access, action, type, data ,callback){
+    console.log("GROUP EDITING INITIATED");
+
+    return callback(true);
 }
