@@ -39,7 +39,8 @@ module.exports = {
     getGroupPositions: getGroupPositions,
     getUserAccessPermissions: getUserAccessPermissions,
     groupRemoveUser: groupRemoveUser,
-    groupRemovePosition: groupRemovePosition
+    groupRemovePosition: groupRemovePosition,
+    groupCreatePosition: groupCreatePosition
 }
 
 //Creates new group
@@ -237,7 +238,7 @@ function groupRemoveUser(groupID, userID, callback) {
 function groupRemovePosition(groupID, position, callback) {
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND position = \'" + position + "\'", function (err, stmt) {
+        conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND ROLE_NAME = \'" + position + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -255,4 +256,38 @@ function groupRemovePosition(groupID, position, callback) {
     });
 
     return callback();
+}
+
+
+/**
+ * Adds new entry to RolePermissions table with the supplied groupID
+ * @param groupID
+ * @param positionData
+ * @param callback
+ */
+//TODO: Add Organization ID, double check database entry is working fully.
+function groupCreatePosition(groupID, data, callback){
+   console.log("CREATE-POSITION: " + JSON.stringify(data, null, 2));
+
+    console.log("CREATE-POSITION-KEYS: " + Object.keys(data));
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, view_Org_Admin_Dash, Group_Editing, Remove_users, View_Group_Results, Give_Tests) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(["", data.groupID, data["data[positionTitle]"], data["data[adminAccess]"], data["data[editGroup]"], data["data[removeUsers]"], data["data[viewGroup]"], data["data[giveTests]"]], function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback;
+                });
+            });
+        });
+    });
+
+
 }

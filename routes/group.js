@@ -22,9 +22,9 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
             }
             var access = result;
 
-            //Handle edits.
-            if (action && type && access.GROUP_EDITING == 1) {
-                model.editAction(access, action, type, req.body, function (result) {
+
+            if (action && type && access.GROUP_EDITING == 1) {//Handle edits
+                model.editActionIndex(access, action, type, req.body, function (result) {
                     edit_group_callback(req, res, access, gid);
                 });
             }

@@ -1,6 +1,7 @@
 //Model for interacting with Users
 var ibmdb = require('ibm_db');
 var uuid = require('node-uuid');
+var models_admin = require('../models/admin');
 
 var env = null;
 var keySql = null;
@@ -36,7 +37,7 @@ module.exports = {
     inviteCode: inviteCode,
     getGroupInfo: getGroupInfo,
     getGroupPermissions: getGroupPermissions,
-    editAction: editAction
+    editActionIndex: editActionIndex
 }
 
 function inviteCode(req, callback){
@@ -145,8 +146,45 @@ function getGroupPermissions(user, groupID, callback){
 }
 
 
-function editAction(access, action, type, data ,callback){
+function editActionIndex(access, action, type, data ,callback){
     console.log("GROUP EDITING INITIATED");
 
-    return callback(true);
+    switch (action){
+        case 'remove':
+            if(type == "user"){
+                //TODO: call to remove user
+                models_admin.groupRemoveUser(data.groupID, data.data, function(){ //data.data should be userID of user to be removed
+                    return callback(true);
+                });
+            }
+            else if (type == "position"){
+                //TODO call to remove position
+                models_admin.groupRemovePosition(data.groupID, data.data, function(){//data.data is position name
+                    return callback(true)
+                })
+            }
+            break;
+        case 'add':
+            if (type == "position"){
+                //TODO: call to add position
+                models_admin.groupCreatePosition(data.groupID, data,data, function(){
+                    return callback(true)
+                });
+            }
+            break;
+        case 'edit':
+            if(type == "user"){
+                //TODO call to update MEMBERS table
+            }
+            else if(type == "position"){
+                //TODO call to update ROLEPERMISSIONS table
+            }
+            else if(type == "group"){
+                //TODO: call to update group information in GROUPS table
+            }
+            break;
+        default:
+            return callback(true);
+            break;
+    }
 }

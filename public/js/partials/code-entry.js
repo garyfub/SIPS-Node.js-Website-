@@ -19,7 +19,7 @@ $( document ).ready(function() {
             success: function (data) {
                 $('#code_form')[0].reset();
                 $('.code-panel').removeClass("panel-default").addClass("panel-success");
-                $('.code-panel .panel-body').append('<p id=\'code-msg\' class"text-danger">Operation succesfull</p>');
+                $('.code-panel .panel-body').append('<p id=\'code-msg\' class"text-danger">Operation successful</p>');
 
             },
             error: function (data) {
