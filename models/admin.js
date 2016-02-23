@@ -319,6 +319,16 @@ function groupCreatePosition(data, callback){
 
 function groupUpdatePosition(data, callback){
 
+    //Update group by removing the group and recreating it with the changed values
+    groupRemovePosition(data, function(){
+        groupCreatePosition(data, function(){
+            return callback();
+        })
+    })
+
+
+    //TODO: Get ibm_db module to execute Update command
+    /*
     var groupID = data.groupID;
     var obj = JSON.parse(data.data);
 
@@ -338,8 +348,11 @@ function groupUpdatePosition(data, callback){
     if(!obj.hasOwnProperty('giveTests')){
         obj.giveTests = 0;
     }
+
+    console.log("UPDATE POSITION: " + JSON.stringify(obj, null, 2));
+
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("UPDATE ROLEPERMISSIONS SET (Role_name, view_Org_Admin_Dash, Group_Editing, Remove_users, View_Group_Results, Give_Tests) = VALUES ( ?, ?, ?, ?, ?, ?) WHERE GROUPID = \'" + groupID + "\' AND ORGANIZATIONID = \'" + obj.orgID + "\'", function (err, stmt) {
+        conn.prepare("UPDATE ROLEPERMISSIONS SET Role_name = \'"+obj.positionTitle+"\', VIEW_ORG_ADMIN_DASH =\'"+obj.adminAccess+"\', GROUP_EDITING= \'"+obj.editGroup+"\', REMOVE_USERS= \'"+obj.removeUsers+"\', VIEW_GROUP_RESULTS= \'"+obj.viewGroup+"\', GIVE_TESTS= \'"+obj.giveTests+"\' WHERE GROUPID = \'" + groupID + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -347,7 +360,7 @@ function groupUpdatePosition(data, callback){
             }
 
             //Bind and Execute the statement asynchronously
-            stmt.execute([obj.positionTitle, obj.adminAccess, obj.editGroup, obj.removeUsers, obj.viewGroup, obj.giveTests], function (err, result) {
+            stmt.execute(function (err, result) {
                 if (err) console.log(err);
                 else conn.close(function () {
                     return callback();
@@ -355,4 +368,5 @@ function groupUpdatePosition(data, callback){
             });
         });
     });
+    */
 }

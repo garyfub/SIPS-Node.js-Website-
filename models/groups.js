@@ -146,6 +146,15 @@ function getGroupPermissions(user, groupID, callback){
 }
 
 
+/**
+ * Index for Group Editing actions
+ * @param access
+ * @param action
+ * @param type
+ * @param data
+ * @param callback
+ * @returns {*}
+ */
 function editActionIndex(access, action, type, data ,callback){
     console.log("GROUP EDITING INITIATED: " + action + " " + type);
 
@@ -174,14 +183,11 @@ function editActionIndex(access, action, type, data ,callback){
                 //TODO call to update MEMBERS table
             }
             else if(type == "position"){
-                //TODO call to update ROLEPERMISSIONS table
-                console.log("Update position called");
                     models_admin.groupUpdatePosition(data,function(){
                         return callback(true);
                     })
             }
             else if(type == "group"){
-                console.log("Update group called");
                 //TODO: call to update group information in GROUPS table
             }
             break;
