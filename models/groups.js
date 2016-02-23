@@ -140,8 +140,6 @@ function getGroupPermissions(user, groupID, callback){
             }
         }
     }
-
-    console.log("PERMISSIONS" + JSON.stringify(permissions, null, 2));
     return callback(permissions);
 }
 
@@ -159,6 +157,7 @@ function editActionIndex(access, action, type, data ,callback){
     console.log("GROUP EDITING INITIATED: " + action + " " + type);
 
     switch (action){
+        //REMOVE
         case 'remove':
             if(type == "user"){
                 models_admin.groupRemoveUser(data.groupID, data.data, function(){ //data.data should be userID of user to be removed
@@ -171,6 +170,7 @@ function editActionIndex(access, action, type, data ,callback){
                 })
             }
             break;
+        //ADD
         case 'add':
             if (type == "position"){
                 models_admin.groupCreatePosition(data, function(){
@@ -178,6 +178,7 @@ function editActionIndex(access, action, type, data ,callback){
                 });
             }
             break;
+        //UPDATE
         case 'update':
             if(type == "user"){
                 //TODO call to update MEMBERS table
@@ -189,8 +190,10 @@ function editActionIndex(access, action, type, data ,callback){
             }
             else if(type == "group"){
                 //TODO: call to update group information in GROUPS table
+                //TODO: Learn how to run Update command
             }
             break;
+
         default:
             return callback(true);
             break;

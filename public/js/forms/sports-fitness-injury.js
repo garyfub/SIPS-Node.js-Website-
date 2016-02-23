@@ -69,7 +69,7 @@ $(document).on("click",'.next', function(e){
     if($('input[name= \"arr['+ currentPage+ ']\"]').valid()) {
         if (currentPage == newInjuryQuestion) {
             var selec = '#apage_' + newInjuryQuestion + ' input[type="radio"]:checked';
-            console.log(selec);
+            //console.log(selec);
             var isInjury = $(selec).val();
             if (isInjury == 1) {
                 addInjuryQuestions();//Add questions for new injury

@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models/admin');
-var model_groups = require('../models/groups');
 var model_data = require('../models/data');
 
 /* GET Admin page. */
@@ -11,9 +10,9 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
         var admin = req.user.Admin[0];//TODO: Need to add ability to switch between organizations if more than one result
         var orgID = admin.ORGANIZATIONID;
 
-        console.log("OBJECt-OrgID: " + orgID);
+        //console.log("OBJECt-OrgID: " + orgID);
         model.getGroups(orgID, function (err, groups) {
-            console.log("Results: " + JSON.stringify(groups, null, 2));
+         //   console.log("Results: " + JSON.stringify(groups, null, 2));
 
 
             res.render('admin/dash', {
@@ -68,7 +67,6 @@ router.post('/create-group', ensureAuthenticated, function (req, res, next) {
  * 1. Double check that admin has access to group?
  *
  */
-
 router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
 
     var groupID = req.body.group;
@@ -85,102 +83,6 @@ router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
         res.send('404: Page not Found', 404);
     }
 });
-
-/**
- * TODO
- * 1. ✓ Be able to send users invite code via email (using client's email program)
- * 2. ✓ Remove user from group
- * 3. Make the route dynamic based on the url
- * 4. Check user's permissions to see if they have access to group
- * 5. Create and assign group positions
- * 6. Edit Group properties (name, group type, etc)
- */
-router.all('/edit-group/:groupID', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin[0]) {
-
-        var admin = req.user.Admin[0];
-        var gid = req.params.groupID;
-
-        console.log("EDIT GROUP: " + gid);
-
-        model_groups.getGroupPermissions(req.user, gid,  function (result) {
-            if(result == {}){ res.redirect('/');}
-            var access = result;
-
-            model_groups.getGroupInfo(gid, function (result) { //TODO: Move getGroupUsers into getGroupInfo for n all-in-one function call
-
-                var groupInfo = result;
-
-               // console.log("ACCESS RESULT: " + JSON.stringify(result, null, 2));
-               // console.log("Group: " + gid + ", " + groupInfo.name);
-                if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
-
-                    model.getGroupUsers(gid, 1, function (result) {
-
-                    console.log("GROUP-EDIT: " + JSON.stringify(groupInfo, null, 2));
-                        res.render('admin/edit-group', {
-                            title: 'Edit Group',
-                            name: req.user.name.givenName + " " + req.user.name.familyName,
-                            id: req.user.id,
-                            isAdmin: req.user.isAdmin,
-                            access: access,
-                            groupID: gid,
-                            groupName: groupInfo["NAME"],
-                            orgID: admin.ORGANIZATIONID,
-                            inviteCode: groupInfo["INVITE_CODE"],
-                            groupInfo: result
-                        })
-                    });
-                }
-                else
-                    res.redirect('/admin');
-
-            });
-        });
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
-});
-
-/**
- * GROUP
- * Remove user from group
- */
-router.post('/remove-user', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin[0]) {
-        var gid = req.body.groupID;
-        var userID = req.body.userID;
-
-        console.log("RESULT: " + JSON.stringify(req.body, null, 2));
-        model.groupRemoveUser(gid, userID, function (err) {
-            res.redirect('/admin');
-        });
-    }
-    else {
-        res.redirect('/logout');
-    }
-});
-
-/**
- * GROUP
- * Remove position
- */
-router.post('/remove-position', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin[0]) {
-        var gid = req.body.groupID;
-        var position = req.body.position;
-
-        console.log("RESULT: " + JSON.stringify(req.body, null, 2));
-        model.groupRemovePosition(gid, position, function () {
-            res.sendStatus(200);
-        });
-    }
-    else {
-        res.redirect('/logout');
-    }
-});
-
 
 /**
  * TODO

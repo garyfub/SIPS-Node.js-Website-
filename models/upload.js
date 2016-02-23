@@ -19,7 +19,6 @@ function findKey(obj, lookup) {
         if (typeof(obj[i]) === "object") {
             if (i.toUpperCase().indexOf(lookup) > -1) {
                 // Found the key
-                console.log("Key was found");
                 return i;
             }
             findKey(obj[i], lookup);
@@ -70,13 +69,11 @@ function userCheckUpload(msg, callback) {
             response.end();
             console.log("ERROR Test of VCAP_SERVICES ERROR");
         } else {
-            console.log("Test of VCAP_SERVICES");
-
 
             var obj = conn.querySync("select count(*) from USER WHERE UserID = \'" + userid + "\'");
             str = JSON.stringify(obj, null, 2)
             newUser = str.charAt(15);
-            console.log("New user?: " + newUser);
+
 
 
             //Inserts new user if doesn't exist
@@ -90,7 +87,6 @@ function userCheckUpload(msg, callback) {
                 var date = year + "-" + month + "-" + day;
 
                 console.log("New User Create: " + userid);
-                console.log("Date: " + date);
 
                 conn.prepare("INSERT INTO USER (UserID, dateAdded) VALUES (?, ?)", function (err, stmt) {
                     if (err) {
@@ -112,7 +108,6 @@ function userCheckUpload(msg, callback) {
                 });
             }
             else {
-                console.log("User exists");
                 //taskDataUploadCloudant(msg);
                 taskDataUploadSQLMultiTable(msg, callback);
             }
@@ -292,20 +287,20 @@ function appsensor(data, taskEntryID, callback) {
     });
 }
 
-function taskDataUploadCloudant(msg , callback) {
-    var keyNames = Object.keys(msg);
+function taskDataUploadCloudant(req , callback) {
+    var keyNames = Object.keys(req);
 
     //Print out key names to verify session object loaded
     for (var i in keyNames) {
-        console.log("msg." + keyNames[i] + " in WebApp");
+        console.log("req." + keyNames[i] + " in WebApp");
     }
     // Insert a document into cloudant database specified above.
-    datapoints.insert(msg, function (err, body, header) {
+    datapoints.insert(req, function (err, body, header) {
         if (err) {
             console.log('[session.insert] ', err.message);
         }
         else {
-            console.log('Insertion completed without error')
+            console.log('Cloudant insertion completed without error');
             return callback();
         }
     });
@@ -364,8 +359,6 @@ function taskDataUploadSQLMultiTable(msg, callback) {
                                 console.log(err);
                                 return conn.closeSync();
                             }
-
-                            console.log("SQL prepare command  - - DONE");
 
                             //Send data to database
                             for (var i = 0; i < tstmpA.length; i++) {
@@ -477,7 +470,6 @@ function flanker(data, taskEntryID, callback) {
             console.log("ERROR" + err);
         } else {
 
-            console.log("FLANKER Pre:" + JSON.stringify(data, null, 2));
             //Preparing to excecute SQL command, ? are placements for values given in the execute command
             conn.prepare("INSERT INTO FlankerData (TaskEntryID, num, stimulus, response, responseTime ) VALUES ( ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
@@ -492,17 +484,17 @@ function flanker(data, taskEntryID, callback) {
 
                 for (var i = 0; i < stimulus.length; i++) {
                     num = i + 1;
-                    console.log(num + ": " + stimulus[i] + ", " + response[i] + ", " + responseTime[i]);
+                    //console.log(num + ": " + stimulus[i] + ", " + response[i] + ", " + responseTime[i]);
                     stmt.execute([taskEntryID, num, parseFloat(stimulus[i]), parseFloat(response[i]), parseFloat(responseTime[i])], function (err, result) {
                         if (err) {
                             console.log("ERROR FLANKERDATA: " + err);
                         }
                         else {
-                            console.log("FlankerData table updated");
                             return callback();
                         }
                     });
                 }
+                console.log("FlankerData table updated");
             });
         }
     });
