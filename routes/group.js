@@ -18,7 +18,9 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
 
         model.getGroupPermissions(req.user, gid, function (result) {
             if (result == {}) {
+                console.log("RESULT WAS == to {}");
                 res.redirect('/');
+                return;
             }
             var access = result;
 

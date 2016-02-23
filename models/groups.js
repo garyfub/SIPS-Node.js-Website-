@@ -59,7 +59,7 @@ function inviteCode(req, callback){
                 console.log(err);
                 return callback(err)
             } else{
-                console.log("RESULT: " + JSON.stringify(rows,null,2));
+                //console.log("RESULT: " + JSON.stringify(rows,null,2));
                 if(Object.keys(rows).length == 0){ //if no results
                     return callback(true);
                 }
@@ -147,39 +147,41 @@ function getGroupPermissions(user, groupID, callback){
 
 
 function editActionIndex(access, action, type, data ,callback){
-    console.log("GROUP EDITING INITIATED");
+    console.log("GROUP EDITING INITIATED: " + action + " " + type);
 
     switch (action){
         case 'remove':
             if(type == "user"){
-                //TODO: call to remove user
                 models_admin.groupRemoveUser(data.groupID, data.data, function(){ //data.data should be userID of user to be removed
                     return callback(true);
                 });
             }
             else if (type == "position"){
-                //TODO call to remove position
-                models_admin.groupRemovePosition(data.groupID, data.data, function(){//data.data is position name
-                    return callback(true)
+                models_admin.groupRemovePosition(data, function(){//data.data is position name
+                    return callback(true);
                 })
             }
             break;
         case 'add':
             if (type == "position"){
-                //TODO: call to add position
-                models_admin.groupCreatePosition(data.groupID, data,data, function(){
-                    return callback(true)
+                models_admin.groupCreatePosition(data, function(){
+                    return callback(true);
                 });
             }
             break;
-        case 'edit':
+        case 'update':
             if(type == "user"){
                 //TODO call to update MEMBERS table
             }
             else if(type == "position"){
                 //TODO call to update ROLEPERMISSIONS table
+                console.log("Update position called");
+                    models_admin.groupUpdatePosition(data,function(){
+                        return callback(true);
+                    })
             }
             else if(type == "group"){
+                console.log("Update group called");
                 //TODO: call to update group information in GROUPS table
             }
             break;

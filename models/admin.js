@@ -32,15 +32,20 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 
 module.exports = {
+    //Groups
     createGroup: createGroup,
-    getGroups: getGroups,
     deleteGroup: deleteGroup,
+    getGroups: getGroups,
     getGroupUsers: getGroupUsers,
+    //Permissions
     getGroupPositions: getGroupPositions,
     getUserAccessPermissions: getUserAccessPermissions,
+    //Group Users
     groupRemoveUser: groupRemoveUser,
+    //Group Positions
     groupRemovePosition: groupRemovePosition,
-    groupCreatePosition: groupCreatePosition
+    groupCreatePosition: groupCreatePosition,
+    groupUpdatePosition: groupUpdatePosition
 }
 
 //Creates new group
@@ -231,12 +236,20 @@ function groupRemoveUser(groupID, userID, callback) {
 
 }
 
+
+/////
+//POSITIONS
+/////
+
+
 /**
  * Group
  * Remove position
  */
-function groupRemovePosition(groupID, position, callback) {
+function groupRemovePosition(data, callback) {
 
+    var groupID = data.groupID;
+    var position = data.data;
     ibmdb.open(dsnString, function (err, conn) {
         conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND ROLE_NAME = \'" + position + "\'", function (err, stmt) {
             if (err) {
@@ -249,15 +262,12 @@ function groupRemovePosition(groupID, position, callback) {
             stmt.execute(function (err, result) {
                 if (err) console.log(err);
                 else conn.close(function () {
-                    return callback(err);
+                    return callback();
                 });
             });
         });
     });
-
-    return callback();
 }
-
 
 /**
  * Adds new entry to RolePermissions table with the supplied groupID
@@ -265,29 +275,84 @@ function groupRemovePosition(groupID, position, callback) {
  * @param positionData
  * @param callback
  */
-//TODO: Add Organization ID, double check database entry is working fully.
-function groupCreatePosition(groupID, data, callback){
-   console.log("CREATE-POSITION: " + JSON.stringify(data, null, 2));
+function groupCreatePosition(data, callback){
 
-    console.log("CREATE-POSITION-KEYS: " + Object.keys(data));
+    console.log("POSITION CREATE: " + JSON.stringify(data, null, 2));
 
+    var groupID = data.groupID;
+    var obj = JSON.parse(data.data);
+
+        if(!obj.hasOwnProperty('adminAccess')){
+            obj.adminAccess = 0;
+        }
+        if(!obj.hasOwnProperty('editGroup')){
+            console.log("NO editGroup FOUND!!");
+            obj.editGroup = 0;
+        }
+        if(!obj.hasOwnProperty('removeUsers')){
+            obj.removeUsers = 0;
+        }
+        if(!obj.hasOwnProperty('viewGroup')){
+            obj.viewGroup = 0;
+        }
+        if(!obj.hasOwnProperty('giveTests')){
+            obj.giveTests = 0;
+        }
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, view_Org_Admin_Dash, Group_Editing, Remove_users, View_Group_Results, Give_Tests) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+        conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, view_Org_Admin_Dash, Group_Editing, Remove_users, View_Group_Results, Give_Tests, GROUP_CREATION) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
                 return conn.closeSync();
             }
 
-            //Bind and Execute the statment asynchronously
-            stmt.execute(["", data.groupID, data["data[positionTitle]"], data["data[adminAccess]"], data["data[editGroup]"], data["data[removeUsers]"], data["data[viewGroup]"], data["data[giveTests]"]], function (err, result) {
+            //Bind and Execute the statement asynchronously
+            stmt.execute([obj.orgID, data.groupID, obj.positionTitle, obj.adminAccess, obj.editGroup, obj.removeUsers, obj.viewGroup, obj.giveTests, -1], function (err, result) {
                 if (err) console.log(err);
                 else conn.close(function () {
-                    return callback;
+                    return callback();
                 });
             });
         });
     });
+}
 
+function groupUpdatePosition(data, callback){
 
+    var groupID = data.groupID;
+    var obj = JSON.parse(data.data);
+
+    if(!obj.hasOwnProperty('adminAccess')){
+        obj.adminAccess = 0;
+    }
+    if(!obj.hasOwnProperty('editGroup')){
+        console.log("NO editGroup FOUND!!");
+        obj.editGroup = 0;
+    }
+    if(!obj.hasOwnProperty('removeUsers')){
+        obj.removeUsers = 0;
+    }
+    if(!obj.hasOwnProperty('viewGroup')){
+        obj.viewGroup = 0;
+    }
+    if(!obj.hasOwnProperty('giveTests')){
+        obj.giveTests = 0;
+    }
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE ROLEPERMISSIONS SET (Role_name, view_Org_Admin_Dash, Group_Editing, Remove_users, View_Group_Results, Give_Tests) = VALUES ( ?, ?, ?, ?, ?, ?) WHERE GROUPID = \'" + groupID + "\' AND ORGANIZATIONID = \'" + obj.orgID + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statement asynchronously
+            stmt.execute([obj.positionTitle, obj.adminAccess, obj.editGroup, obj.removeUsers, obj.viewGroup, obj.giveTests], function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
 }

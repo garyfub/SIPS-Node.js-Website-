@@ -36,16 +36,18 @@
 
                             <!-- Group Info Tab -->
                             <div class="tab-pane fade in active" id="tabGroupInfo">
-                                <form role="form" action="update-group" method="post" id="<%= groupID %>">
+                                <form role="form" action="/group/<%= groupID %>/edit/update/group" method="post" id="<%= groupID %>">
                                     <div class="form-group">
+                                        <input type="text" class="form-control col-lg-7 hidden" name="groupID" value="<%= groupID %>">
                                         <label for="group_name col-lg-2">Name:</label>
                                         <input type="text" class="form-control col-lg-7" id="group_name"
-                                               name="group_name" value="<%= groupName %>" disabled>
+                                               name="group_name" value="<%= groupName %>">
                                     </div>
                                     <br><br>
                                     <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i>
                                         Edit
                                     </button>
+                                    <button type="button" class="btn btn-default" onClick="location.reload(true);">Cancel</button>
                                 </form>
                                 <br>
                             </div>
@@ -150,20 +152,22 @@
                                     <tr>
                                         <td class="hidden"><input name="position" class="selectedPos" type="radio"
                                                                   value="<%= groupInfo.pos[i]["ROLE_NAME"] %>"></td>
-                                        <td><%= groupInfo.pos[i]["ROLE_NAME"] %></td>
-                                        <td><%= groupInfo.pos[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes" : "No" %></td>
-                                        <td><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes" : "No" %></td>
-                                        <td><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes" : "No" %></td>
-                                        <td><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes" : "No" %></td>
-                                        <td><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes" : "No" %></td>
+                                        <td class="roleName"><%= groupInfo.pos[i]["ROLE_NAME"] %></td>
+                                        <td class="adminDash"><%= groupInfo.pos[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes" : "No" %></td>
+                                        <td class="groupEdit"><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes" : "No" %></td>
+                                        <td class="remUsers"><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes" : "No" %></td>
+                                        <td class="groupResults"><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes" : "No" %></td>
+                                        <td class="giveTests"><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes" : "No" %></td>
 
                                         <td>
-                                            <div class="btn-group <% if(i == groupInfo.pos.length -1){%><%= "dropup"%><%}%>">
+                                            <div class="btn-group <% if(i == groupInfo.pos.length - 1){ %> <%= "dropup" %> <% } %>">
                                                 <button type="button"
                                                         class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
                                                         data-toggle="dropdown"><span class="fa fa-cog"></span></button>
                                                 <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="#" class="edit-pos"><span class="fa fa-cog "></span>
+                                                    <li><a href="#" class="edit-pos" data-toggle="modal"
+                                                           data-target="#add-position-modal"><span
+                                                                    class="fa fa-cog "></span>
                                                             edit</a>
                                                     </li>
                                                     <li class="divider"></li>
@@ -299,40 +303,40 @@
                     <label class="control-label">Permissions</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="adminAccess"> Access to the Admin Dashboard <p class="text-danger pull-right">
+                            <input type="checkbox" name="adminAccess" value="1"> Access to the Admin Dashboard <p
+                                    class="text-danger pull-right">
                                 (complete access)</p>
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="editGroup"> Able to edit basic group information
+                            <input type="checkbox" name="editGroup" value="1"> Able to edit basic group information
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="removeUsers"> Able to remove members from a group
+                            <input type="checkbox" name="removeUsers" value="1"> Able to remove members from a group
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="viewGroup"> Able to view results of group members
+                            <input type="checkbox" name="viewGroup" value="1"> Able to view results of group members
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="giveTests"> Able to Administer tests via the SIPS app
+                            <input type="checkbox" name="giveTests" value="1"> Able to Administer tests via the SIPS app
                         </label>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" id="add-position-confirmed" class="btn btn-primary" data-dismiss="modal">Add
-                </button>
+                <button type="button" id="add-position-confirmed" class="btn btn-primary" data-dismiss="modal">Add</button>
             </div>
         </div>
     </div>
@@ -373,16 +377,23 @@
             }
         });
 
-        //Check row on hover
+        //Show action button
         $('.table-radio tr').hover(
                 function () {
                     $(this).find('td .btn').removeClass("invisible");
                 },
                 function () {
-                    $(this).find('td input[type=radio]').prop('checked', true);
+
                     $(this).find('td .btn').addClass("invisible");
                 }
         );
+
+        //Checks group on the same row as the action button being clicked
+        $('.action_btn').click(function (e) {
+            e.preventDefault();
+            //$(this).find('td input[type=radio]').prop('checked', true);
+            $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
+        });
 
         //Open add user dialog
         $(".add_user").click(function (e) {
@@ -390,19 +401,46 @@
             $('#add_user_box').dialog('open');
         })
 
-        //Send post to add position
+
+        //Reset modal for adding position
+        $(".add-position").click(function (e) {
+            $('#add-position-modal .modal-title').text("Add New Position");
+            $('#add-position-confirmed').text('Add');
+            $('#new-pos-name').val("");
+            $("#new_position_form")[0].reset();
+        })
+
+
+        //Switch model for updating position
+        $(".edit-pos").click(function (e) {
+            var selectedPos = $('input[name=position]:checked').closest('tr');
+            var title = selectedPos.find('td:eq(1)').text();
+
+            $('#add-position-modal .modal-title').text("Edit: " + title);
+
+            $('#new-pos-name').val(title);
+            $('input[name=adminAccess]').prop('checked', selectedPos.find('td:eq(2)').text() == 'Yes');
+            $('input[name=editGroup]').prop('checked', selectedPos.find('td:eq(3)').text() == 'Yes');
+            $('input[name=removeUsers]').prop('checked', selectedPos.find('td:eq(4)').text() == 'Yes');
+            $('input[name=viewGroup]').prop('checked', selectedPos.find('td:eq(5)').text() == 'Yes');
+            $('input[name=giveTests]').prop('checked', selectedPos.find('td:eq(6)').text() == 'Yes');
+
+            $('#add-position-confirmed').text('Update');
+        });
+
+        //Send post to add/update position
         $('#add-position-confirmed').click(function (e) {
             e.preventDefault();
-           // var form = $('#new_position_form').find(":input");
+            // var form = $('#new_position_form').find(":input");
             var form = $("#new_position_form").serializeArray();
-            var obj = {};
-            for(var i =0 ; i < form.length; i++){
+            var obj = {'orgID': '<%= orgID %>'};
+            for (var i = 0; i < form.length; i++) {
                 var key = form[i].name;
-                var value = form[i].value == 'on'? 1 : 0;
-                obj[key] = value;
+                // var value = form[i].value == 'on'? 1 : 0;
+                obj[key] = form[i].value;
             }
-            console.log("OBJ: " +  JSON.stringify(obj, null, 2));
-            ajaxGroupEdit('add', 'position', obj);
+            var action = $('#add-position-confirmed').text().toLowerCase().trim();
+            ajaxGroupEdit(action, 'position', JSON.stringify(obj, null, 2));
         });
 
         //Post after confirmation to remove user
@@ -422,11 +460,13 @@
         });
 
 
+
+        //Sends ajax post request to server
         function ajaxGroupEdit(action, type, data) {
             $.ajax({
                 type: 'POST',
                 url: '/group/<%= groupID %>/edit/' + action + '/' + type,
-                data: {groupID: '<%= groupID %>', data: data},
+                data: {groupID: '<%= groupID %>', data},
                 complete: function (data) {
                     location.reload(true);
                 }
