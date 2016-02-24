@@ -183,16 +183,17 @@ function editActionIndex(access, action, type, data ,callback){
             if(type == "user"){
                 models_admin.groupUpdateUser(data, function(){
                     return callback(true);
-                })
+                });
             }
             else if(type == "position"){
                     models_admin.groupUpdatePosition(data,function(){
                         return callback(true);
-                    })
+                    });
             }
             else if(type == "group"){
-                //TODO: call to update group information in GROUPS table
-                //TODO: Learn how to run Update command
+                models_admin.groupUpdateInfo(data, function(){
+                    return callback(true);
+                });
             }
             break;
 

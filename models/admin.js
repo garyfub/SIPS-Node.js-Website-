@@ -34,6 +34,7 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 module.exports = {
     //Groups
     createGroup: createGroup,
+    groupUpdateInfo: groupUpdateInfo,
     deleteGroup: deleteGroup,
     getGroups: getGroups,
     getGroupUsers: getGroupUsers,
@@ -76,22 +77,29 @@ function createGroup(name, orgID, callback) {
 
 };
 
-//Retrieves list of groups
-function getGroups(orgID, callback) {
+//Updates group information in Groups table
+function groupUpdateInfo(data, callback){
 
-    // console.log(orgID + ", " + JSON.stringify(callback, null, 2));
+    console.log("UPDATE GROUP INFO: " + JSON.stringify(data, null, 2));
+
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT * FROM GROUPS WHERE ORGANIZATIONID =  \'" + orgID + "\'", function (err, rows, moreResultSets) {
+        conn.prepare("UPDATE GROUPS SET NAME = \'"+ data.group_name + "\' WHERE GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
             if (err) {
+                //could not prepare for some reason
                 console.log(err);
-            } else {
-                //return results
-                return callback(err, rows);
+                return conn.closeSync();
             }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
         });
     });
-
-};
+}
 
 //Deletes group that matched GroupID
 function deleteGroup(groupID, callback) {
@@ -118,6 +126,22 @@ function deleteGroup(groupID, callback) {
     });
 };
 
+//Retrieves list of groups
+function getGroups(orgID, callback) {
+
+    // console.log(orgID + ", " + JSON.stringify(callback, null, 2));
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT * FROM GROUPS WHERE ORGANIZATIONID =  \'" + orgID + "\'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                //return results
+                return callback(err, rows);
+            }
+        });
+    });
+
+};
 
 /**
  * Retrieves list of users in the group from the id used.
@@ -238,7 +262,6 @@ function groupRemoveUser(groupID, userID, callback) {
 }
 
 function groupUpdateUser(data, callback){
-    var groupID = data.groupID;
     var obj = JSON.parse(data.data);
     console.log("UPDATE USER: " + JSON.stringify(obj, null, 2));
 

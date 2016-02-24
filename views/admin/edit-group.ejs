@@ -36,7 +36,7 @@
 
                             <!-- Group Info Tab -->
                             <div class="tab-pane fade in active" id="tabGroupInfo">
-                                <form role="form" action="/group/<%= groupID %>/edit/update/group" method="post" id="<%= groupID %>">
+                                <form role="form" action="/group/<%= groupID %>/edit/update/group" method="post">
                                     <div class="form-group">
                                         <input type="text" class="form-control col-lg-7 hidden" name="groupID" value="<%= groupID %>">
                                         <label for="group_name col-lg-2">Name:</label>
@@ -44,9 +44,7 @@
                                                name="group_name" value="<%= groupName %>">
                                     </div>
                                     <br><br>
-                                    <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i>
-                                        Edit
-                                    </button>
+                                    <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i>Apply Changes</button>
                                     <button type="button" class="btn btn-default" onClick="location.reload(true);">Cancel</button>
                                 </form>
                                 <br>
