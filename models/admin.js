@@ -42,6 +42,7 @@ module.exports = {
     getUserAccessPermissions: getUserAccessPermissions,
     //Group Users
     groupRemoveUser: groupRemoveUser,
+    groupUpdateUser: groupUpdateUser,
     //Group Positions
     groupRemovePosition: groupRemovePosition,
     groupCreatePosition: groupCreatePosition,
@@ -234,6 +235,30 @@ function groupRemoveUser(groupID, userID, callback) {
         });
     });
 
+}
+
+function groupUpdateUser(data, callback){
+    var groupID = data.groupID;
+    var obj = JSON.parse(data.data);
+    console.log("UPDATE USER: " + JSON.stringify(obj, null, 2));
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE MEMBERS SET ROLE_NAME = \'"+ obj.position + "\' WHERE USERID = \'"+ obj.userid + "\' AND GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
 }
 
 

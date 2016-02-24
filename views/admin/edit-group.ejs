@@ -89,7 +89,8 @@
                                                         class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
                                                         data-toggle="dropdown"><span class="fa fa-cog"></span></button>
                                                 <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="#" class="edit-user"><span class="fa fa-cog "></span>
+                                                    <li><a href="#" class="edit-user" data-toggle="modal"
+                                                           data-target="#update-user-modal"><span class="fa fa-cog "></span>
                                                             edit</a>
                                                     </li>
                                                     <li><a href="/results"><span class="fa fa-pie-chart "></span> View
@@ -258,6 +259,35 @@
     </div>
 </div>
 
+<!-- User Update Modal -->
+<div id="update-user-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change member position</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="user-pos">Position: </label>
+                        <select name="user-pos" id="update-user-pos">
+                            <%for(var i = 0; i < groupInfo.pos.length; i++){%>
+                            <option value="<%= groupInfo.pos[i]["ROLE_NAME"] %>"><%= groupInfo.pos[i]["ROLE_NAME"] %></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
+                <button type="button" id="update-user-confirmed" class="btn btn-primary" data-dismiss="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Position Removal Modal -->
 <div id="remove-position-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -280,7 +310,7 @@
     </div>
 </div>
 
-<!-- Position Add Modal -->
+<!-- Position Add/Update Modal -->
 <div id="add-position-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -395,11 +425,26 @@
             $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
         });
 
+        //Open Update user modal and set the select form field to the user's current position
+        $(".edit-user").click(function(e){
+            var activePos = $(this).closest('tr').find('td:eq(2)').text().trim();
+            $('#update-user-pos').val(activePos);
+        })
+
+        $('#update-user-confirmed').click(function(e){
+            var data= {};
+             data.position = $('#update-user-pos').val();
+            data.userid = $('input[name=user]:checked').val();
+            data.groupID = '<%= groupID %>';
+            ajaxGroupEdit('update', 'user', JSON.stringify(data, null, 2));
+        })
+
         //Open add user dialog
-        $(".add_user").click(function (e) {
+        $(".add_user").click(function(e) {
             e.preventDefault();
             $('#add_user_box').dialog('open');
         })
+
 
 
         //Reset modal for adding position

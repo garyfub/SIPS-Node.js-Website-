@@ -181,7 +181,9 @@ function editActionIndex(access, action, type, data ,callback){
         //UPDATE
         case 'update':
             if(type == "user"){
-                //TODO call to update MEMBERS table
+                models_admin.groupUpdateUser(data, function(){
+                    return callback(true);
+                })
             }
             else if(type == "position"){
                     models_admin.groupUpdatePosition(data,function(){
