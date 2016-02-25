@@ -9,7 +9,34 @@ var model = require('../models/groups');
  */
 router.get('/:groupID/', ensureAuthenticated, function (req, res, next) {
     //TODO: Create group page, decide on staying with groupID's or using group name or short id for group pages.
-    res.redirect('/group/' + req.params.groupID + "/edit"); //temp redirect to edit page
+
+    var gid = req.params.groupID;
+
+    model.getGroupPermissions(req.user, gid, function (result) {
+        if (result == {}) {
+            console.log("RESULT WAS == to {}");
+            res.redirect('/');
+            return;
+        }
+        var access = result;
+
+        model.getGroupInfo(gid, function (result) { //TODO: Move getGroupUsers into getGroupInfo for an all-in-one function call
+
+            var groupInfo = result;
+
+            res.render('group/index', {
+                title: groupInfo["NAME"],
+                isAdmin: req.user.isAdmin,
+                access: access,
+                groupName: groupInfo["NAME"],
+                groupInfo: result
+            });
+        });
+    });
+
+
+
+   // res.redirect('/group/' + req.params.groupID + "/edit"); //temp redirect to edit page
 });
 
 
@@ -50,7 +77,7 @@ function edit_group_callback(req, res, access, gid) {
         if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
             model_admin.getGroupUsers(gid, 1, function (result) {
 
-                res.render('admin/edit-group', {
+                res.render('group/edit', {
                     title: 'Edit Group',
                     name: req.user.name.givenName + " " + req.user.name.familyName,
                     id: req.user.id,
@@ -65,7 +92,7 @@ function edit_group_callback(req, res, access, gid) {
             });
         }
         else
-            res.redirect('/admin');
+            res.redirect('/group/'+ groupID);
 
     });
 }

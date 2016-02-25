@@ -382,7 +382,6 @@ function groupUpdatePosition(data, callback){
         obj.adminAccess = 0;
     }
     if(!obj.hasOwnProperty('editGroup')){
-        console.log("NO editGroup FOUND!!");
         obj.editGroup = 0;
     }
     if(!obj.hasOwnProperty('removeUsers')){
