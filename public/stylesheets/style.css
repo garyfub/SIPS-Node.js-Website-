@@ -21,6 +21,10 @@ body {
   padding: 10px;
 }
 
+#content-area{
+  margin-bottom: 50px;
+}
+
 footer {
   width: 100%;
   background-color: #F8F8F8;

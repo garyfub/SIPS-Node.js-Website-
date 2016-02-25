@@ -160,14 +160,17 @@ function editActionIndex(access, action, type, data ,callback){
         //REMOVE
         case 'remove':
             if(type == "user"){
-                models_admin.groupRemoveUser(data.groupID, data.data, function(){ //data.data should be userID of user to be removed
+                models_admin.groupRemoveUser(data.groupID, data.data, function(){
                     return callback(true);
                 });
             }
             else if (type == "position"){
-                models_admin.groupRemovePosition(data, function(){//data.data is position name
+                models_admin.groupRemovePosition(data, function(){
                     return callback(true);
                 })
+            }
+            else if(type == "session"){
+                //TODO: remove Session
             }
             break;
         //ADD
@@ -176,6 +179,9 @@ function editActionIndex(access, action, type, data ,callback){
                 models_admin.groupCreatePosition(data, function(){
                     return callback(true);
                 });
+            }
+            else if(type == 'session'){
+                //TODO: Add Session
             }
             break;
         //UPDATE
@@ -194,6 +200,9 @@ function editActionIndex(access, action, type, data ,callback){
                 models_admin.groupUpdateInfo(data, function(){
                     return callback(true);
                 });
+            }
+            else if(type == "session"){
+                //TODO: Update Session
             }
             break;
 

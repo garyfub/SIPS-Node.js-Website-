@@ -5,36 +5,40 @@ var model = require('../models/groups');
 
 
 /**
+ * Displays group page based on ID in url
+ */
+router.get('/:groupID/', ensureAuthenticated, function (req, res, next) {
+    //TODO: Create group page, decide on staying with groupID's or using group name or short id for group pages.
+    res.redirect('/group/' + req.params.groupID + "/edit"); //temp redirect to edit page
+});
+
+
+/**
  * Retrieves group editing page and handles edits to group
  */
 router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin[0]) {
 
-        var gid = req.params.groupID;
-        var action = req.params.action;
-        var type = req.params.type;
+    var gid = req.params.groupID;
+    var action = req.params.action;
+    var type = req.params.type;
 
-        model.getGroupPermissions(req.user, gid, function (result) {
-            if (result == {}) {
-                console.log("RESULT WAS == to {}");
-                res.redirect('/');
-                return;
-            }
-            var access = result;
+    model.getGroupPermissions(req.user, gid, function (result) {
+        if (result == {}) {
+            console.log("RESULT WAS == to {}");
+            res.redirect('/');
+            return;
+        }
+        var access = result;
 
-            if (action && type && access.GROUP_EDITING == 1) {//Handle edits
-                console.log("EDIT GROUP ACTION: " + action + ", " + JSON.stringify(req.params));
-                model.editActionIndex(access, action, type, req.body, function (result) {
-                    edit_group_callback(req, res, access, gid);
-                });
-            }
-            else
+        if (action && type && access.GROUP_EDITING == 1) {//Handle edits
+            console.log("EDIT GROUP ACTION: " + action + ", " + JSON.stringify(req.params));
+            model.editActionIndex(access, action, type, req.body, function (result) {
                 edit_group_callback(req, res, access, gid);
-        });
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
+            });
+        }
+        else //TODO: Redirect to group page when group page is built out
+            edit_group_callback(req, res, access, gid);
+    });
 });
 
 //Added to minimize repeated code.
@@ -54,7 +58,7 @@ function edit_group_callback(req, res, access, gid) {
                     access: access,
                     groupID: gid,
                     groupName: groupInfo["NAME"],
-                    orgID: admin.ORGANIZATIONID,
+                    orgID: access.ORGANIZATIONID,
                     inviteCode: groupInfo["INVITE_CODE"],
                     groupInfo: result
                 })
@@ -65,6 +69,7 @@ function edit_group_callback(req, res, access, gid) {
 
     });
 }
+
 
 //route functions
 function ensureAuthenticated(req, res, next) {

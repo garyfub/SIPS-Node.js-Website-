@@ -12,8 +12,9 @@
         <div class="container-fluid">
 
 
-            <div class="col-lg-12">
+            <div id="content-area" class="col-lg-12">
 
+                <!-- Page header -->
                 <div class="panel panel-default">
                     <div class="content">
                         <h1><%= groupName %></h1>
@@ -23,11 +24,13 @@
 
 
                 <div class="panel with-nav-tabs panel-default">
+                    <!--Tab header-->
                     <div class="panel-heading">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tabGroupInfo" data-toggle="tab">Group Info</a></li>
                             <li><a href="#tabUsers" data-toggle="tab">Members</a></li>
                             <li><a href="#tabPositions" data-toggle="tab">Positions</a></li>
+                            <li><a href="#tabSessions" data-toggle="tab">Sessions</a></li>
                         </ul>
                     </div>
                     <br>
@@ -38,14 +41,19 @@
                             <div class="tab-pane fade in active" id="tabGroupInfo">
                                 <form role="form" action="/group/<%= groupID %>/edit/update/group" method="post">
                                     <div class="form-group">
-                                        <input type="text" class="form-control col-lg-7 hidden" name="groupID" value="<%= groupID %>">
+                                        <input type="text" class="form-control col-lg-7 hidden" name="groupID"
+                                               value="<%= groupID %>">
                                         <label for="group_name col-lg-2">Name:</label>
                                         <input type="text" class="form-control col-lg-7" id="group_name"
                                                name="group_name" value="<%= groupName %>">
                                     </div>
                                     <br><br>
-                                    <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i>Apply Changes</button>
-                                    <button type="button" class="btn btn-default" onClick="location.reload(true);">Cancel</button>
+                                    <button type="submit" class="btn btn-primary-outline"><i class="fa fa-wrench"></i>
+                                        Apply Changes
+                                    </button>
+                                    <button type="button" class="btn btn-default" onClick="location.reload(true);">
+                                        Cancel
+                                    </button>
                                 </form>
                                 <br>
                             </div>
@@ -88,7 +96,8 @@
                                                         data-toggle="dropdown"><span class="fa fa-cog"></span></button>
                                                 <ul class="dropdown-menu pull-right" role="menu">
                                                     <li><a href="#" class="edit-user" data-toggle="modal"
-                                                           data-target="#update-user-modal"><span class="fa fa-cog "></span>
+                                                           data-target="#update-user-modal"><span
+                                                                    class="fa fa-cog "></span>
                                                             edit</a>
                                                     </li>
                                                     <li><a href="/results"><span class="fa fa-pie-chart "></span> View
@@ -157,7 +166,6 @@
                                         <td class="remUsers"><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes" : "No" %></td>
                                         <td class="groupResults"><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes" : "No" %></td>
                                         <td class="giveTests"><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes" : "No" %></td>
-
                                         <td>
                                             <div class="btn-group <% if(i == groupInfo.pos.length - 1){ %> <%= "dropup" %> <% } %>">
                                                 <button type="button"
@@ -189,12 +197,9 @@
                                             class="fa fa-plus-square"></span> Add new position
                                 </a>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
@@ -271,16 +276,17 @@
                     <div class="form-group">
                         <label for="user-pos">Position: </label>
                         <select name="user-pos" id="update-user-pos">
-                            <%for(var i = 0; i < groupInfo.pos.length; i++){%>
+                            <% for(var i = 0; i < groupInfo.pos.length; i++){ %>
                             <option value="<%= groupInfo.pos[i]["ROLE_NAME"] %>"><%= groupInfo.pos[i]["ROLE_NAME"] %></option>
-                            <%}%>
+                            <% } %>
                         </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
-                <button type="button" id="update-user-confirmed" class="btn btn-primary" data-dismiss="modal">Update</button>
+                <button type="button" id="update-user-confirmed" class="btn btn-primary" data-dismiss="modal">Update
+                </button>
             </div>
         </div>
     </div>
@@ -364,7 +370,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" id="add-position-confirmed" class="btn btn-primary" data-dismiss="modal">Add</button>
+                <button type="button" id="add-position-confirmed" class="btn btn-primary" data-dismiss="modal">Add
+                </button>
             </div>
         </div>
     </div>
@@ -374,11 +381,12 @@
 
 <script>
     $(document).ready(function () {
+        //Init sidebar menu
         $(function () {
             $('#sideMenu').metisMenu();
         });
 
-        //Initialize Add User dialog
+        //Initialize Add User email dialog
         $("#add_user_box").dialog({
             autoOpen: false,
             modal: true,
@@ -405,16 +413,17 @@
             }
         });
 
-        //Show action button
+
+        //Show/Hide action button on hover
         $('.table-radio tr').hover(
                 function () {
                     $(this).find('td .btn').removeClass("invisible");
                 },
                 function () {
-
                     $(this).find('td .btn').addClass("invisible");
                 }
         );
+
 
         //Checks group on the same row as the action button being clicked
         $('.action_btn').click(function (e) {
@@ -423,26 +432,29 @@
             $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
         });
 
+
         //Open Update user modal and set the select form field to the user's current position
-        $(".edit-user").click(function(e){
+        $(".edit-user").click(function (e) {
             var activePos = $(this).closest('tr').find('td:eq(2)').text().trim();
             $('#update-user-pos').val(activePos);
         })
 
-        $('#update-user-confirmed').click(function(e){
-            var data= {};
-             data.position = $('#update-user-pos').val();
+
+        //Send Update User post request with needed data
+        $('#update-user-confirmed').click(function (e) {
+            var data = {};
+            data.position = $('#update-user-pos').val();
             data.userid = $('input[name=user]:checked').val();
             data.groupID = '<%= groupID %>';
             ajaxGroupEdit('update', 'user', JSON.stringify(data, null, 2));
         })
 
+
         //Open add user dialog
-        $(".add_user").click(function(e) {
+        $(".add_user").click(function (e) {
             e.preventDefault();
             $('#add_user_box').dialog('open');
         })
-
 
 
         //Reset modal for adding position
@@ -471,6 +483,7 @@
             $('#add-position-confirmed').text('Update');
         });
 
+
         //Send post to add/update position
         $('#add-position-confirmed').click(function (e) {
             e.preventDefault();
@@ -486,6 +499,7 @@
             ajaxGroupEdit(action, 'position', JSON.stringify(obj, null, 2));
         });
 
+
         //Post after confirmation to remove user
         $('#remove-user-confirmed').click(function (e) {
             e.preventDefault();
@@ -494,6 +508,7 @@
             ajaxGroupEdit('remove', 'user', selectedUser);
         });
 
+
         //Post after confirmation to remove position
         $('#remove-position-confirmed').click(function (e) {
             e.preventDefault();
@@ -501,7 +516,6 @@
 
             ajaxGroupEdit('remove', 'position', selectedPos);
         });
-
 
 
         //Sends ajax post request to server
@@ -515,10 +529,7 @@
                 }
             })
         }
-
     });
-
-
 </script>
 
 </body>
