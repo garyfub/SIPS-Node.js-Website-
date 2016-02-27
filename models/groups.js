@@ -123,7 +123,7 @@ function getGroupPermissions(user, groupID, callback){
     for(var i = 0; i < Object.keys(user.Admin).length; i++){
 
         for(var t = 0; t < Object.keys(user.Admin[i].GROUPS).length; t++){
-            if(user.Admin[i].GROUPS[t] == groupID){
+            if(user.Admin[i].GROUPS[t]['GROUPID'] == groupID){
                 permissions = user.Admin[i];
                 isAdmin = true;
                 break;

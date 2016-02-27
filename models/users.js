@@ -173,12 +173,14 @@ function getAdminAccessPositions(req, callback) {
                         admin.GROUPS = {};
                         groups = admin.GROUPS;
 
-                        conn.query("SELECT GROUPID FROM GROUPS WHERE ORGANIZATIONID =  \'" + req.user.Admin[i].ORGANIZATIONID + "\'", function (err, rows, moreResultSets) {
+                        conn.query("SELECT GROUPID, GROUP_NAME FROM GROUPS WHERE ORGANIZATIONID =  \'" + req.user.Admin[i].ORGANIZATIONID + "\'", function (err, rows, moreResultSets) {
                             if (err) {
                                 console.log(err);
                             } else {
                                 for (var t = 0; t < Object.keys(rows).length; t++) {
-                                    admin["GROUPS"][t] = rows[t]["GROUPID"];
+                                    admin["GROUPS"][t] = {};
+                                    admin["GROUPS"][t]["GROUPID"] = rows[t]["GROUPID"];
+                                    admin["GROUPS"][t]["GROUP_NAME"] = rows[t]["GROUP_NAME"];
                                 }
                                 console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
                             }

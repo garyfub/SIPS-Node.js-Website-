@@ -40,7 +40,6 @@ module.exports = {
     getGroupUsers: getGroupUsers,
     //Permissions
     getGroupPositions: getGroupPositions,
-    getUserAccessPermissions: getUserAccessPermissions,
     //Group Users
     groupRemoveUser: groupRemoveUser,
     groupUpdateUser: groupUpdateUser,
@@ -48,15 +47,16 @@ module.exports = {
     groupRemovePosition: groupRemovePosition,
     groupCreatePosition: groupCreatePosition,
     groupUpdatePosition: groupUpdatePosition
+    //Group Sessions
 }
 
 //Creates new group
 function createGroup(name, orgID, callback) {
 
-    var groupID = uuid.v1();
+    var groupID = shortid.generate();
     //console.log(name + ", " + orgID + ", " + JSON.stringify(callback, null, 2));
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("insert into GROUPS (groupID, name, invite_code, organizationID) VALUES (?, ?, ?, ?)", function (err, stmt) {
+        conn.prepare("insert into GROUPS (groupID, group_name, invite_code, organizationID) VALUES (?, ?, ?, ?)", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -83,7 +83,7 @@ function groupUpdateInfo(data, callback){
     console.log("UPDATE GROUP INFO: " + JSON.stringify(data, null, 2));
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("UPDATE GROUPS SET NAME = \'"+ data.group_name + "\' WHERE GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
+        conn.prepare("UPDATE GROUPS SET GROUP_NAME = \'"+ data.group_name + "\' WHERE GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -202,40 +202,6 @@ function getGroupPositions(groupID, users, callback) {
 }
 
 /**
- * ACCESS PERMISSIONS
- *Returns all roles and permissions connected to the user ID
- *
- * optional: get role and permissions for specific group if groupID isn't null.
- */
-function getUserAccessPermissions(groupID, userID, callback) {
-
-    ibmdb.open(dsnString, function (err, conn) {
-        if (groupID != null) {//Returns user positions for specified groupID
-            conn.query("SELECT GROUPS.name, GROUPS.invite_code, MEMBERS.role_name, ROLEPERMISSIONS.VIEW_ORG_ADMIN_DASH, ROLEPERMISSIONS.group_creation, ROLEPERMISSIONS.group_editing, ROLEPERMISSIONS.remove_users, ROLEPERMISSIONS.view_group_results, ROLEPERMISSIONS.give_tests, ROLEPERMISSIONS.organizationID FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON MEMBERS.role_name = ROLEPERMISSIONS.role_name INNER JOIN GROUPS ON MEMBERS.GROUPID = GROUPS.GROUPID WHERE (ROLEPERMISSIONS.GROUPID =  \'" + groupID + "\' OR ROLEPERMISSIONS.GROUPID IS NULL) and USERID =  \'" + userID + "\';", function (err, rows, moreResultSets) {
-                if (err) {
-                    console.log(err);
-                    return false;
-                } else {
-                    return callback(rows);
-                }
-            });
-        }
-        else {//Returns all positions/permissions the user has
-            conn.query("SELECT MEMBERS.role_name, ROLEPERMISSIONS.groupID, ROLEPERMISSIONS.VIEW_ORG_ADMIN_DASH, ROLEPERMISSIONS.group_creation, ROLEPERMISSIONS.group_editing, ROLEPERMISSIONS.remove_users, ROLEPERMISSIONS.view_group_results, ROLEPERMISSIONS.give_tests, ROLEPERMISSIONS.organizationID FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON MEMBERS.role_name = ROLEPERMISSIONS.role_name WHERE USERID =  \'" + userID + "\';", function (err, rows, moreResultSets) {
-                if (err) {
-                    console.log(err);
-                    return false;
-                } else {
-                    return callback(rows);
-                }
-            });
-
-        }
-    });
-
-}
-
-/**
  * Group
  * Remove user
  */
@@ -334,7 +300,6 @@ function groupCreatePosition(data, callback){
             obj.adminAccess = 0;
         }
         if(!obj.hasOwnProperty('editGroup')){
-            console.log("NO editGroup FOUND!!");
             obj.editGroup = 0;
         }
         if(!obj.hasOwnProperty('removeUsers')){

@@ -84,7 +84,7 @@ function edit_group_callback(req, res, access, gid) {
                     isAdmin: req.user.isAdmin,
                     access: access,
                     groupID: gid,
-                    groupName: groupInfo["NAME"],
+                    groupName: groupInfo["GROUP_NAME"],
                     orgID: access.ORGANIZATIONID,
                     inviteCode: groupInfo["INVITE_CODE"],
                     groupInfo: result
