@@ -33,8 +33,14 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-lg-5 pull-right">
         <%- include partials/code_entry.ejs %>
+
+            <%//Show list of groups if user is in any
+            if(groups.length > 0 && admin.length > 0){%>
+        <%- include partials/user_groups.ejs %>
+            <%}%>
+        </div>
 
     </div>
 

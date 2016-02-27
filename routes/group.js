@@ -41,7 +41,7 @@ router.get('/:groupID/', ensureAuthenticated, function (req, res, next) {
 
 
 /**
- * Retrieves group editing page and handles edits to group
+ * Retrieves group editing page and handles edits to a single group
  */
 router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req, res, next) {
 

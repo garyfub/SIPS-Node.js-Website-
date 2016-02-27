@@ -16,9 +16,11 @@ router.get('/', function (req, res, next) {
     if (req.isAuthenticated()) {
         // logged in
         res.render('index', {
-            title: 'SIPS',
+            title: 'Sports Injury Prevention Screen',
             name: req.user.name.givenName + " " + req.user.name.familyName,
-            isAdmin: req.user.isAdmin
+            isAdmin: req.user.isAdmin,
+            admin: req.user.Admin,
+            groups: req.user.Groups
         });
     } else {
         passport.use(new GoogleStrategy({

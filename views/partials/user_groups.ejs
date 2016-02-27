@@ -1,0 +1,15 @@
+<div class="col-lg-12">
+    <div class="group-panel panel panel-default">
+        <div class="panel-heading">Groups you are in</div>
+        <div class="panel-body">
+
+            <ul class="list-group">
+                <%for(var i =0; i < groups.length; i++){%>
+                <li class="list-group-item"><div class="list-group-item-heading"><%= groups[i]['GROUP_NAME']%></div>
+                    <%if(groups[i]["GROUP_EDITING"] == 1){%>
+                    <div class="list-group-item-text"><a href="/group/<%= groups[i]["GROUPID"]%>/edit"><button class="btn btn-primary btn-small">edit</button></a></div></li>
+                <%}}%>
+            </ul>
+        </div>
+    </div>
+</div>
