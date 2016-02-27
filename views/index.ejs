@@ -7,17 +7,24 @@
 
 <!-- Page Content -->
 <div class=" container-fluid">
-    <div class="container">
-        <div class="panel panel-info">
-            <div class="panel-body">
-                <h1><%= title %></h1>
-                <p><%= 'Welcome, ' + name %></p>
-            </div>
+
+    <div class="col-lg-12">
+    <div class="panel panel-info">
+        <div class="panel-body">
+            <h1><%= title %></h1>
+            <p><%= 'Welcome, ' + name %></p>
         </div>
     </div>
+    </div>
 
-    <div class="container">
-        <div class="col-lg-3">
+
+    <!-- Main Content area -->
+    <%- include partials/user_groups.ejs %>
+
+
+    <!-- Right sidebar area -->
+    <div class="col-lg-3">
+        <div class="">
             <div class="panel panel-primary">
                 <div class="panel-heading">Quick Links</div>
 
@@ -33,16 +40,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-5 pull-right">
+
         <%- include partials/code_entry.ejs %>
-
-            <%//Show list of groups if user is in any
-            if(groups.length > 0 && admin.length > 0){%>
-        <%- include partials/user_groups.ejs %>
-            <%}%>
-        </div>
-
     </div>
+
+</div>
 
 
 </div>
