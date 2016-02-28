@@ -74,7 +74,7 @@ function edit_group_callback(req, res, access, gid) {
     model.getGroupInfo(gid, function (result) {
 
         var groupInfo = result;
-        console.log("GROUP INFO: " + groupInfo.info["GROUP_NAME"]);
+        console.log("GROUP INFO: " + groupInfo.info['GROUP_NAME']);
         if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
                 res.render('group/edit', {
                     title: 'Edit Group',

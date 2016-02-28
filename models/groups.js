@@ -100,7 +100,7 @@ function getGroupInfo(groupID, callback) {
                 getGroupUsers(groupID, function (users) {
                     getGroupPositions(groupID, function (pos) {
                         getGroupSessions(groupID, function (sessions) {
-                            result['info'] = group;
+                            result['info'] = group[0];//single result
                             result['pos'] = pos;
                             result['users'] = users;
                             result['sessions'] = sessions;
