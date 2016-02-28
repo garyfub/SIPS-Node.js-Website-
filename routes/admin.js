@@ -5,6 +5,7 @@ var model_data = require('../models/data');
 var model_user = require('../models/users');
 
 /* GET Admin page. */
+/*
 router.get('/', ensureAuthenticated, function (req, res, next) {
     if (req.user.Admin[0]) {
         var user = req.user;
@@ -30,12 +31,12 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
         res.send('404: Page not Found', 404);
     }
 });
+*/
 
 /* GET Dynamic Admin page. */
 router.get('/:orgID', ensureAuthenticated, function (req, res, next) {
 
     var user = req.user;
-    var admin = req.user.Admin[0];//TODO: Need to add ability to switch between organizations if more than one result
 
     model_user.getPermissions(req.user, req.params.orgID, function (result) {
         if (result == {}) {

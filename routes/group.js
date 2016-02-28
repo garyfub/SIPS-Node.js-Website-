@@ -88,7 +88,6 @@ function edit_group_callback(req, res, access, gid) {
                     inviteCode: groupInfo.info["INVITE_CODE"],
                     groupInfo: groupInfo
                 })
-
         }
         else
             res.redirect('/group/'+ groupID);

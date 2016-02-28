@@ -72,13 +72,25 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <%if(Object.keys(groupInfo.sessions).length == 0){%>
+                                    <tr class="warning">
+                                        <td class="hidden"></td>
+                                        <td>No sessions have been added to this group</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <% }
+                                    for(var i = 0; i < Object.keys(groupInfo.sessions); i++){
+                                    %>
                                     <tr>
                                         <td class="hidden"><input name="user" class="selectedSession" type="radio"
-                                                                  value=""></td>
-                                        <td>name</td>
-                                        <td>2/27/2016</td>
-                                        <td>9/2/2016</td>
-                                        <td>Joshua</td>
+                                                                  value="<%= group.sessions[i]["SESSIONID"] %>"></td>
+                                        <td><%= group.sessions[i]["SESSIONID"] %></td>
+                                        <td><%= group.sessions[i]["START_TIME"] %></td>
+                                        <td><%= group.sessions[i]["END_TIME"] %></td>
+                                        <td><%= group.sessions[i]["CREATEDBY"] %></td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button"
@@ -100,6 +112,7 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <% } %>
                                     </tbody>
                                 </table>
                             </div>

@@ -116,8 +116,6 @@ function deleteGroup(groupID, callback) {
                 else conn.close(function () {
                     return callback(err);
                 });
-
-
             });
         });
     });
@@ -137,7 +135,6 @@ function getGroups(orgID, callback) {
             }
         });
     });
-
 };
 
 /**
@@ -163,7 +160,6 @@ function groupRemoveUser(groupID, userID, callback) {
             });
         });
     });
-
 }
 
 function groupUpdateUser(data, callback){
