@@ -71,13 +71,11 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
 
 //Added to minimize repeated code.
 function edit_group_callback(req, res, access, gid) {
-    var admin = req.user.Admin[0];
-    model.getGroupInfo(gid, function (result) { //TODO: Move getGroupUsers into getGroupInfo for an all-in-one function call
+    model.getGroupInfo(gid, function (result) {
 
         var groupInfo = result;
+        console.log("GROUP INFO: " + groupInfo.info["GROUP_NAME"]);
         if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
-            model_admin.getGroupUsers(gid, 1, function (result) {
-
                 res.render('group/edit', {
                     title: 'Edit Group',
                     name: req.user.name.givenName + " " + req.user.name.familyName,
@@ -85,12 +83,12 @@ function edit_group_callback(req, res, access, gid) {
                     isAdmin: req.user.isAdmin,
                     access: access,
                     groupID: gid,
-                    groupName: groupInfo["GROUP_NAME"],
+                    groupName: groupInfo.info["GROUP_NAME"],
                     orgID: access.ORGANIZATIONID,
-                    inviteCode: groupInfo["INVITE_CODE"],
-                    groupInfo: result
+                    inviteCode: groupInfo.info["INVITE_CODE"],
+                    groupInfo: groupInfo
                 })
-            });
+
         }
         else
             res.redirect('/group/'+ groupID);

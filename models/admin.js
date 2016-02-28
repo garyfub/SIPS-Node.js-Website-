@@ -37,9 +37,6 @@ module.exports = {
     groupUpdateInfo: groupUpdateInfo,
     deleteGroup: deleteGroup,
     getGroups: getGroups,
-    getGroupUsers: getGroupUsers,
-    //Permissions
-    getGroupPositions: getGroupPositions,
     //Group Users
     groupRemoveUser: groupRemoveUser,
     groupUpdateUser: groupUpdateUser,
@@ -142,64 +139,6 @@ function getGroups(orgID, callback) {
     });
 
 };
-
-/**
- * Retrieves list of users in the group from the id used.
- * Retrieves user's names from User table via inner join.
- * @param groupID
- * @param getPos
- * @param callback
- */
-function getGroupUsers(groupID, getPos, callback) {
-
-    ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, rows, moreResultSets) {
-            if (err) {
-                console.log(err);
-                return false;
-            } else {
-                //return results
-                if (getPos == 1) {
-                    return getGroupPositions(groupID, rows, callback);
-                }
-                else {
-                    var result = {};
-                    result['users'] = rows;
-                    conn.closeSync();
-                    return callback(result);
-                }
-            }
-        });
-    });
-}
-
-/**
- * Retrieve Group role positions and their respective permissions
- * Attaches to getGroupUsers() if getPerms = 1
- * @param groupID
- * @param users
- * @param callback
- */
-function getGroupPositions(groupID, users, callback) {
-    ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT * FROM ROLEPERMISSIONS WHERE GROUPID =  \'" + groupID + "\' OR GROUPID IS NULL ORDER BY ROLEPERMISSIONS.ROLE_NAME", function (err, rows, moreResultSets) {
-            if (err) {
-                console.log(err);
-                return false;
-            } else {
-                //return results
-                var result = {};
-                if (users !== undefined) {
-                    result['pos'] = rows;
-                    result['users'] = users;
-                    return callback(result);
-                }
-                else
-                    return callback(rows);
-            }
-        });
-    });
-}
 
 /**
  * Group

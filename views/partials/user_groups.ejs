@@ -20,13 +20,17 @@
                     for(var i = 0; i < admin.length; i++){ %>
                     <div class="well">
                         <div class="row" style="padding-bottom: 15px;">
-                            <h3 class="h5 col-lg-10 col-md-10 col-xs-8"><%= admin[i]['NAME'] %></h3>
+                            <h3 class="h4 col-lg-10 col-md-10 col-xs-8"><%= admin[i]['NAME'] %></h3>
                             <div class="col-lg-2 col-xs-2">
                                 <a href="/admin/<%= admin[i]['ORGANIZATIONID'] %>" class="btn btn-danger">Admin</a>
                             </div>
                         </div>
+                        <p class="h6"><i>Groups</i>:</p>
                         <ul class="list-group">
-                            <% for(var t = 0; t < Object.keys(admin[i]['GROUPS']).length; t++){ %>
+                            <% for(var t = 0; t < Object.keys(admin[i]['GROUPS']).length; t++){
+                            if(t > 10){//break after showing 10 groups
+                                break;
+                            }%>
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="list-group-item-heading col-lg-10 col-xs-10"><%= admin[i]['GROUPS'][t]['GROUP_NAME'] %></div>
