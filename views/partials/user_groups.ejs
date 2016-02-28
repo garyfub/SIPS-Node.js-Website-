@@ -1,60 +1,73 @@
 <div class="col-lg-9">
-    <div class="group-panel panel panel-default">
-        <div class="panel-heading">Organizations & Groups you have joined</div>
-        <div class="panel-body">
+    <div class="group-panel panel panel-primary">
+        <ul class="nav nav-tabs pull-right">
+            <li class="active"><a href="#tabOrg" data-toggle="tab">Organizations</a></li>
+            <li><a href="#tabGroup" data-toggle="tab">Groups</a></li>
+        </ul>
 
+        <div class="panel-body">
+            <div class="tab-content">
             <% //Show list of groups if user is in any
             if(groups.length <= 0 && admin.length <= 0){ %>
-            <p>Seems you haven't been invited to a group yet.</p>
+            <p class="text-danger">Seems you haven't been invited to a group yet.</p>
             <% } %>
 
-            <% if(admin.length > 0){ %>
-            <h2 class="h4">Organization Admin membership</h2>
-            <% //Admin access
-            for(var i = 0; i < admin.length; i++){ %>
-            <div class="well">
-                <div class="row" style="padding-bottom: 15px;">
-                    <h3 class="h5 col-lg-10 col-md-10 col-xs-8"><%= admin[i]['NAME'] %></h3>
-                    <div class="col-lg-2 col-xs-2">
-                        <a href="/admin/<%= admin['ORGANIZATIONID'] %>" class="btn btn-danger">Admin</a>
-                    </div>
-                </div>
-                <ul class="list-group">
-                    <% for(var t = 0; t < Object.keys(admin[i]['GROUPS']).length; t++){ %>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="list-group-item-heading col-lg-10 col-xs-10"><%= admin[i]['GROUPS'][t]['GROUP_NAME'] %></div>
+                <% if(admin.length > 0){ %>
+                <!-- Organization Tab -->
+                <div class="tab-pane fade in active" id="tabOrg">
+                    <h2 class="h4">Organization Admin membership</h2>
+                    <% //Admin access
+                    for(var i = 0; i < admin.length; i++){ %>
+                    <div class="well">
+                        <div class="row" style="padding-bottom: 15px;">
+                            <h3 class="h5 col-lg-10 col-md-10 col-xs-8"><%= admin[i]['NAME'] %></h3>
                             <div class="col-lg-2 col-xs-2">
-                                <div class="list-group-item-text"><a href="/group/<%= groups[i]["GROUPID"] %>/edit">
-                                        <button class="btn btn-primary btn-xs">edit</button>
-                                    </a></div>
+                                <a href="/admin/<%= admin[i]['ORGANIZATIONID'] %>" class="btn btn-danger">Admin</a>
                             </div>
                         </div>
-                    </li>
-                    <% } %>
-                </ul>
-            </div>
-            <% }} %>
-
-            <hr>
-            <h2 class="h4">Group Memberships</h2>
-            <ul class="list-group">
-                <% //Regular Group access
-                for(var i = 0; i < groups.length; i++){ %>
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="list-group-item-heading col-lg-10 col-xs-10"><%= groups[i]['GROUP_NAME'] %></div>
-                        <% if(groups[i]["GROUP_EDITING"] == 1){ %>
-                        <div class="col-xs-2">
-                            <div class="list-group-item-text"><a href="/group/<%= groups[i]["GROUPID"] %>/edit">
-                                    <button class="btn btn-primary btn-xs">edit</button>
-                                </a></div>
-                        </div>
+                        <ul class="list-group">
+                            <% for(var t = 0; t < Object.keys(admin[i]['GROUPS']).length; t++){ %>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="list-group-item-heading col-lg-10 col-xs-10"><%= admin[i]['GROUPS'][t]['GROUP_NAME'] %></div>
+                                    <div class="col-lg-2 col-xs-2">
+                                        <div class="list-group-item-text"><a
+                                                    href="/group/<%= groups[i]["GROUPID"] %>/edit">
+                                                <button class="btn btn-primary btn-xs">edit</button>
+                                            </a></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <% } %>
+                        </ul>
+                        <% } %>
                     </div>
-                </li>
-                <% }} %>
-            </ul>
+                </div>
+                <% } %>
+                <% if(groups.length > 0){ %>
 
+                <!-- Group Tab -->
+                <div class="tab-pane fade in" id="tabGroup">
+                    <h2 class="h4">Group Memberships</h2>
+                    <ul class="list-group">
+                        <% //Regular Group access
+                        for(var i = 0; i < groups.length; i++){ %>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="list-group-item-heading col-lg-10 col-xs-10"><%= groups[i]['GROUP_NAME'] %></div>
+                                <% if(groups[i]["GROUP_EDITING"] == 1){ %>
+                                <div class="col-xs-2">
+                                    <div class="list-group-item-text"><a href="/group/<%= groups[i]["GROUPID"] %>/edit">
+                                            <button class="btn btn-primary btn-xs">edit</button>
+                                        </a></div>
+                                </div>
+                            </div>
+                        </li>
+                        <% }} %>
+                    </ul>
+                </div>
+                <% } %>
+            </div>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var model = require('../models/admin');
 var model_data = require('../models/data');
+var model_user = require('../models/users');
 
 /* GET Admin page. */
 router.get('/', ensureAuthenticated, function (req, res, next) {
@@ -12,7 +13,7 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
 
         //console.log("OBJECt-OrgID: " + orgID);
         model.getGroups(orgID, function (err, groups) {
-         //   console.log("Results: " + JSON.stringify(groups, null, 2));
+            //   console.log("Results: " + JSON.stringify(groups, null, 2));
 
 
             res.render('admin/dash', {
@@ -28,6 +29,40 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
     else {
         res.send('404: Page not Found', 404);
     }
+});
+
+/* GET Dynamic Admin page. */
+router.get('/:orgID', ensureAuthenticated, function (req, res, next) {
+
+    var user = req.user;
+    var admin = req.user.Admin[0];//TODO: Need to add ability to switch between organizations if more than one result
+
+    model_user.getPermissions(req.user, req.params.orgID, function (result) {
+        if (result == {}) {
+            console.log("RESULT WAS == to {}");
+            res.redirect('/');
+            return;
+        }
+        var access = result;
+
+
+        //console.log("OBJECt-OrgID: " + orgID);
+        model.getGroups(access.ORGANIZATIONID, function (err, groups) {
+            //   console.log("Results: " + JSON.stringify(groups, null, 2));
+
+
+            res.render('admin/dash', {
+                title: access.NAME +' Dashboard',
+                name: user.name.givenName + " " + user.name.familyName,
+                id: user.id,
+                isAdmin: user.isAdmin,
+                organizationid: access.ORGANIZATIONID,
+                access: access,
+                groups: groups
+            })
+        });
+    });
+
 });
 
 router.get('/create-group', ensureAuthenticated, function (req, res, next) {
@@ -61,6 +96,7 @@ router.post('/create-group', ensureAuthenticated, function (req, res, next) {
         res.send('404: Page not Found', 404);
     }
 });
+
 
 /**
  * TODO

@@ -36,7 +36,6 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 module.exports = {
     inviteCode: inviteCode,
     getGroupInfo: getGroupInfo,
-    getGroupPermissions: getGroupPermissions,
     editActionIndex: editActionIndex
 }
 
@@ -100,47 +99,6 @@ function getGroupInfo(groupID, callback){
             }
         });
     });
-}
-
-/**
- * Retrieves user's permissions for a specific group.
- *
- * Admin check: If user is an admin then a check is made to see if the group is under the Organization(s) the Admin is under.
- *  If yes then the group member check will be skipped
- * Group Member check: If user is a group member then the permissions for that will be returned
- * @param user
- * @param groupID
- * @param callback
- * @returns {*}
- */
-function getGroupPermissions(user, groupID, callback){
-    var permissions = {};
-    var isAdmin = false;
-
-    //console.log("USER" + JSON.stringify(user, null, 2));
-
-    //Admin Check
-    for(var i = 0; i < Object.keys(user.Admin).length; i++){
-
-        for(var t = 0; t < Object.keys(user.Admin[i].GROUPS).length; t++){
-            if(user.Admin[i].GROUPS[t]['GROUPID'] == groupID){
-                permissions = user.Admin[i];
-                isAdmin = true;
-                break;
-            }
-        }
-    }
-
-    //Member Check
-    if(!isAdmin){
-        for(var i = 0; i < Object.keys(user.Groups).length; i++){
-            if(user.Groups[i].GroupID == groupID){
-                permissions = user.Groups[i];
-                break;
-            }
-        }
-    }
-    return callback(permissions);
 }
 
 

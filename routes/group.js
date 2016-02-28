@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var model_admin = require('../models/admin');
 var model = require('../models/groups');
+var model_user = require('../models/users');
 
 
 /**
@@ -12,7 +13,7 @@ router.get('/:groupID/', ensureAuthenticated, function (req, res, next) {
 
     var gid = req.params.groupID;
 
-    model.getGroupPermissions(req.user, gid, function (result) {
+    model_user.getPermissions(req.user, gid, function (result) {
         if (result == {}) {
             console.log("RESULT WAS == to {}");
             res.redirect('/');
@@ -49,7 +50,7 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
     var action = req.params.action;
     var type = req.params.type;
 
-    model.getGroupPermissions(req.user, gid, function (result) {
+    model_user.getPermissions(req.user, gid, function (result) {
         if (result == {}) {
             console.log("RESULT WAS == to {}");
             res.redirect('/');
