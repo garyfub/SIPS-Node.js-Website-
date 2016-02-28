@@ -231,23 +231,26 @@ function groupCreatePosition(data, callback){
     var groupID = data.groupID;
     var obj = JSON.parse(data.data);
 
-        if(!obj.hasOwnProperty('adminAccess')){
-            obj.adminAccess = 0;
-        }
         if(!obj.hasOwnProperty('editGroup')){
             obj.editGroup = 0;
         }
-        if(!obj.hasOwnProperty('removeUsers')){
-            obj.removeUsers = 0;
+        if(!obj.hasOwnProperty('groupSessions')){
+            obj.groupSessions = 0;
         }
-        if(!obj.hasOwnProperty('viewGroup')){
-            obj.viewGroup = 0;
+        if(!obj.hasOwnProperty('groupMembers')){
+            obj.groupMembers = 0;
+        }
+        if(!obj.hasOwnProperty('groupPos')){
+            obj.groupPos = 0;
+        }
+        if(!obj.hasOwnProperty('groupResults')){
+            obj.groupResults = 0;
         }
         if(!obj.hasOwnProperty('giveTests')){
             obj.giveTests = 0;
         }
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, view_Org_Admin_Dash, Group_Editing, Remove_users, View_Group_Results, Give_Tests, GROUP_CREATION) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+        conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, Group_Editing, Group_Sessions, Group_Members, Group_Positions, Group_Results, Group_Test) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -255,7 +258,7 @@ function groupCreatePosition(data, callback){
             }
 
             //Bind and Execute the statement asynchronously
-            stmt.execute([obj.orgID, data.groupID, obj.positionTitle, obj.adminAccess, obj.editGroup, obj.removeUsers, obj.viewGroup, obj.giveTests, -1], function (err, result) {
+            stmt.execute([obj.orgID, data.groupID, obj.positionTitle, obj.editGroup, obj.groupSessions, obj.groupMembers, obj.groupPos, obj.groupResults, obj.giveTests], function (err, result) {
                 if (err) console.log(err);
                 else conn.close(function () {
                     return callback();
@@ -278,26 +281,28 @@ function groupUpdatePosition(data, callback){
     var groupID = data.groupID;
     var obj = JSON.parse(data.data);
 
-    if(!obj.hasOwnProperty('adminAccess')){
-        obj.adminAccess = 0;
-    }
     if(!obj.hasOwnProperty('editGroup')){
         obj.editGroup = 0;
     }
-    if(!obj.hasOwnProperty('removeUsers')){
-        obj.removeUsers = 0;
+    if(!obj.hasOwnProperty('groupSessions')){
+        obj.groupSessions = 0;
     }
-    if(!obj.hasOwnProperty('viewGroup')){
-        obj.viewGroup = 0;
+    if(!obj.hasOwnProperty('groupMembers')){
+        obj.groupMembers = 0;
+    }
+    if(!obj.hasOwnProperty('groupPos')){
+        obj.groupPos = 0;
+    }
+    if(!obj.hasOwnProperty('groupResults')){
+        obj.groupResults = 0;
     }
     if(!obj.hasOwnProperty('giveTests')){
         obj.giveTests = 0;
     }
-
     console.log("UPDATE POSITION: " + JSON.stringify(obj, null, 2));
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("UPDATE ROLEPERMISSIONS SET VIEW_ORG_ADMIN_DASH =\'"+obj.adminAccess+"\', GROUP_EDITING= \'"+obj.editGroup+"\', REMOVE_USERS= \'"+obj.removeUsers+"\', VIEW_GROUP_RESULTS= \'"+obj.viewGroup+"\', GIVE_TESTS= \'"+obj.giveTests+"\' WHERE GROUPID = \'" + groupID + "\'", function (err, stmt) {
+        conn.prepare("UPDATE ROLEPERMISSIONS SET  GROUP_EDITING= \'"+obj.editGroup+"\', GROUP_SESSIONS= \'"+obj.groupSessions+"\', GROUP_MEMBERS= \'"+obj.groupMembers+"\' , GROUP_POSITIONS = \'"+obj.groupPos+"\' , GROUP_RESULTS= \'"+obj.groupResults+"\' , GIVE_TESTS= \'"+obj.giveTests+"\' WHERE GROUPID = \'" + groupID + "\' AND ROLE_NAME = \'" + obj.name + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);

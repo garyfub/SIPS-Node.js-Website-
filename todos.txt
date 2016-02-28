@@ -1,0 +1,24 @@
+This file is for an ongoing to-do list for the project.
+========================================================
+
+Website
+TODO: Update Database to latest diagram and refactor changes into code
+TODO: Populate Sessions tab in group edit page. Include modal for adding new sessions and one for removing sessions.
+TODO: Make sure form is mandatory at the beginning and end of seasonal(?) length session, but only at the beginning of daily sessions.
+TODO: CREATE Profile edit page. (Basic page with form fields that update user when submitted)
+TODO: Add description and image fields to groups and organizations on group and group edit pages and also display them on the homepage's group list.
+
+Android
+TODO: Retrieve access object during user check call
+TODO: Get SQLite file in internal storage for holding user info and access permissions
+TODO: Save and use Access/Refresh tokens with the server to keep login persistent
+
+Android - Give_tests permission == 1 or Admin
+TODO: Retrieve and save list of each group's members in the SQLite file
+TODO: Display list of groups/organizations accessible to active user after login (menu button leading to list activity, sidebar?)
+    TODO: Display the group's members in a list
+    TODO: If user selects a member the menu for that user should be displayed (then the exercise list, profile, etc)
+
+    TODO: Need a way to quickly switch from one member to another with minimal clicks by user.
+
+
