@@ -38,26 +38,21 @@ router.get('/:orgID', ensureAuthenticated, function (req, res, next) {
 
     var user = req.user;
 
-    model_user.getPermissions(req.user, req.params.orgID, function (result) {
-        if (result == {}) {
+    model_user.getPermissions(req.user, req.params.orgID, function (access) {
+        if (access == null) {
             console.log("RESULT WAS == to {}");
             res.redirect('/');
             return;
         }
-        var access = result;
 
-
-        //console.log("OBJECt-OrgID: " + orgID);
         model.getGroups(access.ORGANIZATIONID, function (err, groups) {
-            //   console.log("Results: " + JSON.stringify(groups, null, 2));
 
-
+            console.log("ADMIN: " + JSON.stringify(access, null, 2));
             res.render('admin/dash', {
-                title: access.NAME +' Dashboard',
+                title: access.ORG_NAME +' Dashboard',
                 name: user.name.givenName + " " + user.name.familyName,
                 id: user.id,
                 isAdmin: user.isAdmin,
-                organizationid: access.ORGANIZATIONID,
                 access: access,
                 groups: groups
             })
@@ -66,59 +61,60 @@ router.get('/:orgID', ensureAuthenticated, function (req, res, next) {
 
 });
 
-router.get('/create-group', ensureAuthenticated, function (req, res, next) {
+router.get('/:orgID/create/group', ensureAuthenticated, function (req, res, next) {
 
-    if (req.user.Admin[0]) {
+    model_user.getPermissions(req.user, req.params.orgID, function (access) {
+        if (result == {}) {
+            console.log("RESULT WAS == to {}");
+            res.redirect('/');
+            return;
+        }
+
         var user = req.user;
-        var admin = req.user.Admin[0];
         res.render('admin/create-group', {
             title: 'Create New Group',
             name: user.name.givenName + " " + user.name.familyName,
             id: user.id,
-            isAdmin: user.isAdmin
+            isAdmin: user.isAdmin,
+            access: access
         })
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
+    });
 });
 
-router.post('/create-group', ensureAuthenticated, function (req, res, next) {
+router.post('/:orgID/create/group', ensureAuthenticated, function (req, res, next) {
 
-    if (req.user.Admin[0]) {
+    model_user.getPermissions(req.user, req.params.orgID, function (access) {
+        if (result == {}) {
+            console.log("RESULT WAS == to {}");
+            res.redirect('/');
+            return;
+        }
         var name = req.body.group_name;
-        var orgID = req.user.Admin[0].ORGANIZATIONID;
+        var orgID = access.ORGANIZATIONID;
 
         model.createGroup(name, orgID, function (err, data) {
-            res.redirect('/admin');
+            res.redirect('/admin/' + orgID);
         });
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
+    });
 });
 
 
 /**
- * TODO
- * 1. Double check that admin has access to group?
- *
+ * Remove group
  */
-router.post('/delete-group', ensureAuthenticated, function (req, res, next) {
+router.get('/:orgID/remove/group/:groupID', ensureAuthenticated, function (req, res, next) {
 
-    var groupID = req.body.group;
-
-    if (req.user.Admin[0]) {
-        var admin = req.user.Admin[0];
-
-        model.deleteGroup(groupID, function (err) {
-            res.redirect('/admin');
+    model_user.getPermissions(req.user, req.params.orgID, function (access) {
+        if (access == null) {
+            console.log("RESULT WAS == to {}");
+            res.redirect('/');
+            return;
+        }
+        model.deleteGroup(req.params.groupID, function (err) {
+            res.redirect('/admin/' + access.ORGANIZATIONID);
         });
 
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
+    });
 });
 
 /**

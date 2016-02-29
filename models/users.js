@@ -147,7 +147,6 @@ function isAdmin(profile, callback) {
 
 //Retrieves list of all groups a user is related to and the subsequent permissions for each one
 function getPositions(req, callback) {
-
     getAdminAccessPositions(req, function (req) {
         getGroups(req, function (req) {
             return callback(req);
@@ -168,7 +167,7 @@ function getPositions(req, callback) {
  * @param callback
  * @returns {*}
  */
-function getPermissions(user, id, callback){
+function getPermissions(user, idNum, callback){
     var permissions = {};
     var isAdmin = false;
 
@@ -177,8 +176,16 @@ function getPermissions(user, id, callback){
     //Admin Check
     for(var i = 0; i < Object.keys(user.Admin).length; i++){
 
+        //if idNum matches the id of an organization
+        if(user.Admin[i]['ORGANIZATIONID'] == idNum){
+            permissions = user.Admin[i];
+            isAdmin = true;
+            break;
+        }
+
+        //Check each organization's group to find matching groupID
         for(var t = 0; t < Object.keys(user.Admin[i].GROUPS).length; t++){
-            if(user.Admin[i].GROUPS[t]['GROUPID'] == id || user.Admin[i]['ORGANIZATIONID'] == id){
+            if(user.Admin[i].GROUPS[t]['GROUPID'] == idNum){
                 permissions = user.Admin[i];
                 isAdmin = true;
                 break;
@@ -189,7 +196,7 @@ function getPermissions(user, id, callback){
     //Member Check
     if(!isAdmin){
         for(var i = 0; i < Object.keys(user.Groups).length; i++){
-            if(user.Groups[i].GroupID == id){
+            if(user.Groups[i].GroupID == idNum){
                 permissions = user.Groups[i];
                 break;
             }
@@ -202,7 +209,7 @@ function getPermissions(user, id, callback){
 function getAdminAccessPositions(req, callback) {
     user = req.user;
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, ORGANIZATION.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN ORGANIZATION On ORGANIZATION.organizationid = MEMBERS.organizationid WHERE MEMBERS.userid =  \'" + user.id + "\' and MEMBERS.role_name = 'Administrator'", function (err, rows, moreResultSets) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, ORGANIZATION.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN ORGANIZATION On ORGANIZATION.organizationid = MEMBERS.organizationid WHERE ORGANIZATION.ORGANIZATIONID != 'any' and MEMBERS.userid =  \'" + user.id + "\' and (MEMBERS.role_name = 'Administrator' OR MEMBERS.role_name = 'Head Administrator')", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
             } else {

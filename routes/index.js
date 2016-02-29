@@ -15,6 +15,7 @@ router.get('/', function (req, res, next) {
 
     if (req.isAuthenticated()) {
         // logged in
+
         res.render('index', {
             title: 'Sports Injury Prevention Screen',
             name: req.user.name.givenName + " " + req.user.name.familyName,
@@ -55,7 +56,10 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
 
     model_groups.inviteCode(req, function (err) {
         if (!err)
-            res.sendStatus(200); //success
+            model_users.getPositions(req, function (req) {
+                res.sendStatus(200); //success
+            });
+
         else
             res.sendStatus(404); //fail
     });

@@ -1,8 +1,10 @@
 <div class="col-lg-9">
     <div class="group-panel panel panel-primary">
         <ul class="nav nav-tabs pull-right">
+            <% if(Object.keys(admin).length > 0){%>
             <li class="active"><a href="#tabOrg" data-toggle="tab">Organizations</a></li>
-            <li><a href="#tabGroup" data-toggle="tab">Groups</a></li>
+            <% } %>
+            <li <%if(Object.keys(admin).length == 0){%> class="active" <% } %>><a href="#tabGroup" data-toggle="tab">Groups</a></li>
         </ul>
 
         <div class="panel-body">
@@ -20,12 +22,13 @@
                     for(var i = 0; i < admin.length; i++){ %>
                     <div class="well">
                         <div class="row" style="padding-bottom: 15px;">
-                            <h3 class="h4 col-lg-10 col-md-10 col-xs-8"><%= admin[i]['NAME'] %></h3>
+                            <h3 class="h4 col-lg-10 col-md-10 col-xs-8"><%= admin[i]['ORG_NAME'] %></h3>
                             <div class="col-lg-2 col-xs-2">
                                 <a href="/admin/<%= admin[i]['ORGANIZATIONID'] %>" class="btn btn-danger">Admin</a>
                             </div>
                         </div>
                         <p class="h6"><i>Groups</i>:</p>
+
                         <ul class="list-group">
                             <% for(var t = 0; t < Object.keys(admin[i]['GROUPS']).length; t++){
                             if(t > 10){//break after showing 10 groups
@@ -36,7 +39,7 @@
                                     <div class="list-group-item-heading col-lg-10 col-xs-10"><%= admin[i]['GROUPS'][t]['GROUP_NAME'] %></div>
                                     <div class="col-lg-2 col-xs-2">
                                         <div class="list-group-item-text"><a
-                                                    href="/group/<%= groups[i]["GROUPID"] %>/edit">
+                                                    href="/group/<%= admin[i]['GROUPS'][t]['GROUPID'] %>/edit">
                                                 <button class="btn btn-primary btn-xs">edit</button>
                                             </a></div>
                                     </div>
@@ -51,7 +54,7 @@
                 <% if(groups.length > 0){ %>
 
                 <!-- Group Tab -->
-                <div class="tab-pane fade in" id="tabGroup">
+                <div class="tab-pane fade in" id="tabGroup" <%if(Object.keys(admin).length == 0){%> style="display:initial;" <% } %>>
                     <h2 class="h4">Group Memberships</h2>
                     <ul class="list-group">
                         <% //Regular Group access
