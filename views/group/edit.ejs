@@ -195,12 +195,13 @@
                                         <thead>
                                         <tr class="active">
                                             <th class="col-lg-1 hidden">Select</th>
-                                            <th class="col-lg-2">Position Name</th>
-                                            <th class="col-lg-1">View Admin Dashboard</th>
-                                            <th class="col-lg-1">Edit Group</th>
-                                            <th class="col-lg-1">Remove Members from Group</th>
-                                            <th class="col-lg-1">View Group Results</th>
-                                            <th class="col-lg-1">Administer Tests</th>
+                                            <th class="col-lg-2">Position</th>
+                                            <th class="col-lg-1">Group Editing (view Group edit page)</th>
+                                            <th class="col-lg-1">Edit Sessions</th>
+                                            <th class="col-lg-1">Edit Members</th>
+                                            <th class="col-lg-1">Edit Positions</th>
+                                            <th class="col-lg-1">View group results</th>
+                                            <th class="col-lg-1">Give tests using SIPS app</th>
                                             <th class="col-lg-1">Actions</th>
                                         </tr>
                                         </thead>
@@ -209,6 +210,7 @@
                                         <tr class="warning">
                                             <td class="hidden"></td>
                                             <td>Hello! Please add a position and they will be displayed here</td>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -227,11 +229,12 @@
                                             <td class="hidden"><input name="position" class="selectedPos" type="radio"
                                                                       value="<%= groupInfo.pos[i]["ROLE_NAME"] %>"></td>
                                             <td class="roleName"><%= groupInfo.pos[i]["ROLE_NAME"] %></td>
-                                            <td class="adminDash"><%= groupInfo.pos[i]["VIEW_ORG_ADMIN_DASH"] == 1 ? "Yes" : "No" %></td>
-                                            <td class="groupEdit"><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes" : "No" %></td>
-                                            <td class="remUsers"><%= groupInfo.pos[i]["REMOVE_USERS"] == 1 ? "Yes" : "No" %></td>
-                                            <td class="groupResults"><%= groupInfo.pos[i]["VIEW_GROUP_RESULTS"] == 1 ? "Yes" : "No" %></td>
-                                            <td class="giveTests"><%= groupInfo.pos[i]["GIVE_TESTS"] == 1 ? "Yes" : "No" %></td>
+                                            <td class="groupEditing"><%= groupInfo.pos[i]["GROUP_EDITING"] == 1 ? "Yes" : "No" %></td>
+                                            <td class="groupSessions"><%= groupInfo.pos[i]["GROUP_SESSIONS"] == 1 ? "Yes" : "No" %></td>
+                                            <td class="groupMembers"><%= groupInfo.pos[i]["GROUP_MEMBERS"] == 1 ? "Yes" : "No" %></td>
+                                            <td class="groupPos"><%= groupInfo.pos[i]["GROUP_POSITIONS"] == 1 ? "Yes" : "No" %></td>
+                                            <td class="groupResults"><%= groupInfo.pos[i]["GROUP_RESULTS"] == 1 ? "Yes" : "No" %></td>
+                                            <td class="groupTests"><%= groupInfo.pos[i]["GROUP_TEST"] == 1 ? "Yes" : "No" %></td>
                                             <td>
                                                 <div class="btn-group <% if(i == groupInfo.pos.length - 1){ %> <%= "dropup" %> <% } %>">
                                                     <button type="button"
@@ -342,7 +345,7 @@
                 <h4 class="modal-title">Remove member confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to remove the member from the group?.</p>
+                <p>Are you sure you want to remove the member from the group?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
@@ -394,7 +397,7 @@
                 <h4 class="modal-title">Remove position confirmation</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to remove this position from the group?.</p>
+                <p>Are you sure you want to remove this position from the group?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
@@ -413,7 +416,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add New Position</h4>
+                <h4 class="modal-title">Add New Group Position</h4>
             </div>
             <div class="modal-body">
                 <p>Fill out form below</p>
@@ -425,36 +428,42 @@
                     </div>
 
                     <br>
-                    <label class="control-label">Permissions</label>
+                    <label class="control-label">Group Permissions</label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="adminAccess" value="1"> Access to the Admin Dashboard <p
-                                    class="text-danger pull-right">
-                                (complete access)</p>
+                            <input type="checkbox" name="groupEdit" value="1"> Access to group edit page <p
+                                    class="text-warning pull-right">
+                                (This enables/disables the following group permissions)</p>
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="editGroup" value="1"> Able to edit basic group information
+                            <input type="checkbox" name="groupSessions" value="1"> Able to view/use Sessions tab
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="removeUsers" value="1"> Able to remove members from a group
+                            <input type="checkbox" name="groupMembers" value="1"> Able to view/use Members tab
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="viewGroup" value="1"> Able to view results of group members
+                            <input type="checkbox" name="groupPositions" value="1"> Able to view/use Positions tab
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="giveTests" value="1"> Able to Administer tests via the SIPS app
+                            <input type="checkbox" name="groupResults" value="1"> Able to view results of group members
+                        </label>
+                    </div>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="groupTests" value="1"> Able to Administer tests via the SIPS app
                         </label>
                     </div>
                 </form>
@@ -565,11 +574,12 @@
             $('#add-position-modal .modal-title').text("Edit: " + title);
 
             $('#new-pos-name').val(title);
-            $('input[name=adminAccess]').prop('checked', selectedPos.find('td:eq(2)').text() == 'Yes');
-            $('input[name=editGroup]').prop('checked', selectedPos.find('td:eq(3)').text() == 'Yes');
-            $('input[name=removeUsers]').prop('checked', selectedPos.find('td:eq(4)').text() == 'Yes');
-            $('input[name=viewGroup]').prop('checked', selectedPos.find('td:eq(5)').text() == 'Yes');
-            $('input[name=giveTests]').prop('checked', selectedPos.find('td:eq(6)').text() == 'Yes');
+            $('input[name=groupEdit]').prop('checked', selectedPos.find('td:eq(2)').text() == 'Yes');
+            $('input[name=groupSessions]').prop('checked', selectedPos.find('td:eq(3)').text() == 'Yes');
+            $('input[name=groupMembers]').prop('checked', selectedPos.find('td:eq(4)').text() == 'Yes');
+            $('input[name=groupPositions]').prop('checked', selectedPos.find('td:eq(5)').text() == 'Yes');
+            $('input[name=groupResults]').prop('checked', selectedPos.find('td:eq(6)').text() == 'Yes');
+            $('input[name=groupTests]').prop('checked', selectedPos.find('td:eq(7)').text() == 'Yes');
 
             $('#add-position-confirmed').text('Update');
         });

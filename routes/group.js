@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var model_admin = require('../models/admin');
 var model = require('../models/groups');
 var model_user = require('../models/users');
 
@@ -13,31 +12,23 @@ router.get('/:groupID/', ensureAuthenticated, function (req, res, next) {
 
     var gid = req.params.groupID;
 
-    model_user.getPermissions(req.user, gid, function (result) {
+    model_user.getPermissions(req.user, gid, function (access) {
         if (result == {}) {
             console.log("RESULT WAS == to {}");
             res.redirect('/');
             return;
         }
-        var access = result;
 
-        model.getGroupInfo(gid, function (result) { //TODO: Move getGroupUsers into getGroupInfo for an all-in-one function call
-
-            var groupInfo = result;
-
+        model.getGroupInfo(gid, function (groupInfo) {
             res.render('group/index', {
-                title: groupInfo["NAME"],
+                title: groupInfo["GROUP_NAME"],
                 isAdmin: req.user.isAdmin,
                 access: access,
-                groupName: groupInfo["NAME"],
+                groupName: groupInfo["GROUP_NAME"],
                 groupInfo: result
             });
         });
     });
-
-
-
-   // res.redirect('/group/' + req.params.groupID + "/edit"); //temp redirect to edit page
 });
 
 
