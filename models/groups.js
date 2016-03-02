@@ -1,7 +1,7 @@
 //Model for interacting with Users
 var ibmdb = require('ibm_db');
 var uuid = require('node-uuid');
-var models_admin = require('../models/admin');
+var model = require('../models/groups');
 
 var env = null;
 var keySql = null;
@@ -33,11 +33,23 @@ var dsnString = "DRIVER={DB2};DATABASE=" + credentialsSQL.db + ";UID=" + credent
 
 
 module.exports = {
+    //Group Invite Code actions
     inviteCode: inviteCode,
+    //Group Information
     getGroupInfo: getGroupInfo,
+    groupUpdateInfo: groupUpdateInfo,
+    //Members
     getGroupUsers: getGroupUsers,
+    groupUpdateMember: groupUpdateMember,
+    groupRemoveUser: groupRemoveMember,
+    //Positions
     getGroupPositions: getGroupPositions,
+    groupCreatePosition: groupCreatePosition,
+    groupUpdatePosition: groupUpdatePosition,
+    groupRemovePosition: groupRemovePosition,
+    //Sessions
     getGroupSessions: getGroupSessions,
+    //Group Action Index
     editActionIndex: editActionIndex
 }
 
@@ -53,8 +65,6 @@ function inviteCode(req, callback) {
     var date = year + "-" + month + "-" + day;
 
     ibmdb.open(dsnString, function (err, conn) {
-
-
         conn.query("SELECT GROUPID FROM GROUPS WHERE invite_code =  \'" + code + "\'", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
@@ -87,7 +97,7 @@ function inviteCode(req, callback) {
     });
 }
 
-
+//Retrieves group info
 function getGroupInfo(groupID, callback) {
 
     ibmdb.open(dsnString, function (err, conn) {
@@ -114,6 +124,31 @@ function getGroupInfo(groupID, callback) {
     });
 }
 
+//Updates group information in Groups table
+function groupUpdateInfo(data, callback) {
+    //console.log("UPDATE GROUP INFO: " + JSON.stringify(data, null, 2));
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE GROUPS SET GROUP_NAME = \'" + data.group_name + "\' WHERE GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+/**
+ *
+ * USERS
+ *
+ */
+
 /**
  * Retrieves list of users in the group from the id used.
  * Retrieves user's names from User table via inner join.
@@ -136,6 +171,67 @@ function getGroupUsers(groupID, callback) {
 }
 
 /**
+ * Update member
+ * @param data
+ * @param callback
+ */
+function groupUpdateMember(data, callback) {
+    var obj = JSON.parse(data.data);
+    console.log("UPDATE USER: " + JSON.stringify(obj, null, 2));
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE MEMBERS SET ROLE_NAME = \'" + obj.position + "\' WHERE USERID = \'" + obj.userid + "\' AND GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+/**
+ * Remove Member
+ * @param groupID
+ * @param userID
+ * @param callback
+ */
+function groupRemoveMember(groupID, userID, callback) {
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("DELETE FROM MEMBERS WHERE groupID = \'" + groupID + "\' AND userID = \'" + userID + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback(err);
+                });
+            });
+        });
+    });
+}
+
+
+/******************
+ *
+ * POSITIONS
+ *
+ ******************/
+
+/**
  * Retrieve Group role positions and their respective permissions
  * @param groupID
  * @param callback
@@ -153,6 +249,133 @@ function getGroupPositions(groupID, callback) {
     });
 }
 
+
+/**
+ * Adds new entry to RolePermissions table with the supplied groupID
+ * @param groupID
+ * @param positionData
+ * @param callback
+ */
+function groupCreatePosition(data, callback) {
+
+    var groupID = data.groupID;
+    var obj = JSON.parse(data.data);
+
+    if (!obj.hasOwnProperty('groupEdit')) {
+        obj.groupEdit = 0;
+    }
+    if (!obj.hasOwnProperty('groupSessions')) {
+        obj.groupSessions = 0;
+    }
+    if (!obj.hasOwnProperty('groupMembers')) {
+        obj.groupMembers = 0;
+    }
+    if (!obj.hasOwnProperty('groupPositions')) {
+        obj.groupPos = 0;
+    }
+    if (!obj.hasOwnProperty('groupResults')) {
+        obj.groupResults = 0;
+    }
+    if (!obj.hasOwnProperty('groupTests')) {
+        obj.groupTests = 0;
+    }
+    //console.log("Create POSITION: " + JSON.stringify(obj, null, 2));
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, Group_Editing, Group_Sessions, Group_Members, Group_Positions, Group_Results, Group_Test, org_initial, org_groupCreate, org_groupDelete, org_editAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute([obj.orgID, data.groupID, obj.positionTitle, obj.groupEdit, obj.groupSessions, obj.groupMembers, obj.groupPositions, obj.groupResults, obj.groupTests, -1, -1, -1, -1], function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+function groupUpdatePosition(data, callback) {
+    var groupID = data.groupID;
+    var obj = JSON.parse(data.data);
+
+    if (!obj.hasOwnProperty('groupEdit')) {
+        obj.groupEdit = 0;
+    }
+    if (!obj.hasOwnProperty('groupSessions')) {
+        obj.groupSessions = 0;
+    }
+    if (!obj.hasOwnProperty('groupMembers')) {
+        obj.groupMembers = 0;
+    }
+    if (!obj.hasOwnProperty('groupPositions')) {
+        obj.groupPositions = 0;
+    }
+    if (!obj.hasOwnProperty('groupResults')) {
+        obj.groupResults = 0;
+    }
+    if (!obj.hasOwnProperty('groupTests')) {
+        obj.groupTests = 0;
+    }
+    //console.log("UPDATE POSITION: " + JSON.stringify(obj, null, 2));
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE ROLEPERMISSIONS SET  GROUP_EDITING= \'" + obj.groupEdit + "\', GROUP_SESSIONS= \'" + obj.groupSessions + "\', GROUP_MEMBERS= \'" + obj.groupMembers + "\' , GROUP_POSITIONS = \'" + obj.groupPositions + "\' , GROUP_RESULTS= \'" + obj.groupResults + "\' , GROUP_TEST= \'" + obj.groupTests + "\' WHERE GROUPID = \'" + groupID + "\' AND ROLE_NAME = \'" + obj.positionTitle + "\'", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+/**
+ * Removes specified position from group
+ * @param data
+ * @param callback
+ */
+function groupRemovePosition(data, callback) {
+
+    var groupID = data.groupID;
+    var position = data.data;
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("DELETE FROM ROLEPERMISSIONS WHERE groupID = \'" + groupID + "\' AND ROLE_NAME = \'" + position + "\'", function (err, stmt) {
+            if (err) {
+                //could not prepare for some reason
+                console.log(err);
+                return conn.closeSync();
+            }
+
+            //Bind and Execute the statment asynchronously
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+
+/***************
+ *
+ * SESSIONS
+ *
+ **************/
+
+/**
+ * Retrieves Group Sessions
+ * @param groupID
+ * @param callback
+ */
 function getGroupSessions(groupID, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM SESSIONS WHERE GROUPID =  \'" + groupID + "\'", function (err, sessions, moreResultSets) {
@@ -183,12 +406,12 @@ function editActionIndex(access, action, type, data, callback) {
         //REMOVE
         case 'remove':
             if (type == "user") {
-                models_admin.groupRemoveUser(data.groupID, data.data, function () {
+                groupRemoveMember(data.groupID, data.data, function () {
                     return callback(true);
                 });
             }
             else if (type == "position") {
-                models_admin.groupRemovePosition(data, function () {
+                groupRemovePosition(data, function () {
                     return callback(true);
                 })
             }
@@ -199,28 +422,29 @@ function editActionIndex(access, action, type, data, callback) {
         //ADD
         case 'add':
             if (type == "position") {
-                models_admin.groupCreatePosition(data, function () {
+                groupCreatePosition(data, function () {
                     return callback(true);
                 });
             }
             else if (type == 'session') {
+
                 //TODO: Add Session
             }
             break;
         //UPDATE
         case 'update':
             if (type == "user") {
-                models_admin.groupUpdateUser(data, function () {
+                groupUpdateMember(data, function () {
                     return callback(true);
                 });
             }
             else if (type == "position") {
-                models_admin.groupUpdatePosition(data, function () {
+                groupUpdatePosition(data, function () {
                     return callback(true);
                 });
             }
             else if (type == "group") {
-                models_admin.groupUpdateInfo(data, function () {
+                groupUpdateInfo(data, function () {
                     return callback(true);
                 });
             }

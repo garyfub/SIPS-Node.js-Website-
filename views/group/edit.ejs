@@ -108,7 +108,7 @@
                                                         data-toggle="dropdown"><span class="fa fa-cog"></span></button>
                                                 <ul class="dropdown-menu pull-right" role="menu">
                                                     <li><a href="#" class="edit-session" data-toggle="modal"
-                                                           data-target="#update-session-modal"><span
+                                                           data-target="#session-modal"><span
                                                                     class="fa fa-cog "></span>
                                                             edit</a>
                                                     </li>
@@ -288,7 +288,7 @@
 </div>
 
 <% if(access.GROUP_SESSIONS){ %>
-<!-- New Session Modal-->
+<!-- Session Modal-->
 <div id="session-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
@@ -298,7 +298,7 @@
                 <h4 class="modal-title">Add New Session</h4>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="sessions_form">
                     <div class="form-group col-lg-4">
                                 <label for="start_date">Start date: </label>
                                 <input type="text" id="start_date" name="start_date" class="form-control">
@@ -396,7 +396,7 @@
                 <h4 class="modal-title">Change member position</h4>
             </div>
             <div class="modal-body">
-                <form>
+                <form class="form-inline">
                     <div class="form-group">
                         <label for="user-pos">Position: </label>
                         <select name="user-pos" id="update-user-pos">
@@ -407,8 +407,8 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No - Cancel</button>
+            <div class="modal-footer" style="clear: both;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" id="update-user-confirmed" class="btn btn-primary" data-dismiss="modal">Update
                 </button>
             </div>
@@ -520,6 +520,27 @@
             $('#sideMenu').metisMenu();
         });
 
+        //Show/Hide action button on hover
+        $('.table-radio tr').hover(
+                function () {
+                    $(this).find('td .btn').removeClass("invisible");
+                },
+                function () {
+                    $(this).find('td .btn').addClass("invisible");
+                }
+        );
+
+        //Checks group on the same row as the action button being clicked
+        $('.action_btn').click(function (e) {
+            e.preventDefault();
+            //$(this).find('td input[type=radio]').prop('checked', true);
+            $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
+        });
+
+        /**
+         * Sessions
+         **/
+
         //initialize Datepickers for sessions
         $(function () {
             $("#start_date").datepicker({
@@ -539,7 +560,38 @@
                 }
             });
         });
-        //Initialize Add User email dialog
+
+        //Switch model for updating position
+        $(".edit-session").click(function (e) {
+            $('#session-modal .modal-title').text("Edit Session");
+            $('#session-confirmed').text('Update');
+            //TODO: Add Session data to form fields
+        });
+
+        $(".add-session").click(function (e) {
+            $('#session-modal .modal-title').text("Add new Session");
+            $('#session-confirmed').text('Add');
+            $('#sessions_form')[0].reset();
+        });
+
+        //Send post to add/update sessions
+        $('#session-confirmed').click(function (e) {
+            e.preventDefault();
+            // var form = $('#new_position_form').find(":input");
+            var form = $("#sessions_form").serializeArray();
+            var obj = {'orgID': '<%= orgID %>'};
+            for (var i = 0; i < form.length; i++) {
+                var key = form[i].name;
+                obj[key] = form[i].value;
+            }
+            var action = $('#session-confirmed').text().toLowerCase().trim();
+            ajaxGroupEdit(action, 'session', JSON.stringify(obj, null, 2));
+        });
+
+        /**
+         * Members
+         */
+            //Initialize Add User email dialog
         $("#add_user_box").dialog({
             autoOpen: false,
             modal: true,
@@ -566,32 +618,11 @@
             }
         });
 
-
-        //Show/Hide action button on hover
-        $('.table-radio tr').hover(
-                function () {
-                    $(this).find('td .btn').removeClass("invisible");
-                },
-                function () {
-                    $(this).find('td .btn').addClass("invisible");
-                }
-        );
-
-
-        //Checks group on the same row as the action button being clicked
-        $('.action_btn').click(function (e) {
-            e.preventDefault();
-            //$(this).find('td input[type=radio]').prop('checked', true);
-            $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
-        });
-
-
         //Open Update user modal and set the select form field to the user's current position
         $(".edit-user").click(function (e) {
             var activePos = $(this).closest('tr').find('td:eq(2)').text().trim();
             $('#update-user-pos').val(activePos);
         })
-
 
         //Send Update User post request with needed data
         $('#update-user-confirmed').click(function (e) {
@@ -602,15 +633,24 @@
             ajaxGroupEdit('update', 'user', JSON.stringify(data, null, 2));
         })
 
-
         //Open add user dialog
         $(".add_user").click(function (e) {
             e.preventDefault();
             $('#add_user_box').dialog('open');
         })
 
+        //Post after confirmation to remove user
+        $('#remove-user-confirmed').click(function (e) {
+            e.preventDefault();
+            var selectedUser = $('input[name=user]:checked').val();
 
-        //Reset modal for adding position
+            ajaxGroupEdit('remove', 'user', selectedUser);
+        });
+
+        /**
+         * Positions
+         */
+            //Reset modal for adding position
         $(".add-position").click(function (e) {
             $('#add-position-modal .modal-title').text("Add New Position");
             $('#add-position-confirmed').text('Add');
@@ -651,15 +691,6 @@
             }
             var action = $('#add-position-confirmed').text().toLowerCase().trim();
             ajaxGroupEdit(action, 'position', JSON.stringify(obj, null, 2));
-        });
-
-
-        //Post after confirmation to remove user
-        $('#remove-user-confirmed').click(function (e) {
-            e.preventDefault();
-            var selectedUser = $('input[name=user]:checked').val();
-
-            ajaxGroupEdit('remove', 'user', selectedUser);
         });
 
 

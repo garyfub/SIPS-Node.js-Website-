@@ -8,24 +8,21 @@ var model_user = require('../models/users');
  * Displays group page based on ID in url
  */
 router.get('/:groupID/', ensureAuthenticated, function (req, res, next) {
-    //TODO: Create group page, decide on staying with groupID's or using group name or short id for group pages.
 
     var gid = req.params.groupID;
-
     model_user.getPermissions(req.user, gid, function (access) {
         if (result == {}) {
             console.log("RESULT WAS == to {}");
             res.redirect('/');
             return;
         }
-
         model.getGroupInfo(gid, function (groupInfo) {
             res.render('group/index', {
-                title: groupInfo["GROUP_NAME"],
+                title: groupInfo.info["GROUP_NAME"],
                 isAdmin: req.user.isAdmin,
                 access: access,
-                groupName: groupInfo["GROUP_NAME"],
-                groupInfo: result
+                groupName: groupInfo.info["GROUP_NAME"],
+                groupInfo: groupInfo
             });
         });
     });
@@ -40,7 +37,6 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
     var gid = req.params.groupID;
     var action = req.params.action;
     var type = req.params.type;
-
     model_user.getPermissions(req.user, gid, function (access) {
         if (Object.keys(access).length == 0) {
             res.redirect('/group/' + gid);
