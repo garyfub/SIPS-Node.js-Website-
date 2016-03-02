@@ -36,7 +36,7 @@
                             }%>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="list-group-item-heading col-lg-10 col-xs-10"><%= admin[i]['GROUPS'][t]['GROUP_NAME'] %></div>
+                                    <div class="list-group-item-heading col-lg-10 col-xs-10"><a href="/group/<%=admin[i]['GROUPS'][t]['GROUPID']%>"><%= admin[i]['GROUPS'][t]['GROUP_NAME'] %></a></div>
                                     <div class="col-lg-2 col-xs-2">
                                         <div class="list-group-item-text"><a
                                                     href="/group/<%= admin[i]['GROUPS'][t]['GROUPID'] %>/edit">
@@ -61,7 +61,7 @@
                         for(var i = 0; i < groups.length; i++){ %>
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="list-group-item-heading col-lg-10 col-xs-10"><%= groups[i]['GROUP_NAME'] %></div>
+                                <div class="list-group-item-heading col-lg-10 col-xs-10"><a href="/group/<%=groups[i]["GROUPID"]%>"><%= groups[i]['GROUP_NAME'] %></a></div>
                                 <% if(groups[i]["GROUP_EDITING"] == 1){ %>
                                 <div class="col-xs-2">
                                     <div class="list-group-item-text"><a href="/group/<%= groups[i]["GROUPID"] %>/edit">

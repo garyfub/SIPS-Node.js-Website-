@@ -41,32 +41,29 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
     var action = req.params.action;
     var type = req.params.type;
 
-    model_user.getPermissions(req.user, gid, function (result) {
-        if (result == {}) {
-            console.log("RESULT WAS == to {}");
-            res.redirect('/');
+    model_user.getPermissions(req.user, gid, function (access) {
+        if (Object.keys(access).length == 0) {
+            res.redirect('/group/'+ gid);
             return;
         }
-        var access = result;
-
-        if (action && type && access.GROUP_EDITING == 1) {//Handle edits
+        if (action && type && access.GROUP_EDITING == 1) {//Handle edit requests
             console.log("EDIT GROUP ACTION: " + action + ", " + JSON.stringify(req.params));
             model.editActionIndex(access, action, type, req.body, function (result) {
                 edit_group_callback(req, res, access, gid);
             });
         }
-        else //TODO: Redirect to group page when group page is built out
+        else
             edit_group_callback(req, res, access, gid);
     });
 });
 
 //Added to minimize repeated code.
 function edit_group_callback(req, res, access, gid) {
-    model.getGroupInfo(gid, function (result) {
+    model.getGroupInfo(gid, function (groupInfo) {
 
-        var groupInfo = result;
-        console.log("GROUP INFO: " + groupInfo.info['GROUP_NAME']);
-        if (typeof gid !== 'undefined' && gid || access.GROUP_EDITING) {
+        console.log("GROUP EDIT: " + JSON.stringify(access, null, 2));
+        console.log("GROUP EDIT Keys: " + Object.keys(access));
+        if (access.GROUP_EDITING == 1) {
                 res.render('group/edit', {
                     title: 'Edit Group',
                     name: req.user.name.givenName + " " + req.user.name.familyName,
@@ -81,8 +78,7 @@ function edit_group_callback(req, res, access, gid) {
                 })
         }
         else
-            res.redirect('/group/'+ groupID);
-
+            res.redirect('/group/'+ gid);
     });
 }
 

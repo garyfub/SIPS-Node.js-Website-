@@ -28,9 +28,12 @@
                     <div class="panel-heading">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tabGroupInfo" data-toggle="tab">Group Info</a></li>
-                            <li><a href="#tabSessions" data-toggle="tab">Sessions</a></li>
-                            <li><a href="#tabUsers" data-toggle="tab">Members</a></li>
-                            <li><a href="#tabPositions" data-toggle="tab">Positions</a></li>
+                            <% if(access.GROUP_SESSIONS){%>
+                            <li><a href="#tabSessions" data-toggle="tab">Sessions</a></li> <% } %>
+                            <% if(access.GROUP_MEMBERS){%>
+                            <li><a href="#tabUsers" data-toggle="tab">Members</a></li> <% } %>
+                            <% if(access.GROUP_POSITIONS){%>
+                            <li><a href="#tabPositions" data-toggle="tab">Positions</a></li> <% } %>
                         </ul>
                     </div>
                     <br>
@@ -58,6 +61,7 @@
                                 <br>
                             </div>
 
+                            <% if(access.GROUP_SESSIONS){%>
                             <!-- Sessions Tab -->
                             <div class="tab-pane fade in" id="tabSessions">
                                 <table class="table table-striped table-hover table-radio">
@@ -65,6 +69,7 @@
                                     <tr class="active">
                                         <th class="col-lg-1 hidden">Select</th>
                                         <th class="col-lg-1">Session Title</th>
+                                        <th class="col-lg-1">type</th>
                                         <th class="col-lg-1">Start date</th>
                                         <th class="col-lg-1">End Date</th>
                                         <th class="col-lg-1">Create by</th>
@@ -72,10 +77,11 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <%if(groupInfo.sessions.length == 0){%>
+                                    <% if(groupInfo.sessions.length == 0){ %>
                                     <tr class="warning">
                                         <td class="hidden"></td>
                                         <td>No sessions have been added to this group</td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -87,7 +93,8 @@
                                     <tr>
                                         <td class="hidden"><input name="user" class="selectedSession" type="radio"
                                                                   value="<%= group.sessions[i]["SESSIONID"] %>"></td>
-                                        <td><%= group.sessions[i]["SESSIONID"] %></td>
+                                        <td><%= group.sessions[i]["SESSION_DESC"] %></td>
+                                        <td><%= group.sessions[i]["SESSION_TYPE"] %></td>
                                         <td><%= group.sessions[i]["START_TIME"] %></td>
                                         <td><%= group.sessions[i]["END_TIME"] %></td>
                                         <td><%= group.sessions[i]["CREATEDBY"] %></td>
@@ -121,9 +128,10 @@
                                    data-target="#session-modal"><span
                                             class="fa fa-plus-square"></span> Add new session
                                 </a>
-                            </div>
+                            </div>  <% } %>
 
-                            <!-- Users Tab -->
+                            <% if(access.GROUP_MEMBERS){%>
+                            <!-- Members Tab -->
                             <div class="tab-pane fade" id="tabUsers">
                                 <table class="table table-striped table-hover table-radio">
                                     <thead>
@@ -185,9 +193,9 @@
                                 <a href="#" class="add_user btn btn-primary-outline"><span
                                             class="fa fa-plus-square"></span> Add new user
                                 </a>
-                            </div>
+                            </div>  <% } %>
 
-
+                            <% if(access.GROUP_POSITIONS){%>
                             <!-- Positions Tab -->
                             <div class="tab-pane fade" id="tabPositions">
                                 <div class="table-responsive">
@@ -217,9 +225,6 @@
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                <a href="#" class="add_position btn btn-sm invisible"><span
-                                                            class="fa fa-plus-square"></span> Add new position
-                                                </a>
                                             </td>
                                         </tr>
                                         <% }
@@ -267,7 +272,7 @@
                                    data-target="#add-position-modal"><span
                                             class="fa fa-plus-square"></span> Add new position
                                 </a>
-                            </div>
+                            </div>  <% } %>
                         </div>
                     </div>
                 </div>
@@ -276,6 +281,7 @@
     </div>
 </div>
 
+<% if(access.GROUP_SESSIONS){%>
 <!-- New Session Modal-->
 <div id="session-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -288,7 +294,28 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="session_name">Name: </label>
+                        <div class="row">
+                        <div class="col-lg-4">
+                            <label for="start_date">Start date: </label>
+                            <input type="text" id="start_date" name="start_date">
+                                <br>
+                            <label for="end_date">End date: </label>
+                            <input type="text" id="end_date" name="end_date">
+
+                            <br>
+                            <label for="session_type">Type: </label>
+                            <select name="session_type" id="session_type">
+                                <option value="Seasonal">Seasonal</option>
+                                <option value="Seasonal">Once</option>
+                            </select>
+
+                        </div>
+                        <br>
+                        <div class="col-lg-4">
+                            <label for="session_desc">Description: </label>
+                        <textarea rows="3" cols="40" name="session_desc" placeholder="Enter brief description..."></textarea>
+                        </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -299,8 +326,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>  <% } %>
 
+<% if(access.GROUP_MEMBERS){ %>
 <!-- Add User popup dialog -->
 <div id="add_user_box" title="Invite members to group">
     <span class="ui-state-default"><span class="ui-icon ui-icon-info"
@@ -384,8 +412,9 @@
             </div>
         </div>
     </div>
-</div>
+</div> <% } %>
 
+<% if(access.GROUP_POSITIONS){%>
 <!-- Position Removal Modal -->
 <div id="remove-position-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -463,7 +492,8 @@
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="groupTests" value="1"> Able to Administer tests via the SIPS app
+                            <input type="checkbox" name="groupTests" value="1"> Able to Administer tests via the SIPS
+                            app
                         </label>
                     </div>
                 </form>
@@ -475,7 +505,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> <% } %>
 
 <%- include ../partials/default_footer.ejs %>
 
@@ -486,6 +516,25 @@
             $('#sideMenu').metisMenu();
         });
 
+        //initialize Datepickers for sessions
+        $(function () {
+            $("#start_date").datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function (selectedDate) {
+                    $("#start_date").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#end_date").datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function (selectedDate) {
+                    $("#end_date").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+        });
         //Initialize Add User email dialog
         $("#add_user_box").dialog({
             autoOpen: false,

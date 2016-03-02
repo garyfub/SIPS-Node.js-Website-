@@ -172,17 +172,14 @@ function getPermissions(user, idNum, callback){
     var isAdmin = false;
 
     //console.log("USER" + JSON.stringify(user, null, 2));
-
     //Admin Check
     for(var i = 0; i < Object.keys(user.Admin).length; i++){
-
         //if idNum matches the id of an organization
         if(user.Admin[i]['ORGANIZATIONID'] == idNum){
             permissions = user.Admin[i];
             isAdmin = true;
             break;
         }
-
         //Check each organization's group to find matching groupID
         for(var t = 0; t < Object.keys(user.Admin[i].GROUPS).length; t++){
             if(user.Admin[i].GROUPS[t]['GROUPID'] == idNum){
@@ -196,7 +193,7 @@ function getPermissions(user, idNum, callback){
     //Member Check
     if(!isAdmin){
         for(var i = 0; i < Object.keys(user.Groups).length; i++){
-            if(user.Groups[i].GroupID == idNum){
+            if(user.Groups[i]['GROUPID'] == idNum){
                 permissions = user.Groups[i];
                 break;
             }
