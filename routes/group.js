@@ -43,8 +43,9 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
             return;
         }
         if (action && type && access.GROUP_EDITING == 1) {//Handle edit requests
-            console.log("EDIT GROUP ACTION: " + action + ", " + JSON.stringify(req.params));
-            model.editActionIndex(access, action, type, req.body, function (result) {
+            console.log("EDIT GROUP: "+  JSON.stringify(req.body));
+
+            model.editActionIndex(access, action, type, req, function (result) {
                 edit_group_callback(req, res, access, gid);
             });
         }
@@ -57,6 +58,8 @@ router.all('/:groupID/edit/:action?/:type?', ensureAuthenticated, function (req,
 function edit_group_callback(req, res, access, gid) {
 
     model.getGroupInfo(gid, function (groupInfo) {
+
+        console.log("SESSION: " + Object.keys(groupInfo.sessions[0]));
         if (access.GROUP_EDITING == 1) {
             res.render('group/edit', {
                 title: 'Edit Group',

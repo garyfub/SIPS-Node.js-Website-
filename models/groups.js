@@ -49,6 +49,9 @@ module.exports = {
     groupRemovePosition: groupRemovePosition,
     //Sessions
     getGroupSessions: getGroupSessions,
+    groupCreateSession: groupCreateSession,
+    groupUpdateSession: groupUpdateSession,
+    groupRemoveSession: groupRemoveSession,
     //Group Action Index
     editActionIndex: editActionIndex
 }
@@ -143,11 +146,11 @@ function groupUpdateInfo(data, callback) {
     });
 }
 
-/**
+/****************
  *
  * USERS
  *
- */
+ ***************/
 
 /**
  * Retrieves list of users in the group from the id used.
@@ -389,6 +392,75 @@ function getGroupSessions(groupID, callback) {
     });
 }
 
+/**
+ * Creates new Session entry for group
+ * @param req
+ * @param callback
+ */
+function groupCreateSession(req, callback) {
+
+    var obj = JSON.parse(req.body.data);
+    var sessionID  = uuid.v1();
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1;
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var date = year + "-" + month + "-" + day;
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("insert into SESSIONS (SESSIONID, SESSION_DESC, START_DATE, END_DATE, SESSION_TYPE, CREATEDBY, GROUPID, DATEADDED) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute([sessionID, obj.session_desc, obj.start_date, obj.end_date, obj.session_type, req.user.id, req.body.groupID, date ], function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+function groupUpdateSession(req, callback) {
+    var groupID = req.body.groupID;
+    var obj = JSON.parse(req.body.data);
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE SESSIONS SET  SESSION_DESC= \'" + obj.session_desc + "\', START_DATE= \'" + obj.start_date  + "\', END_DATE= \'" + obj.end_date + "\' , SESSION_TYPE = \'" + obj.session_type + "\' WHERE GROUPID = \'" + groupID + "\' AND SESSIONID = \'" + obj.sessionID + "\'", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
+function groupRemoveSession(req, callback) {
+    var groupID = req.body.groupID;
+    var session = req.body.data;
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("DELETE FROM SESSIONS WHERE groupID = \'" + groupID + "\' AND SESSIONID = \'" + session + "\'", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback();
+                });
+            });
+        });
+    });
+}
+
 
 /**
  * Index for Group Editing actions
@@ -399,9 +471,9 @@ function getGroupSessions(groupID, callback) {
  * @param callback
  * @returns {*}
  */
-function editActionIndex(access, action, type, data, callback) {
+function editActionIndex(access, action, type, req, callback) {
     console.log("GROUP EDITING INITIATED: " + action + " " + type);
-
+    var data = req.body;
     switch (action) {
         //REMOVE
         case 'remove':
@@ -416,7 +488,9 @@ function editActionIndex(access, action, type, data, callback) {
                 })
             }
             else if (type == "session") {
-                //TODO: remove Session
+                groupRemoveSession(req, function(){
+                    return callback(true);
+                })
             }
             break;
         //ADD
@@ -427,8 +501,9 @@ function editActionIndex(access, action, type, data, callback) {
                 });
             }
             else if (type == 'session') {
-
-                //TODO: Add Session
+                groupCreateSession(req, function(){
+                    return callback(true);
+                })
             }
             break;
         //UPDATE
@@ -449,7 +524,9 @@ function editActionIndex(access, action, type, data, callback) {
                 });
             }
             else if (type == "session") {
-                //TODO: Update Session
+                groupUpdateSession(req, function(){
+                    return callback(true);
+                })
             }
             break;
 

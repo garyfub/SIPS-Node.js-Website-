@@ -6,10 +6,13 @@ TODO: Update Database to latest diagram
     TODO: Refactor changes into code
 TODO: Populate Sessions tab in group edit page.
     TODO: Include modal for adding/updating sessions and another for removing sessions.
-TODO: Make sure form is mandatory at the beginning and end of seasonal(?) length session, but only at the beginning of daily sessions.
+TODO: Make sure form is mandatory at the beginning and end of seasonal(?) length sessions, but only at the beginning of daily sessions?
 TODO: CREATE Profile edit page. (Basic page with form fields that update user when submitted)
 TODO: Add description and image fields to groups and organizations on group and group edit pages and also display them on the homepage's group list.
-TODO: Move Group-related functions from models/admin to models/group. Possibly renaming models/admin to models/org in the process
+COMPLETE: Move Group-related functions from models/admin to models/group. Possibly renaming models/admin to models/org in the process
+TODO: Create "Admin" tab in views/admin/dash for editing other Admin.
+    TODO: Set it so the default Admin cannot be removed from the Organization
+    TODO: Use Invite code for adding Admin users? Single and limited time use only?
 
 TODO: Troubleshoot everything
 
