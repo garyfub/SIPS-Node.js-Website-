@@ -71,7 +71,11 @@
                                     <thead>
                                     <tr class="active">
                                         <th class="col-lg-1 hidden">Select</th>
+                                        <<<<<<< HEAD
                                         <th class="col-lg-3">Session Description</th>
+                                        =======
+                                        <th class="col-lg-1">Session Title</th>
+                                        >>>>>>> 9603e61fa79e007eed1c5fbeda2298189b78bb7b
                                         <th class="col-lg-1">type</th>
                                         <th class="col-lg-1">Start date</th>
                                         <th class="col-lg-1">End Date</th>
@@ -87,17 +91,29 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
                                     </tr>
                                     <% }
                                     for(var i = 0; i < Object.keys(groupInfo.sessions).length; i++){
                                     %>
                                     <tr>
+                                        <<<<<<< HEAD
                                         <td class="hidden"><input name="session" class="selectedSession" type="radio"
-                                                                  value="<%= groupInfo.sessions[i]["SESSIONID"] %>"></td>
+                                                                  value="<%= groupInfo.sessions[i]["SESSIONID"] %>">
+                                        </td>
                                         <td><%= groupInfo.sessions[i]["SESSION_DESC"] %></td>
                                         <td><%= groupInfo.sessions[i]["SESSION_TYPE"] %></td>
                                         <td><%= groupInfo.sessions[i]["START_DATE"] %></td>
                                         <td><%= groupInfo.sessions[i]["END_DATE"] %></td>
+                                        =======
+                                        <td class="hidden"><input name="user" class="selectedSession" type="radio"
+                                                                  value="<%= group.sessions[i]["SESSIONID"] %>"></td>
+                                        <td><%= group.sessions[i]["SESSION_DESC"] %></td>
+                                        <td><%= group.sessions[i]["SESSION_TYPE"] %></td>
+                                        <td><%= group.sessions[i]["START_TIME"] %></td>
+                                        <td><%= group.sessions[i]["END_TIME"] %></td>
+                                        <td><%= group.sessions[i]["CREATEDBY"] %></td>
+                                        >>>>>>> 9603e61fa79e007eed1c5fbeda2298189b78bb7b
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button"
@@ -295,26 +311,28 @@
                 <h4 class="modal-title">Add New Session</h4>
             </div>
             <div class="modal-body">
+                <<<<<<< HEAD
                 <form id="sessions_form">
                     <div class="form-group col-lg-4">
-                                <label for="start_date">Start date: </label>
-                                <input type="text" id="start_date" name="start_date" class="form-control">
-                                <br>
-                                <label for="end_date">End date: </label>
-                                <input type="text" id="end_date" name="end_date" class="form-control">
-                                <br>
-                                <label for="session_type">Type: </label>
-                                <select name="session_type" id="session_type" class="form-control">
-                                    <option value="Seasonal">Seasonal</option>
-                                    <option value="Once">Once</option>
-                                </select>
+                        <label for="start_date">Start date: </label>
+                        <input type="text" id="start_date" name="start_date" class="form-control">
+                        <br>
+                        <label for="end_date">End date: </label>
+                        <input type="text" id="end_date" name="end_date" class="form-control">
+                        <br>
+                        <label for="session_type">Type: </label>
+                        <select name="session_type" id="session_type" class="form-control">
+                            <option value="Seasonal">Seasonal</option>
+                            <option value="Once">Once</option>
+                        </select>
 
-                            </div>
+                    </div>
                     <div class="form-group col-lg-8">
-                                <label for="session_desc">Description: </label>
+                        <label for="session_desc">Description: </label>
                                 <textarea rows="3" cols="40" name="session_desc"
-                                          placeholder="Enter brief description..." class="form-control" id="session_desc"></textarea>
-                            </div>
+                                          placeholder="Enter brief description..." class="form-control"
+                                          id="session_desc"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer" style="clear:both;">
@@ -561,7 +579,7 @@
          * Sessions
          **/
 
-        //initialize Datepickers for sessions
+            //initialize Datepickers for sessions
         $(function () {
             $("#start_date").datepicker({
                 defaultDate: "+1w",
@@ -580,6 +598,7 @@
                 }
             });
         });
+
 
         //Switch model for updating position
         $(".edit-session").click(function (e) {
