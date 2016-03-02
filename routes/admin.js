@@ -6,32 +6,32 @@ var model_user = require('../models/users');
 
 /* GET Admin page. */
 /*
-router.get('/', ensureAuthenticated, function (req, res, next) {
-    if (req.user.Admin[0]) {
-        var user = req.user;
-        var admin = req.user.Admin[0];//TODO: Need to add ability to switch between organizations if more than one result
-        var orgID = admin.ORGANIZATIONID;
+ router.get('/', ensureAuthenticated, function (req, res, next) {
+ if (req.user.Admin[0]) {
+ var user = req.user;
+ var admin = req.user.Admin[0];//TODO: Need to add ability to switch between organizations if more than one result
+ var orgID = admin.ORGANIZATIONID;
 
-        //console.log("OBJECt-OrgID: " + orgID);
-        model.getGroups(orgID, function (err, groups) {
-            //   console.log("Results: " + JSON.stringify(groups, null, 2));
+ //console.log("OBJECt-OrgID: " + orgID);
+ model.getGroups(orgID, function (err, groups) {
+ //   console.log("Results: " + JSON.stringify(groups, null, 2));
 
 
-            res.render('admin/dash', {
-                title: 'Admin Dashboard',
-                name: user.name.givenName + " " + user.name.familyName,
-                id: user.id,
-                isAdmin: user.isAdmin,
-                organizationid: admin.ORGANIZATIONID,
-                groups: groups
-            })
-        });
-    }
-    else {
-        res.send('404: Page not Found', 404);
-    }
-});
-*/
+ res.render('admin/dash', {
+ title: 'Admin Dashboard',
+ name: user.name.givenName + " " + user.name.familyName,
+ id: user.id,
+ isAdmin: user.isAdmin,
+ organizationid: admin.ORGANIZATIONID,
+ groups: groups
+ })
+ });
+ }
+ else {
+ res.send('404: Page not Found', 404);
+ }
+ });
+ */
 
 /* GET Dynamic Admin page. */
 router.get('/:orgID', ensureAuthenticated, function (req, res, next) {
@@ -49,7 +49,7 @@ router.get('/:orgID', ensureAuthenticated, function (req, res, next) {
 
             console.log("ADMIN: " + JSON.stringify(access, null, 2));
             res.render('admin/dash', {
-                title: access.ORG_NAME +' Dashboard',
+                title: access.ORG_NAME + ' Dashboard',
                 name: user.name.givenName + " " + user.name.familyName,
                 id: user.id,
                 isAdmin: user.isAdmin,

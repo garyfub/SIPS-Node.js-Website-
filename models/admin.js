@@ -75,12 +75,12 @@ function createGroup(name, orgID, callback) {
 };
 
 //Updates group information in Groups table
-function groupUpdateInfo(data, callback){
+function groupUpdateInfo(data, callback) {
 
     console.log("UPDATE GROUP INFO: " + JSON.stringify(data, null, 2));
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("UPDATE GROUPS SET GROUP_NAME = \'"+ data.group_name + "\' WHERE GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
+        conn.prepare("UPDATE GROUPS SET GROUP_NAME = \'" + data.group_name + "\' WHERE GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -162,12 +162,12 @@ function groupRemoveUser(groupID, userID, callback) {
     });
 }
 
-function groupUpdateUser(data, callback){
+function groupUpdateUser(data, callback) {
     var obj = JSON.parse(data.data);
     console.log("UPDATE USER: " + JSON.stringify(obj, null, 2));
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("UPDATE MEMBERS SET ROLE_NAME = \'"+ obj.position + "\' WHERE USERID = \'"+ obj.userid + "\' AND GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
+        conn.prepare("UPDATE MEMBERS SET ROLE_NAME = \'" + obj.position + "\' WHERE USERID = \'" + obj.userid + "\' AND GROUPID = \'" + data.groupID + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);
@@ -224,31 +224,31 @@ function groupRemovePosition(data, callback) {
  * @param positionData
  * @param callback
  */
-function groupCreatePosition(data, callback){
+function groupCreatePosition(data, callback) {
 
     console.log("POSITION CREATE: " + JSON.stringify(data, null, 2));
 
     var groupID = data.groupID;
     var obj = JSON.parse(data.data);
 
-        if(!obj.hasOwnProperty('groupEdit')){
-            obj.groupEdit = 0;
-        }
-        if(!obj.hasOwnProperty('groupSessions')){
-            obj.groupSessions = 0;
-        }
-        if(!obj.hasOwnProperty('groupMembers')){
-            obj.groupMembers = 0;
-        }
-        if(!obj.hasOwnProperty('groupPositions')){
-            obj.groupPos = 0;
-        }
-        if(!obj.hasOwnProperty('groupResults')){
-            obj.groupResults = 0;
-        }
-        if(!obj.hasOwnProperty('groupTests')){
-            obj.groupTests = 0;
-        }
+    if (!obj.hasOwnProperty('groupEdit')) {
+        obj.groupEdit = 0;
+    }
+    if (!obj.hasOwnProperty('groupSessions')) {
+        obj.groupSessions = 0;
+    }
+    if (!obj.hasOwnProperty('groupMembers')) {
+        obj.groupMembers = 0;
+    }
+    if (!obj.hasOwnProperty('groupPositions')) {
+        obj.groupPos = 0;
+    }
+    if (!obj.hasOwnProperty('groupResults')) {
+        obj.groupResults = 0;
+    }
+    if (!obj.hasOwnProperty('groupTests')) {
+        obj.groupTests = 0;
+    }
 
     console.log("Create POSITION: " + JSON.stringify(obj, null, 2));
 
@@ -271,41 +271,41 @@ function groupCreatePosition(data, callback){
     });
 }
 
-function groupUpdatePosition(data, callback){
+function groupUpdatePosition(data, callback) {
 
     /*
      //Update group by removing the group and recreating it with the changed values
-    groupRemovePosition(data, function(){
-        groupCreatePosition(data, function(){
-            return callback();
-        })
-    })
-    */
+     groupRemovePosition(data, function(){
+     groupCreatePosition(data, function(){
+     return callback();
+     })
+     })
+     */
     var groupID = data.groupID;
     var obj = JSON.parse(data.data);
 
-    if(!obj.hasOwnProperty('groupEdit')){
+    if (!obj.hasOwnProperty('groupEdit')) {
         obj.groupEdit = 0;
     }
-    if(!obj.hasOwnProperty('groupSessions')){
+    if (!obj.hasOwnProperty('groupSessions')) {
         obj.groupSessions = 0;
     }
-    if(!obj.hasOwnProperty('groupMembers')){
+    if (!obj.hasOwnProperty('groupMembers')) {
         obj.groupMembers = 0;
     }
-    if(!obj.hasOwnProperty('groupPositions')){
+    if (!obj.hasOwnProperty('groupPositions')) {
         obj.groupPositions = 0;
     }
-    if(!obj.hasOwnProperty('groupResults')){
+    if (!obj.hasOwnProperty('groupResults')) {
         obj.groupResults = 0;
     }
-    if(!obj.hasOwnProperty('groupTests')){
+    if (!obj.hasOwnProperty('groupTests')) {
         obj.groupTests = 0;
     }
     console.log("UPDATE POSITION: " + JSON.stringify(obj, null, 2));
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.prepare("UPDATE ROLEPERMISSIONS SET  GROUP_EDITING= \'"+obj.groupEdit+"\', GROUP_SESSIONS= \'"+obj.groupSessions+"\', GROUP_MEMBERS= \'"+obj.groupMembers+"\' , GROUP_POSITIONS = \'"+obj.groupPositions+"\' , GROUP_RESULTS= \'"+obj.groupResults+"\' , GROUP_TEST= \'"+obj.groupTests+"\' WHERE GROUPID = \'" + groupID + "\' AND ROLE_NAME = \'" + obj.positionTitle + "\'", function (err, stmt) {
+        conn.prepare("UPDATE ROLEPERMISSIONS SET  GROUP_EDITING= \'" + obj.groupEdit + "\', GROUP_SESSIONS= \'" + obj.groupSessions + "\', GROUP_MEMBERS= \'" + obj.groupMembers + "\' , GROUP_POSITIONS = \'" + obj.groupPositions + "\' , GROUP_RESULTS= \'" + obj.groupResults + "\' , GROUP_TEST= \'" + obj.groupTests + "\' WHERE GROUPID = \'" + groupID + "\' AND ROLE_NAME = \'" + obj.positionTitle + "\'", function (err, stmt) {
             if (err) {
                 //could not prepare for some reason
                 console.log(err);

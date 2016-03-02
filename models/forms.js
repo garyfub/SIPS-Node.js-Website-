@@ -179,8 +179,8 @@ function sportsFormEntry(req, formEntryID, date, callback) {
                                         console.log("New injury added by User");
                                         result.closeSync();
 
-                                        if(!parseInt(question.arr[i + 1]))
-                                        return callback();
+                                        if (!parseInt(question.arr[i + 1]))
+                                            return callback();
                                     }
                                 });
                             }

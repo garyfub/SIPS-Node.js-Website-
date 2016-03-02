@@ -46,7 +46,8 @@
                                 <td></td>
                                 <td class="hidden"></td>
                                 <td>
-                                    <a href="/admin/<%= access.ORGANIZATIONID %>/create/group" class="btn btn-sm invisible"><span
+                                    <a href="/admin/<%= access.ORGANIZATIONID %>/create/group"
+                                       class="btn btn-sm invisible"><span
                                                 class="fa fa-plus-square"></span> Add new group
                                     </a>
                                 </td>
@@ -57,7 +58,9 @@
                                 <td class="hidden"><input name="group" class="selectedGroup" type="radio"
                                                           value="<%= groups[i]["GROUPID"] %>">
                                 </td>
-                                <td class="group_name"><a href="/group/<%=groups[i]["GROUPID"]%>"><%= groups[i]["GROUP_NAME"] %></a></td>
+                                <td class="group_name"><a
+                                            href="/group/<%= groups[i]["GROUPID"] %>"><%= groups[i]["GROUP_NAME"] %></a>
+                                </td>
                                 <td class="group_org"><%= groups[i]["ORGANIZATIONID"] %></td>
                                 <td class="group_member">null</td>
                                 <td class="group_code hidden"><%= groups[i]["INVITE_CODE"] %></td>
@@ -73,7 +76,9 @@
                                             <li><a href="/results"><span class="fa fa-pie-chart "></span> View
                                                     Results</a></li>
                                             <li class="divider"></li>
-                                            <li><a href="/admin/<%= access.ORGANIZATIONID %>/remove/group/<%= groups[i]["GROUPID"] %>" class="delete-group"><span class="fa fa-trash-o "></span>
+                                            <li>
+                                                <a href="/admin/<%= access.ORGANIZATIONID %>/remove/group/<%= groups[i]["GROUPID"] %>"
+                                                   class="delete-group"><span class="fa fa-trash-o "></span>
                                                     Delete Group</a>
                                             </li>
                                         </ul>
@@ -122,7 +127,6 @@
             //$(this).find('td input[type=radio]').prop('checked', true);
             $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
         });
-
 
 
         $(".edit-group").click(function (e) {

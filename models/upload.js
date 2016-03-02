@@ -75,7 +75,6 @@ function userCheckUpload(msg, callback) {
             newUser = str.charAt(15);
 
 
-
             //Inserts new user if doesn't exist
             if (newUser == 0 || newUser == "0") {
 
@@ -287,7 +286,7 @@ function appsensor(data, taskEntryID, callback) {
     });
 }
 
-function taskDataUploadCloudant(req , callback) {
+function taskDataUploadCloudant(req, callback) {
     var keyNames = Object.keys(req);
 
     //Print out key names to verify session object loaded

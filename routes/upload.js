@@ -38,15 +38,16 @@ router.post('/form', function (req, res, next) {
     }
 
     //Create user on submission of registration form if not exists
-    modelUsers.UserCheck(req.user, function(result){
+    modelUsers.UserCheck(req.user, function (result) {
 
-    if (result == 0) {
-        modelUsers.UserCreate(req.user, function(result){});
-    }
-    modelForm.addFormEntry(req, function(){
+        if (result == 0) {
+            modelUsers.UserCreate(req.user, function (result) {
+            });
+        }
+        modelForm.addFormEntry(req, function () {
 
-    console.log("FORM:" + JSON.stringify(req.body, null, 2));
-    });
+            console.log("FORM:" + JSON.stringify(req.body, null, 2));
+        });
     });
 });
 

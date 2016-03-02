@@ -153,7 +153,7 @@ function getGroupPositions(groupID, callback) {
     });
 }
 
-function getGroupSessions(groupID, callback){
+function getGroupSessions(groupID, callback) {
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT * FROM SESSIONS WHERE GROUPID =  \'" + groupID + "\'", function (err, sessions, moreResultSets) {
             if (err) {
