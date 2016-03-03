@@ -40,21 +40,19 @@
 
         <ul class="metismenu nav nav-pills nav-stacked panel panel-default navbar-collapse collapse" id="sideMenu">
             <li>
-                <a href="/admin" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard Menu</a>
+                <a href="/admin/<%= access.ORGANIZATIONID %>" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
             <li class="nav-divider"></li>
-            <li>
-                <a href="/admin"><i class="fa fa-fort-awesome"></i>
-                    Organization</a>
-            </li>
+
             <li class="hidden-lg hidden-md">
                 <a href="#">Menu<span class="caret arrow"></span></a>
                 <ul class="nav nav-pills nav-stacked">
                     <li><a href="/">Home</a></li>
-                    <li><a href="/admin">Admin</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </li>
+            <li><a href="/admin/<%= access.ORGANIZATIONID %>/Administrators"><span class="sidebar-nav-item"><i class="fa fa-user-md"></i> Administrators</span></a></li>
+            <!--
             <li>
                 <a href="#">
                     <span class="sidebar-nav-item"><i class="fa fa-users"></i>
@@ -62,10 +60,11 @@
                     <span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#">Users</a></li>
+                    <li><a href="/admin/<%= access.ORGANIZATIONID %>/Administrators"><i class="fa fa-user-md"></i> Administrators</a></li>
                 </ul>
             </li>
-            <li><a href="/results"><i class="fa fa-bar-chart-o fa-fw"></i> Results</a></li>
+            -->
+            <li><a href="/results/<%= access.ORGANIZATIONID %>"><i class="fa fa-bar-chart-o fa-fw"></i> Results</a></li>
         </ul>
 
     </div>

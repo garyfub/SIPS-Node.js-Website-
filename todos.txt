@@ -4,8 +4,8 @@ This file is for an ongoing to-do list for the project.
 Website
 TODO: Update Database to latest diagram
     TODO: Refactor changes into code
-TODO: Populate Sessions tab in group edit page.
-    TODO: Include modal for adding/updating sessions and another for removing sessions.
+COMPLETE: Populate Sessions tab in group edit page.
+    COMPLETE: Include modal for adding/updating sessions and another for removing sessions.
 TODO: Make sure form is mandatory at the beginning and end of seasonal(?) length sessions, but only at the beginning of daily sessions?
 TODO: CREATE Profile edit page. (Basic page with form fields that update user when submitted)
 TODO: Add description and image fields to groups and organizations on group and group edit pages and also display them on the homepage's group list.

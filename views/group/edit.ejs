@@ -71,11 +71,7 @@
                                     <thead>
                                     <tr class="active">
                                         <th class="col-lg-1 hidden">Select</th>
-                                        <<<<<<< HEAD
                                         <th class="col-lg-3">Session Description</th>
-                                        =======
-                                        <th class="col-lg-1">Session Title</th>
-                                        >>>>>>> 9603e61fa79e007eed1c5fbeda2298189b78bb7b
                                         <th class="col-lg-1">type</th>
                                         <th class="col-lg-1">Start date</th>
                                         <th class="col-lg-1">End Date</th>
@@ -97,7 +93,6 @@
                                     for(var i = 0; i < Object.keys(groupInfo.sessions).length; i++){
                                     %>
                                     <tr>
-                                        <<<<<<< HEAD
                                         <td class="hidden"><input name="session" class="selectedSession" type="radio"
                                                                   value="<%= groupInfo.sessions[i]["SESSIONID"] %>">
                                         </td>
@@ -105,16 +100,8 @@
                                         <td><%= groupInfo.sessions[i]["SESSION_TYPE"] %></td>
                                         <td><%= groupInfo.sessions[i]["START_DATE"] %></td>
                                         <td><%= groupInfo.sessions[i]["END_DATE"] %></td>
-                                        =======
-                                        <td class="hidden"><input name="user" class="selectedSession" type="radio"
-                                                                  value="<%= group.sessions[i]["SESSIONID"] %>"></td>
-                                        <td><%= group.sessions[i]["SESSION_DESC"] %></td>
-                                        <td><%= group.sessions[i]["SESSION_TYPE"] %></td>
-                                        <td><%= group.sessions[i]["START_TIME"] %></td>
-                                        <td><%= group.sessions[i]["END_TIME"] %></td>
-                                        <td><%= group.sessions[i]["CREATEDBY"] %></td>
-                                        >>>>>>> 9603e61fa79e007eed1c5fbeda2298189b78bb7b
                                         <td>
+
                                             <div class="btn-group">
                                                 <button type="button"
                                                         class="action_btn btn btn-primary btn-sm dropdown-toggle invisible"
@@ -311,7 +298,6 @@
                 <h4 class="modal-title">Add New Session</h4>
             </div>
             <div class="modal-body">
-                <<<<<<< HEAD
                 <form id="sessions_form">
                     <div class="form-group col-lg-4">
                         <label for="start_date">Start date: </label>
@@ -604,7 +590,6 @@
         $(".edit-session").click(function (e) {
             $('#session-modal .modal-title').text("Edit Session");
             $('#session-confirmed').text('Update');
-            //TODO: Add Session data to form fields
             var selectedSession = $('input[name=session]:checked').closest('tr');
             $('#session_desc').val(selectedSession.find('td:eq(1)').text());
             $('#session_type').val(selectedSession.find('td:eq(2)').text());
