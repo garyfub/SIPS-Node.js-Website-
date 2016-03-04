@@ -10,7 +10,7 @@ TODO: Make sure form is mandatory at the beginning and end of seasonal(?) length
 TODO: CREATE Profile edit page. (Basic page with form fields that update user when submitted)
 TODO: Add description and image fields to groups and organizations on group and group edit pages and also display them on the homepage's group list.
 COMPLETE: Move Group-related functions from models/admin to models/group. Possibly renaming models/admin to models/org in the process
-TODO: Create "Admin" tab in views/admin/dash for editing other Admin.
+TODO: Create "Admin" tab in views/admin/dash or separate page for editing other Admin.
     TODO: Set it so the default Admin cannot be removed from the Organization
     TODO: Use Invite code for adding Admin users? Single and limited time use only?
 

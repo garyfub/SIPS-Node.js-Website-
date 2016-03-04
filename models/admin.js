@@ -36,6 +36,7 @@ module.exports = {
     createGroup: createGroup,
     deleteGroup: deleteGroup,
     getGroups: getGroups,
+    getAdmins: getAdmins
 
 }
 
@@ -98,5 +99,17 @@ function getGroups(orgID, callback) {
         });
     });
 };
+
+function getAdmins(req, access, callback){
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name WHERE MEMBERS.ORGANIZATIONID =  \'" + access.ORGANIZATIONID + "\' AND MEMBERS.ROLE_NAME = 'Administrator' OR MEMBERS.ROLE_NAME = 'Head Administrator'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                return callback(rows);
+            }
+        });
+    });
+}
 
 

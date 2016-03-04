@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<%- include ../partials/default_header.ejs %>
+<body>
+
+<%- include ../partials/admin_navbar.ejs %>
+
+<!-- Page Content -->
+<div id="wrapper" class="container-fluid col-lg-10">
+
+    <div class="row">
+        <div class="container-fluid">
+
+
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+                    <div class="content">
+                        <h1><%= title %></h1>
+                        <p>View <%= access.ORG_NAME %> administrators here.</p>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Admin in <%= access.ORG_NAME %></div>
+                    <br>
+                    <div class="content">
+                        <ul class="list-group">
+                            <li class="list-group-item">Admin 1</li>
+                            <li class="list-group-item">Admin 2</li>
+                            <li class="list-group-item">Admin 3</li>
+                            <li class="list-group-item">Admin 4</li>
+                            <li class="list-group-item">Admin 5</li>
+                        </ul>
+                        <br>
+                        <!-- Open Invite code modal -->
+                        <a href="#" class="btn btn-primary-outline"><span
+                                    class="fa fa-plus-square"></span> Generate Admin invite code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%- include ../partials/default_footer.ejs %>
+
+<script>
+
+    $(document).ready(function () {
+        $(function () {
+            $('#sideMenu').metisMenu();
+        });
+
+        $('.table-radio tr').hover(
+                function () {
+                    $(this).find('td .btn').removeClass("invisible");
+                },
+                function () {
+
+                    $(this).find('td .btn').addClass("invisible");
+                }
+        );
+
+        //Checks hidden radio on the same row as the action button being clicked
+        $('.action_btn').click(function (e) {
+            e.preventDefault();
+            //$(this).find('td input[type=radio]').prop('checked', true);
+            $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
+        });
+    });
+
+</script>
+
+</body>
+</html>

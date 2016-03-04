@@ -117,6 +117,29 @@ router.get('/:orgID/remove/group/:groupID', ensureAuthenticated, function (req, 
     });
 });
 
+router.get('/:orgID/administrators', ensureAuthenticated, function (req, res, next) {
+
+    model_user.getPermissions(req.user, req.params.orgID, function (access) {
+        if (Object.keys(access).length == 0) {
+            res.redirect('/');
+            return;
+        }
+
+        //TODO create function to retrieve all Admin for a specific Organization ID
+        model.getAdmins(req, access, function(result){
+
+        console.log("ADMIN: " + JSON.stringify(result, null, 2));
+       var user = req.user;
+        res.render('admin/administrators', {
+            title: 'Administrators',
+            name: user.name.givenName + " " + user.name.familyName,
+            id: user.id,
+            access: access
+        })
+        });
+    });
+});
+
 /**
  * TODO
  * 1. Should there be a single results page or is it easier to manage a separate admin version?
