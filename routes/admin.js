@@ -170,7 +170,7 @@ router.get('/:orgID/invite/:code', ensureAuthenticated, function (req, res, next
             res.redirect("/admin/" + req.params.orgID);
             }
             else{
-                res.redirect("/");
+                res.status(404).send('Sorry, The code has expired. You will have to request it is resent.');
             }
     });
 });

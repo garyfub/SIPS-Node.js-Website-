@@ -44,6 +44,30 @@
 </div>
 
 
+<!-- Position Removal Modal -->
+<div id="invite-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Generated invite link</h4>
+            </div>
+            <div class="modal-body">
+                <p>Send the below link to a SIPS user to add them as an Administrator</p>
+                <div class="well">
+                <p id="code_field"></p>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <%- include ../partials/default_footer.ejs %>
 
 <script>
@@ -61,7 +85,10 @@
                 type: 'GET',
                 url: '/admin/<%= access.ORGANIZATIONID %>/generate/invite',
                 success: function (data) {
-                    alert("Success! "  + JSON.stringify(data, null, 2));
+                    //alert("Success! "  + JSON.stringify(data, null, 2));
+                    $('#code_field').empty();
+                    $('#invite-modal').modal('show');
+                    $('#code_field').append("http://sipsapp.org/admin/<%= access.ORGANIZATIONID %>/invite/" + data)
                 }
             })
             //$(this).find('td input[type=radio]').prop('checked', true);

@@ -139,7 +139,8 @@ function inviteAdmin(req, callback){
                     var b = moment("'"+ org["INVITE_TIME"]+ "'", "x");
                     var now = moment();
                     console.log("TIME DIFF: " + b.isAfter(now) + ", " + b.format('x') + "::" + now.format('x'));
-                    return callback(true);
+
+                    return callback(b.isAfter(now));
                 }
                 else
                 return callback(false);
