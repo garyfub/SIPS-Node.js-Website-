@@ -10,8 +10,6 @@
 
     <div class="row">
         <div class="container-fluid">
-
-
             <div class="col-lg-12">
 
                 <div class="panel panel-default">
@@ -22,19 +20,20 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Admin in <%= access.ORG_NAME %></div>
+                    <div class="panel-heading">Admin for <%= access.ORG_NAME %></div>
                     <br>
                     <div class="content">
                         <ul class="list-group">
-                            <li class="list-group-item">Admin 1</li>
-                            <li class="list-group-item">Admin 2</li>
-                            <li class="list-group-item">Admin 3</li>
-                            <li class="list-group-item">Admin 4</li>
-                            <li class="list-group-item">Admin 5</li>
+                            <% for(var i =0; i < Object.keys(adminList).length; i++){ %>
+                            <li class="list-group-item">
+                                <div class="col-lg-11 col-xs-10"><%= adminList[i]["NAME_FIRST"] + " " + adminList[i]["NAME_LAST"]%></div>
+                                <div class="">
+                                    <a href="/admin/<%= access.ORGANIZATIONID %>/remove/admin/<%= adminList[i]["USERID"]%>">remove</a></div></li>
+                            <% } %>
                         </ul>
                         <br>
                         <!-- Open Invite code modal -->
-                        <a href="#" class="btn btn-primary-outline"><span
+                        <a href="#" class="generate_btn btn btn-primary-outline"><span
                                     class="fa fa-plus-square"></span> Generate Admin invite code
                         </a>
                     </div>
@@ -54,21 +53,18 @@
             $('#sideMenu').metisMenu();
         });
 
-        $('.table-radio tr').hover(
-                function () {
-                    $(this).find('td .btn').removeClass("invisible");
-                },
-                function () {
-
-                    $(this).find('td .btn').addClass("invisible");
-                }
-        );
-
         //Checks hidden radio on the same row as the action button being clicked
-        $('.action_btn').click(function (e) {
+        $('.generate_btn').click(function (e) {
             e.preventDefault();
+
+            $.ajax({
+                type: 'GET',
+                url: '/admin/<%= access.ORGANIZATIONID %>/generate/invite',
+                success: function (data) {
+                    alert("Success! "  + JSON.stringify(data, null, 2));
+                }
+            })
             //$(this).find('td input[type=radio]').prop('checked', true);
-            $(this).closest('tr').find('td:eq(0) input[type=radio]').prop('checked', true);
         });
     });
 

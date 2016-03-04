@@ -2,6 +2,7 @@
 var ibmdb = require('ibm_db');
 var uuid = require('node-uuid');
 var shortid = require('shortid');
+var moment = require('moment');
 
 var env = null;
 var keySql = null;
@@ -36,7 +37,10 @@ module.exports = {
     createGroup: createGroup,
     deleteGroup: deleteGroup,
     getGroups: getGroups,
-    getAdmins: getAdmins
+    generateInvite: generateInvite,
+    inviteAdmin: inviteAdmin,
+    getAdmins: getAdmins,
+    removeAdmin: removeAdmin
 
 }
 
@@ -100,9 +104,58 @@ function getGroups(orgID, callback) {
     });
 };
 
+function generateInvite(req, callback){
+    var startDate =  moment().add(2, 'hours');
+    var code = uuid.v1();
+
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("UPDATE ORGANIZATION SET INVITE_CODE = '" + code + "', INVITE_TIME = '" + startDate + "' WHERE ORGANIZATIONID = \'" + req.params.orgID + "\'", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                conn.closeSync()
+                return callback(false);
+            }
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback(code);
+                });
+            });
+        });
+    });
+}
+
+function inviteAdmin(req, callback){
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.query("SELECT * FROM ORGANIZATION WHERE ORGANIZATIONID =  \'" + req.params.orgID + "\'", function (err, rows, moreResultSets) {
+            if (err) {
+                console.log(err);
+            } else {
+                var org = rows[0];
+
+
+                if(req.params.code == org["INVITE_CODE"]) {
+                    //http://sipsapp.org/admin/UTC_ID/invite/4d26b650-e24d-11e5-9cdb-e56cdf5a45b2
+                  //  var startDate = moment(org["INVITE_TIME"],'h:mm:ss a');
+                  // var endDate =  moment().format('h:mm:ss a');
+                  //  var diff = endDate.diff(startDate, 'seconds').format('H');
+                   // console.log("TIME DIFF: " + diff);
+
+                    var b = moment(org["INVITE_TIME"]);
+
+                    console.log("TIME DIFF: " + b.isAfter(moment()));
+                    return callback(true);
+                }
+                else
+                return callback(false);
+            }
+        });
+    });
+}
+
 function getAdmins(req, access, callback){
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name WHERE MEMBERS.ORGANIZATIONID =  \'" + access.ORGANIZATIONID + "\' AND MEMBERS.ROLE_NAME = 'Administrator' OR MEMBERS.ROLE_NAME = 'Head Administrator'", function (err, rows, moreResultSets) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, USER.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name INNER JOIN USER ON MEMBERS.USERID = USER.USERID WHERE MEMBERS.ORGANIZATIONID =  \'" + access.ORGANIZATIONID + "\' AND (MEMBERS.ROLE_NAME = 'Administrator' OR MEMBERS.ROLE_NAME = 'Head Administrator')", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
             } else {
@@ -112,4 +165,19 @@ function getAdmins(req, access, callback){
     });
 }
 
-
+function removeAdmin(adminID, access, callback){
+    ibmdb.open(dsnString, function (err, conn) {
+        conn.prepare("DELETE FROM MEMBERS WHERE USERID = \'" + adminID + "\' AND ORGANIZATIONID = \'" + access.ORGANIZATIONID + "\'", function (err, stmt) {
+            if (err) {
+                console.log(err);
+                return conn.closeSync();
+            }
+            stmt.execute(function (err, result) {
+                if (err) console.log(err);
+                else conn.close(function () {
+                    return callback(err);
+                });
+            });
+        });
+    });
+}

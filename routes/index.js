@@ -11,11 +11,9 @@ userjson = null;
  * Homepage
  */
 router.get('/', function (req, res, next) {
-    // console.log("USER_2: " + JSON.stringify(req.user, null, 2));
 
     if (req.isAuthenticated()) {
         // logged in
-
         res.render('index', {
             title: 'Sports Injury Prevention Screen',
             name: req.user.name.givenName + " " + req.user.name.familyName,
@@ -59,7 +57,6 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
             model_users.getPositions(req, function (req) {
                 res.sendStatus(200); //success
             });
-
         else
             res.sendStatus(404); //fail
     });
