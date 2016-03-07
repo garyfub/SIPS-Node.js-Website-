@@ -58,7 +58,7 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
 
 //Check if user is in database
 router.post('/check', appAuthenticate, function (req, res, next) {
-console.log("O_O_O_O_O_O_O_O_O_O_O_O_O_O: "  + JSON.stringify(req.user, null, 2));
+console.log("APP USER CHECK: "  + JSON.stringify(req.user, null, 2));
         model.UserCheck(req.body, function (check) {
             if(req.user) {
                 model.getPositions(req, function (req) {
