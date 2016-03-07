@@ -45,7 +45,6 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
                 console.log("ADMIN: " + Object.keys(req.user.Admin));
                 console.log("GROUP: " + Object.keys(req.user.Groups));
 
-
                 res.redirect('/');
             });
         }

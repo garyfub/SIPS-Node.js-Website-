@@ -102,17 +102,28 @@ router.post('/:orgID/create/group', ensureAuthenticated, function (req, res, nex
 /**
  * Remove group
  */
-router.get('/:orgID/remove/group/:groupID', ensureAuthenticated, function (req, res, next) {
+router.get('/:orgID/remove/:type/:id', ensureAuthenticated, function (req, res, next) {
 
     model_user.getPermissions(req.user, req.params.orgID, function (access) {
-        if (access == null) {
-            console.log("RESULT WAS == to {}");
+        if (Object.keys(access).length == 0) {
             res.redirect('/');
             return;
         }
-        model.deleteGroup(req.params.groupID, function (err) {
-            res.redirect('/admin/' + access.ORGANIZATIONID);
-        });
+        switch (req.params.type) {
+            case 'group':
+                model.deleteGroup(req.params.id, function (err) {
+                    res.redirect('/admin/' + access.ORGANIZATIONID);
+                });
+
+                break;
+            case 'admin':
+                model.removeAdmin(req.params.id, access, function(err){
+                    res.redirect('/admin/' + access.ORGANIZATIONID + "/administrators");
+                })
+                break;
+            default:
+                break;
+        }
 
     });
 });
@@ -124,21 +135,50 @@ router.get('/:orgID/administrators', ensureAuthenticated, function (req, res, ne
             res.redirect('/');
             return;
         }
+        model.getAdmins(req, access, function (adminList) {
 
-        //TODO create function to retrieve all Admin for a specific Organization ID
-        model.getAdmins(req, access, function(result){
-
-        console.log("ADMIN: " + JSON.stringify(result, null, 2));
-       var user = req.user;
-        res.render('admin/administrators', {
-            title: 'Administrators',
-            name: user.name.givenName + " " + user.name.familyName,
-            id: user.id,
-            access: access
-        })
+            console.log("ADMIN: " + JSON.stringify(adminList, null, 2));
+            console.log("ADMINLIST: " + Object.keys(adminList));
+            var user = req.user;
+            res.render('admin/administrators', {
+                title: 'Administrators',
+                name: user.name.givenName + " " + user.name.familyName,
+                id: user.id,
+                access: access,
+                adminList: adminList
+            })
         });
     });
 });
+
+router.get('/:orgID/generate/invite', ensureAuthenticated, function (req, res, next) {
+
+    model.generateInvite(req, function (result) {
+        if(result){
+            res.send(result);
+        }
+        else{
+            res.sendStatus("404");
+        }
+    });
+});
+
+router.get('/:orgID/invite/:code', ensureAuthenticated, function (req, res, next) {
+
+        model.inviteAdmin(req, function (result) {
+            if(result){
+            res.redirect("/admin/" + req.params.orgID);
+            }
+            else{
+                res.status(404).send('Sorry, The code has expired. You will have to request it is resent.');
+            }
+    });
+});
+
+
+
+
+
 
 /**
  * TODO
