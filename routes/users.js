@@ -4,6 +4,7 @@ var passport = require('passport');
 //var GooglePlusStrategy = require('passport-google-plus');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var session = require('express-session');
+var request = require('request');
 var model = require('../models/users');
 
 
@@ -57,12 +58,42 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
 });
 
 //Check if user is in database
-router.post('/check', function (req, res, next) {
-
-    model.UserCheck(req.body, function (result) {
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({check: result}));
-    });
+router.post('/check', appAuthenticate, function (req, res, next) {
+console.log("O_O_O_O_O_O_O_O_O_O_O_O_O_O: "  + JSON.stringify(req.user, null, 2));
+        model.UserCheck(req.body, function (check) {
+            if(req.user) {
+                model.getPositions(req, function (req) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send(JSON.stringify({check: check, access: req.user}));
+                });
+            }
+            else{
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({check: check}));
+            }
+            });
 });
+
+
+//route functions
+    function appAuthenticate(req, res, next) {
+
+        request('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.id_token, function (error, response, tokenInfo) {
+            if (!error && response.statusCode == 200) {
+                console.log("CHECK: " + response.statusCode + ", " + JSON.stringify(JSON.parse(tokenInfo), null, 2));
+                //TODO: check if aud key's value matches clientID before proceeding
+
+                request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + req.body.access_token, function (error, response, userInfo) {
+                    if (!error && response.statusCode == 200) {
+                        req.user = JSON.parse(userInfo);
+                        console.log("CHECK2: " + response.statusCode + ", " + JSON.stringify(req.user, null, 2));
+
+                        return next(); //return to route
+                    }
+                })
+            }
+        })
+    }
+
 
 module.exports = router;
