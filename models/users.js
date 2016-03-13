@@ -236,7 +236,7 @@ function getAdminAccessPositions(req, callback) {
                 }
                 else {
                     req.user.Admin.GroupID = null;
-                    conn.closeSync()
+                    conn.closeSync();
                     return callback(req);
                 }
             }
@@ -249,13 +249,14 @@ function getAdminAccessPositions(req, callback) {
 function getGroups(req, callback) {
     user = req.user;
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, GROUPS.* FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN GROUPS On Groups.groupid = MEMBERS.groupid WHERE MEMBERS.userid =  \'" + user.id + "\'", function (err, rows, moreResultSets) {
+        conn.query("SELECT MEMBERS.*, ROLEPERMISSIONS.*, GROUPS.*, ORGANIZATION.org_name FROM MEMBERS INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name= MEMBERS.role_name INNER JOIN GROUPS On Groups.groupid = MEMBERS.groupid INNER JOIN Organization ON GROUPS.organizationid = ORGANIZATION.organizationid WHERE MEMBERS.userid =  \'" + user.id + "\'", function (err, rows, moreResultSets) {
             if (err) {
                 console.log(err);
+
             } else {
                 console.log("GROUP ROWS: " + JSON.stringify(rows, null, 2));
                 req.user.Groups = rows;
-                conn.closeSync()
+                conn.closeSync();
                 return callback(req);
             }
         });

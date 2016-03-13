@@ -58,10 +58,11 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
 
 //Check if user is in database
 router.post('/check', appAuthenticate, function (req, res, next) {
-//console.log("APP USER CHECK: "  + JSON.stringify(req.user, null, 2));
         model.UserCheck(req.body, function (check) {
+            console.log("USER CHECK FUNCTION");
             if(req.user) {
                 model.getPositions(req, function (req) {
+                    console.log("USER CHECK FUNCTION");
                     res.setHeader('Content-Type', 'application/json');
                     res.send(JSON.stringify({check: check == 1, user: req.user}));
                 });
@@ -85,7 +86,7 @@ router.post('/check', appAuthenticate, function (req, res, next) {
                 request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + req.body.access_token, function (error, response, userInfo) {
                     if (!error && response.statusCode == 200) {
                         req.user = JSON.parse(userInfo);
-                      //  console.log("CHECK2: " + response.statusCode + ", " + JSON.stringify(req.user, null, 2));
+                        console.log("CHECK2: " + response.statusCode + ", " + JSON.stringify(req.user, null, 2));
 
                         return next(); //return to route
                     }
