@@ -50,8 +50,9 @@ function UserCheck(profile, callback) {
             if (err) {
                 console.log(err);
             } else {
-                conn.close();
-                return callback(result[0][1]);
+                conn.close(function () {
+                    return callback(result[0][1]);
+                });
             }
         });
     });
@@ -93,22 +94,22 @@ function UserCreate(profile, callback) {
                 conn.prepare("INSERT INTO USER (UserID, name_first, name_last, dateAdded) VALUES (?, ?, ?, ?)", function (err, stmt) {
                     if (err) {
                         console.log("ERROR: " + err);
-                        return conn.closeSync();
+                        //return conn.closeSync();
                     }
 
                     stmt.execute([userid, name_first, name_last, date], function (err, result) {
                         if (err) {
                             console.log("ERROR: " + err);
+                            conn.closeSync();
                         }
                         else {
                             console.log("New user created");
-                            result.closeSync();
+                            conn.closeSync();
                         }
                     });
                 });
             }
         });
-        ibmdb.close();
     }
     else console.log("User exists");
 
@@ -137,7 +138,7 @@ function isAdmin(profile, callback) {
             admin['check'] = isAdmin;
             results = admin;
         }
-        conn.close();
+        conn.closeSync();
     } catch (e) {
         console.log(e.message);
     }
@@ -258,9 +259,8 @@ function getGroups(req, callback) {
             } else {
                 console.log("GROUP ROWS: " + JSON.stringify(rows, null, 2));
                 req.user.Groups = rows;
-                conn.close(function () {
+                conn.closeSync();
                     return callback(req);
-                });
             }
         });
     });
