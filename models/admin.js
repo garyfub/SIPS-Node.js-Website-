@@ -37,9 +37,11 @@ module.exports = {
     createGroup: createGroup,
     deleteGroup: deleteGroup,
     getGroups: getGroups,
+    //Invites
     generateInvite: generateInvite,
     inviteAdmin: inviteAdmin,
     getAdmins: getAdmins,
+    //Edit Admin
     removeAdmin: removeAdmin
 
 }
@@ -98,11 +100,13 @@ function getGroups(orgID, callback) {
                 console.log(err);
             } else {
                 //return results
-                return callback(err, rows);
+                conn.close(function () {
+                    return callback(err, rows);
+                });
             }
         });
     });
-};
+}
 
 function generateInvite(req, callback){
     var startDate =  moment().add(2, 'hours');
@@ -113,7 +117,7 @@ function generateInvite(req, callback){
         conn.prepare("UPDATE ORGANIZATION SET INVITE_CODE = '" + code + "', INVITE_TIME = '" + startDate.format('x') + "' WHERE ORGANIZATIONID = \'" + req.params.orgID + "\'", function (err, stmt) {
             if (err) {
                 console.log(err);
-                conn.closeSync()
+                conn.closeSync();
                 return callback(false);
             }
             stmt.execute(function (err, result) {
@@ -140,10 +144,13 @@ function inviteAdmin(req, callback){
                     var now = moment();
                     console.log("TIME DIFF: " + b.isAfter(now) + ", " + b.format('x') + "::" + now.format('x'));
 
-                    return callback(b.isAfter(now));
+                    conn.close(function () {
+                        return callback(b.isAfter(now));
+                    });
                 }
-                else
-                return callback(false);
+                else conn.close(function () {
+                    return callback(false);
+                });
             }
         });
     });
@@ -155,6 +162,7 @@ function getAdmins(req, access, callback){
             if (err) {
                 console.log(err);
             } else {
+                conn.closeSync();
                 return callback(rows);
             }
         });

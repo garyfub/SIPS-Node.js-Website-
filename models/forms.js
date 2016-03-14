@@ -51,7 +51,7 @@ function addFormEntry(req, callback) {
     var year = dateObj.getUTCFullYear();
     var date = year + "-" + month + "-" + day;
 
-    console.log("formEntryID: " + formEntryID);
+    //console.log("formEntryID: " + formEntryID);
 
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
@@ -72,7 +72,7 @@ function addFormEntry(req, callback) {
                     }
                     else {
                         console.log("New " + formType + " Entry added to FORMENTRYLIST");
-                        result.closeSync();
+                        conn.closeSync();
 
                         //Add calls to function based on form id here
                         switch (formType) {

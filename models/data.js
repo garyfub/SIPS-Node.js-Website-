@@ -67,7 +67,10 @@ function getUserTaskData(req, callback) {
     } catch (e) {
         console.log(e.message);
     }
-    return callback(results);
+
+    conn.close(function () {
+        return callback(results);
+    });
 }
 
 

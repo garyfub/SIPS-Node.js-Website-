@@ -59,7 +59,7 @@ function UserCheck(profile, callback) {
 
 //Adds user to database after checking if they exist
 function UserCreate(profile, callback) {
-    console.log(JSON.stringify(profile, null, 2))
+    console.log(JSON.stringify(profile, null, 2));
     var userid = profile.id;
     var name_first = profile.name.hasOwnProperty("givenName") ? profile.name.givenName : "";
     var name_last = profile.name.hasOwnProperty("familyName") ? profile.name.familyName : "";
@@ -232,7 +232,9 @@ function getAdminAccessPositions(req, callback) {
                             }
                         });
                     }
-                    return callback(req);
+                    conn.close(function () {
+                        return callback(req);
+                    });
                 }
                 else {
                     req.user.Admin.GroupID = null;
@@ -256,8 +258,9 @@ function getGroups(req, callback) {
             } else {
                 console.log("GROUP ROWS: " + JSON.stringify(rows, null, 2));
                 req.user.Groups = rows;
-                conn.closeSync();
-                return callback(req);
+                conn.close(function () {
+                    return callback(req);
+                });
             }
         });
     });
