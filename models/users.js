@@ -280,8 +280,9 @@ function appGetGroupMembers(req, callback) {
         for (var i = 0; i < adminLength; i++) {
             admin = req.user["Admin"][i];
 
+
             //return if no groups
-            if(!req.hasOwnProperty("Admin"))
+            if(!req.user.hasOwnProperty("Admin"))
             return callback(req);
 
             groups = admin.GROUPS;
@@ -292,7 +293,6 @@ function appGetGroupMembers(req, callback) {
 
                 console.log("GROUP: " + t);
 
-               // if(group.hasOwnProperty("GROUPID"))
                 var rows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
                     if (err) {
                         console.log("ERROR: " + err);
