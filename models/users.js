@@ -38,7 +38,8 @@ module.exports = {
     getPositions: getPositions,
     getPermissions: getPermissions,
     getAdminAccessPositions: getAdminAccessPositions,
-    getGroups: getGroups
+    getGroups: getGroups,
+    appGetGroupMembers: appGetGroupMembers
 }
 
 //Checks for user in database
@@ -260,8 +261,57 @@ function getGroups(req, callback) {
                 console.log("GROUP ROWS: " + JSON.stringify(rows, null, 2));
                 req.user.Groups = rows;
                 conn.closeSync();
-                    return callback(req);
+                return callback(req);
             }
         });
+    });
+}
+
+//Retrieves group members and places them within the req.user.Admin.GROUPS object in the corresponding sub-object for the group
+function appGetGroupMembers(req, callback) {
+
+    ibmdb.open(dsnString, function (err, conn) {
+        if(err) {
+            console.log(err);
+            return callback(req);
+        }
+
+        var adminLength = Object.keys(req.user.Admin).length;
+        for (var i = 0; i < adminLength; i++) {
+            admin = req.user["Admin"][i];
+
+            //return if no groups
+            if(!req.hasOwnProperty("Admin"))
+            return callback(req);
+
+            groups = admin.GROUPS;
+            var groupLength = Object.keys(groups).length;
+            for (var t = 0; t < groupLength; t++) {
+                group = groups[t + ""];
+                group["Members"] = {};
+
+                console.log("GROUP: " + t);
+
+               // if(group.hasOwnProperty("GROUPID"))
+                var rows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
+                    if (err) {
+                        console.log("ERROR: " + err);
+                        return callback(req);
+                    } else {
+                        group["Members"] = rows;
+
+
+                        console.log("//QUERY MADE//" );
+                        if (i == (adminLength-1) && t == (groupLength-1)) {
+
+                            console.log("EXIT CHECK: GROUP: " + t + " of " + (groupLength - 1) + " Org: " + i + " of " + adminLength);
+                            console.log("CALLBACK CALLED");
+                            conn.close(function () {
+                                return callback(req);
+                            });
+                        }
+                    }
+            }
+        }
     });
 }

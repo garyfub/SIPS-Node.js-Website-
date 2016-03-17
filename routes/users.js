@@ -61,10 +61,15 @@ router.post('/check', appAuthenticate, function (req, res, next) {
         model.UserCheck(req.body, function (check) {
             console.log("USER CHECK FUNCTION");
             if(req.user) {
-                model.getPositions(req, function (req) {
+                model.getPositions(req, function (results) {
                     console.log("USER CHECK FUNCTION");
+                    model.appGetGroupMembers(results, function(req){
+
+                    console.log("FINAL APP OBJECT: " + JSON.stringify(req.user.Admin, null, 2));
                     res.setHeader('Content-Type', 'application/json');
                     res.send(JSON.stringify({check: check == 1, user: req.user}));
+
+                    });
                 });
             }
             else{
