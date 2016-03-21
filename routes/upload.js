@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var request = require('request');
 var model = require('../models/upload');
 var modelForm = require('../models/forms');
 var modelUsers = require('../models/users');
@@ -12,6 +13,7 @@ router.get('/', function (req, res, next) {
 //Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
+        appAuthenticate(req, null, function(){
         console.log("Socket connection made for uploading app data");
         console.log("Object keys: " + Object.keys(req));
 
@@ -20,10 +22,13 @@ io.of('/upload').on('connection', function (socket) {
                 modelUsers.UserCreate(req.user, function (user) {
                 });
             }
+            /*
             model.taskEntry(req.user, req.body, function () {
                 socket.emit('Done');
                 //socket.disconnect('unauthorized');
             });
+            */
+        });
         });
     });
 });
@@ -50,6 +55,26 @@ router.post('/form', function (req, res, next) {
         });
     });
 });
+
+//route functions
+function appAuthenticate(req, res, next) {
+    //console.log("APP AUTHENTICATION CALLED");
+    request('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.id_token, function (error, response, tokenInfo) {
+        if (!error && response.statusCode == 200) {
+            // console.log("CHECK: " + response.statusCode + ", " + JSON.stringify(JSON.parse(tokenInfo), null, 2));
+            //TODO: check if aud key's value matches clientID before proceeding. Double checks that response is related to project
+
+            request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + req.body.access_token, function (error, response, userInfo) {
+                if (!error && response.statusCode == 200) {
+                    req.user = JSON.parse(userInfo);
+                    console.log("CHECK2: " + response.statusCode + ", " + JSON.stringify(req.user, null, 2));
+
+                    return next(); //return to route
+                }
+            })
+        }
+    })
+}
 
 
 module.exports = router;

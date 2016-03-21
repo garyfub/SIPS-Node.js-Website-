@@ -1,32 +1,44 @@
 This file is for an ongoing to-do list for the project.
-========================================================
+=========================================================================================================================================
 
 Website
-TODO: Update Database to latest diagram
-    TODO: Refactor changes into code
+=======================
 COMPLETE: Populate Sessions tab in group edit page.
     COMPLETE: Include modal for adding/updating sessions and another for removing sessions.
 TODO: Make sure form is mandatory at the beginning and end of seasonal(?) length sessions, but only at the beginning of daily sessions?
 TODO: CREATE Profile edit page. (Basic page with form fields that update user when submitted)
-TODO: Add description and image fields to groups and organizations on group and group edit pages and also display them on the homepage's group list.
-COMPLETE: Move Group-related functions from models/admin to models/group. Possibly renaming models/admin to models/org in the process
+TODO/PARTIAL: Add description and image fields to groups and organizations on group and group edit pages and also display them on the homepage's group list.
+COMPLETE: Move Group-related functions from models/admin to models/group.
 TODO: Create "Admin" tab in views/admin/dash or separate page for editing other Admin.
-    TODO: Set it so the default Admin cannot be removed from the Organization
-    TODO: Use Invite code for adding Admin users? Single and limited time use only?
+    TODO/PARTIAL: Set it so the default Admin cannot be removed from the Organization
+    TODO/PARTIAL: Use Invite code for adding Admin users? Single and limited time use only?
 
-TODO: Troubleshoot everything
+
+Website/app connection
+=======================
+COMPLETE: Authenticate id and access tokens on server
+TODO: Check task data for MEMBER sub-JSONObject. Use the info to fill the UserID, groupID, and sessionID(?) in the TASKENTRYLIST table.
+
 
 Android
-TODO: Retrieve access object during user check call
-TODO: Get SQLite file in internal storage for holding user info and access permissions
-TODO: Save and use Access/Refresh tokens with the server to keep login persistent
+=======================
+COMPLETE: Retrieve access object during user check call
+COMPLETE: Get SQLite file in internal storage for holding user info and access permissions
+COMPLETE: Save user info and reuse Access tokens from the server to keep login persistent when there is no internet connection
+TODO: Set a limit of days login will work without access to server(?)
+TODO: Find refresh token location in id token and how to use it from the server to retrieve an update to the access token for sustaining login.
+COMPLETE: Create a way for person to select an Organization, group, and member of group for testing. Also add a way to select a task.
+COMPLETE: Create SQLite database Schema with tables for showing Organizations and groups that the user has been invited to and joined.
+TODO/PARTIAL: Only retrieve members of groups if the Group_Edit permission is set to 1.
+TODO: Retrieve task task list from server. (Are tasks on a per-group basis? Server can send premium tasks if Organization has the appropriate plan.
 
 Android - Give_tests permission == 1 or Admin
-TODO: Retrieve and save list of each group's members in the SQLite file
-TODO: Display list of groups/organizations accessible to active user after login (menu button leading to list activity, sidebar?)
-    TODO: Display the group's members in a list
-    TODO: If user selects a member the menu for that user should be displayed (then the exercise list, profile, etc)
+=======
+COMPLETE: Retrieve and save list of each group's members in the SQLite file
+COMPLETE: Display list of groups/organizations accessible to active user after login (menu button leading to list activity, sidebar?)
+    COMPLETE: Display the group's members in a list
+    TODO/PARTIAL: If user selects a member the menu for that user should be displayed (then the exercise list, profile, etc)
 
-    TODO: Need a way to quickly switch from one member to another with minimal clicks by user.
+    TODO/PARTIAL: Need a way to quickly switch from one member to another with minimal clicks by user.
 
 

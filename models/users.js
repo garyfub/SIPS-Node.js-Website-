@@ -269,21 +269,24 @@ function getGroups(req, callback) {
 
 //Retrieves group members and places them within the req.user.Admin.GROUPS object in the corresponding sub-object for the group
 function appGetGroupMembers(req, callback) {
-
     ibmdb.open(dsnString, function (err, conn) {
         if(err) {
             console.log(err);
             return callback(req);
         }
 
+        //console.log("CHECH: " + JSON.stringify(req.user, null, 2));
+
         var adminLength = Object.keys(req.user.Admin).length;
+
+        //return if not an admin
+        if(req.user["isAdmin"] == 0) {
+            return callback(req);
+        }
+
         for (var i = 0; i < adminLength; i++) {
             admin = req.user["Admin"][i];
 
-
-            //return if no groups
-            if(!req.user.hasOwnProperty("Admin"))
-            return callback(req);
 
             groups = admin.GROUPS;
             var groupLength = Object.keys(groups).length;
