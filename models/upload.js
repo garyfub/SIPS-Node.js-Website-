@@ -116,7 +116,7 @@ function userCheckUpload(msg, callback) {
 
 function taskEntry(user, data, callback) {
     var taskEntryID = uuid.v1();
-    var userID = user.id;
+    var userID = data.testedMember.id != null ? data.testedMember.id : user.id;
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1;
     var day = dateObj.getUTCDate();
@@ -129,28 +129,33 @@ function taskEntry(user, data, callback) {
     //App Sensor data specific Properties
     var appSensorData = data.hasOwnProperty("appsensor") ? 1 : 0;
     var userInput = data.hasOwnProperty("tasknotes") ? data.tasknotes : "null";
+    var groupID = data.hasOwnProperty("groupID") ? data.groupID : "null";
 
+    console.log("USERID: " + userID);
+    console.log("USER INPUT: " + userInput);
     ibmdb.open(dsnString, function (err, conn) {
         if (err) {
             console.log("ERROR" + err);
         } else {
 
             //Preparing to excecute SQL command, ? are placements for values given in the execute command
-            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, TaskNotes, appsensordata, flankerdata, DateAdded) VALUES ( ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, groupID, TaskNotes, appsensordata, flankerdata, DateAdded) VALUES ( ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
                     console.log(err);
                     return conn.closeSync();
                 }
-                stmt.execute([taskEntryID, String(userID), String(userInput), appSensorData, flankerdata, date], function (err, result) {
+                stmt.execute([taskEntryID, String(userID), String(groupID), String(userInput), appSensorData, flankerdata, date], function (err, result) {
                     if (err) {
                         console.log("ERROR: " + err);
                     }
                     else {
+                        /*
                         if (flankerdata == 1)
                             flanker(data.flanker, taskEntryID, callback);
 
                         if (appSensorData == 1)
                             appsensor(data.appsensor, taskEntryID, callback);
+                            */
                     }
                 });
             });

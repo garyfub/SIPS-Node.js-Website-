@@ -13,24 +13,25 @@ router.get('/', function (req, res, next) {
 //Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
-        appAuthenticate(req, null, function(){
-        console.log("Socket connection made for uploading app data");
-        console.log("Object keys: " + Object.keys(req));
+        appAuthenticate(req, null, function () {
+            console.log("Socket connection made for uploading app data");
+            console.log("Object keys: " + Object.keys(req));
 
-        modelUsers.UserCheck(req.user, function (result) {
-            if (result == 0) {
-                modelUsers.UserCreate(req.user, function (user) {
-                });
-            }
             /*
-            model.taskEntry(req.user, req.body, function () {
-                socket.emit('Done');
-                //socket.disconnect('unauthorized');
+            modelUsers.UserCheck(req.user, function (result) {
+                if (result == 0) {
+                    modelUsers.UserCreate(req.user, function (user) {
+                    });
+                }
+                */
+                
+                 model.taskEntry(req.user, req.body, function () {
+                 socket.emit('Done');
+                 //socket.disconnect('unauthorized');
+                 });
             });
-            */
         });
-        });
-    });
+   // });
 });
 
 
