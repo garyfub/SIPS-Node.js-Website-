@@ -82,21 +82,26 @@ router.post('/check', appAuthenticate, function (req, res, next) {
 
 //route functions
     function appAuthenticate(req, res, next) {
-
+        console.log("APP AUTHENTICATE");
         request('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.id_token, function (error, response, tokenInfo) {
-            if (!error && response.statusCode == 200) {
-               // console.log("CHECK: " + response.statusCode + ", " + JSON.stringify(JSON.parse(tokenInfo), null, 2));
+            if (response.statusCode != 200) {
+                console.log("appAuth Error: status is " + response.statusCode + ", " + error);
+                res.status(response.statusCode);
+            }
+                console.log("APP TOKEN RESULT STATUS: " + response.statusCode);
                 //TODO: check if aud key's value matches clientID before proceeding
 
                 request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + req.body.access_token, function (error, response, userInfo) {
-                    if (!error && response.statusCode == 200) {
+                    if (response.statusCode != 200) {
+                        console.log("appAuth Error: status is " + response.statusCode + ", " + error);
+                        res.status(response.statusCode);
+                    }
                         req.user = JSON.parse(userInfo);
-                        console.log("CHECK2: " + response.statusCode + ", " + JSON.stringify(req.user, null, 2));
+                        console.log("APP ACCESS TOKEN RESULT STATUS: " + response.statusCode);
 
                         return next(); //return to route
-                    }
+                    
                 })
-            }
         })
     }
 

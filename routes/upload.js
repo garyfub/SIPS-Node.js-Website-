@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
 //Socket request to recieve data from app and calls to model to insert it into database
 io.of('/upload').on('connection', function (socket) {
     socket.on('data', function (req) {
-        appAuthenticate(req, null, function () {
+        //appAuthenticate(req, null, function () {
             console.log("Socket connection made for uploading app data");
             console.log("Object keys: " + Object.keys(req));
 
@@ -30,7 +30,7 @@ io.of('/upload').on('connection', function (socket) {
                  //socket.disconnect('unauthorized');
                  });
             });
-        });
+       // });
    // });
 });
 
