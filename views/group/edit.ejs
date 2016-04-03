@@ -378,8 +378,13 @@
             </div>
             <div class="form-group">
                 <label for="email_body">Message body:</label>
-                <p class="well">Hello, this is an invitation to join <%= groupName %> on SIPS. Please enter this code
-                    after logging in with the Gmail account you want to use: <%= inviteCode %></p>
+                <div class="well email-body">
+                    <p>Hello, this is an invitation to join <%= groupName %> on SIPS. Please follow these steps in order.</p>
+                    <p>1. Login with your Google account at http://sipsapp.org</p>
+                    <p>2. Enter the code <%= inviteCode %> in the "Join Group" box on the sidebar on the right.</p>
+                    <p>(Alternatively go to: http://sipsapp.org/group/invite/<%= inviteCode %> after step 1)</p>
+                </div>
+
                 <textarea type="text" class="form-control" id="email_body" name="email_body" rows="5"></textarea>
             </div>
 
@@ -644,7 +649,7 @@
 
                     var email = $('#email_to').val();
                     var subject = $('#email_subject').val();
-                    var emailBody = 'Hello, this is an invitation to join <%= groupName %> on SIPS. Please enter this code after logging in with the Gmail account you want to use: <%= inviteCode %> . %0D%0A' + $('#email_body').val();
+                    var emailBody = 'Hello, this is an invitation to join <%= groupName %> on SIPS. Please follow these steps in order. %0D%0A 1. Login with your Google account at http://sipsapp.org %0D%0A 2. Enter the code <%= inviteCode %> in the "Join Group" box on the sidebar on the right. %0D%0A(Alternatively go to: http://sipsapp.org/group/invite/<%= inviteCode %> after step 1) %0D%0A ' + $('#email_body').val();
                     window.location = 'mailto:' + email + '?subject=' + subject + '&body=' + emailBody;
                 },
                 "Cancel": function () {

@@ -63,10 +63,25 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
 
 });
 
+router.get('/group/invite/:code', ensureAuthenticated, function (req, res, next) {
+
+    req.body.code_insert = req.params.code;
+
+    model_groups.inviteCode(req, function (err) {
+        if (!err)
+            model_users.getPositions(req, function (req) {
+                res.redirect('/'); //success
+            });
+        else
+            res.sendStatus(404); //fail
+    });
+
+});
+
 
 /**
  * Opens Results page
- * TODO: Seperate results page for users and admin (for groups/organizations)?
+ * TODO: Separate results page for users and admin (for groups/organizations)?
  */
 router.get('/results', ensureAuthenticated, function (req, res, next) {
 

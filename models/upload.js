@@ -117,11 +117,18 @@ function userCheckUpload(msg, callback) {
 function taskEntry(user, data, callback) {
     var taskEntryID = uuid.v1();
     var userID = data.testedMember.id != null ? data.testedMember.id : user.id;
+    
+    //retrieve ID of person who administered test if memberID has a value
+    var testedBy= data.testedMember.id != null ? user.id : "";
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1;
     var day = dateObj.getUTCDate();
     var year = dateObj.getUTCFullYear();
     var date = year + "-" + month + "-" + day;
+
+    
+    //TODO: temporarily set to use Task ID set manually on app. Should be changed to use taskID from a table of tasks in the database.
+    var taskType = data.task.id;
 
     //Flankerdata specific properties
     var flankerdata = data.hasOwnProperty("flanker") ? 1 : 0;
@@ -139,12 +146,12 @@ function taskEntry(user, data, callback) {
         } else {
 
             //Preparing to excecute SQL command, ? are placements for values given in the execute command
-            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, groupID, TaskNotes, appsensordata, flankerdata, DateAdded) VALUES ( ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, groupID, TaskNotes, appsensordata, flankerdata, DateAdded, TaskType, TestedBy) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
                     console.log(err);
                     return conn.closeSync();
                 }
-                stmt.execute([taskEntryID, String(userID), String(groupID), String(userInput), appSensorData, flankerdata, date], function (err, result) {
+                stmt.execute([taskEntryID, String(userID), String(groupID), String(userInput), appSensorData, flankerdata, date, taskType, testedBy], function (err, result) {
                     if (err) {
                         console.log("ERROR: " + err);
                     }
