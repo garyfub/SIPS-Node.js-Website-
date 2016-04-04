@@ -220,19 +220,15 @@ function getAdminAccessPositions(req, callback) {
                         var admin = req.user.Admin[i];
                         admin.GROUPS = {};
                         groups = admin.GROUPS;
-
-                        conn.query("SELECT GROUPID, GROUP_NAME FROM GROUPS WHERE ORGANIZATIONID =  \'" + req.user.Admin[i].ORGANIZATIONID + "\'", function (err, rows, moreResultSets) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                for (var t = 0; t < Object.keys(rows).length; t++) {
-                                    admin["GROUPS"][t] = {};
-                                    admin["GROUPS"][t]["GROUPID"] = rows[t]["GROUPID"];
-                                    admin["GROUPS"][t]["GROUP_NAME"] = rows[t]["GROUP_NAME"];
-                                }
-                                console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
-                            }
-                        });
+                        console.log("Org " + i + ":  " + Object.keys(rows).length);
+                        gRows = conn.querySync("SELECT GROUPID, GROUP_NAME FROM GROUPS WHERE ORGANIZATIONID =  \'" + req.user.Admin[i].ORGANIZATIONID + "\'");
+                        for (var t = 0; t < Object.keys(gRows).length; t++) {
+                            admin["GROUPS"][t] = {};
+                            admin["GROUPS"][t]["GROUPID"] = gRows[t]["GROUPID"];
+                            admin["GROUPS"][t]["GROUP_NAME"] = gRows[t]["GROUP_NAME"];
+                        }
+                        // console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
+                    
                     }
                     conn.close(function () {
                         return callback(req);

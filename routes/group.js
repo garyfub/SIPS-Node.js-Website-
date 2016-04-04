@@ -59,7 +59,7 @@ function edit_group_callback(req, res, access, gid) {
 
     model.getGroupInfo(gid, function (groupInfo) {
 
-        console.log("SESSION: " + Object.keys(groupInfo.sessions[0]));
+    //    console.log("SESSION: " + Object.keys(groupInfo.sessions[0]));
         if (access.GROUP_EDITING == 1) {
             res.render('group/edit', {
                 title: 'Edit Group',
