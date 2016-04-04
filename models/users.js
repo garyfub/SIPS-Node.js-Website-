@@ -220,14 +220,13 @@ function getAdminAccessPositions(req, callback) {
                         var admin = req.user.Admin[i];
                         admin.GROUPS = {};
                         groups = admin.GROUPS;
-                        console.log("Org " + i + ":  " + Object.keys(rows).length);
                         gRows = conn.querySync("SELECT GROUPID, GROUP_NAME FROM GROUPS WHERE ORGANIZATIONID =  \'" + req.user.Admin[i].ORGANIZATIONID + "\'");
                         for (var t = 0; t < Object.keys(gRows).length; t++) {
                             admin["GROUPS"][t] = {};
                             admin["GROUPS"][t]["GROUPID"] = gRows[t]["GROUPID"];
                             admin["GROUPS"][t]["GROUP_NAME"] = gRows[t]["GROUP_NAME"];
                         }
-                        // console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
+                         console.log("ADMIN ROW: " + JSON.stringify(req.user.Admin, null, 2));
                     
                     }
                     conn.close(function () {
@@ -271,9 +270,23 @@ function appGetGroupMembers(req, callback) {
             return callback(req);
         }
 
-        //console.log("CHECH: " + JSON.stringify(req.user, null, 2));
+        //console.log("CHECK: " + JSON.stringify(req.user, null, 2));
 
         var adminLength = Object.keys(req.user.Admin).length;
+        var gLength = Object.keys(req.user.Groups).length;
+
+        for(var y = 0; y < gLength; y++){
+            var groups = req.user.Groups;
+            var group = groups[y];
+           
+            if(group["GROUP_TEST"] == 1) {
+                group["Members"] = {};
+                var rows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
+                group["Members"] = rows;
+
+                console.log("HAS GROUP TEST PERMISSIONS" + JSON.stringify(group, null, 2));
+            }
+        }
 
         //return if not an admin
         if(req.user["isAdmin"] == 0) {
@@ -285,7 +298,7 @@ function appGetGroupMembers(req, callback) {
 
 
             groups = admin.GROUPS;
-            var groupLength = Object.keys(groups).length;
+            groupLength = Object.keys(groups).length;
             for (var t = 0; t < groupLength; t++) {
                 group = groups[t + ""];
                 group["Members"] = {};
@@ -293,23 +306,16 @@ function appGetGroupMembers(req, callback) {
                 console.log("GROUP: " + t);
 
                 var rows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
-                    if (err) {
-                        console.log("ERROR: " + err);
-                        return callback(req);
-                    } else {
                         group["Members"] = rows;
-
-
-                        console.log("//QUERY MADE//" );
+                        //console.log("//QUERY MADE//" );
                         if (i == (adminLength-1) && t == (groupLength-1)) {
 
-                            console.log("EXIT CHECK: GROUP: " + t + " of " + (groupLength - 1) + " Org: " + i + " of " + adminLength);
-                            console.log("CALLBACK CALLED");
+                           // console.log("EXIT CHECK: GROUP: " + t + " of " + (groupLength - 1) + " Org: " + i + " of " + adminLength);
+                           // console.log("CALLBACK CALLED");
                             conn.close(function () {
                                 return callback(req);
                             });
                         }
-                    }
             }
         }
     });
