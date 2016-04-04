@@ -282,14 +282,14 @@ function groupCreatePosition(data, callback) {
     if (!obj.hasOwnProperty('groupTests')) {
         obj.groupTests = 0;
     }
-    //console.log("Create POSITION: " + JSON.stringify(obj, null, 2));
+    console.log("Create POSITION: " + JSON.stringify(obj, null, 2));
     ibmdb.open(dsnString, function (err, conn) {
         conn.prepare("insert into ROLEPERMISSIONS (organizationID, groupID, Role_name, Group_Editing, Group_Sessions, Group_Members, Group_Positions, Group_Results, Group_Test, org_initial, org_groupCreate, org_groupDelete, org_editAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
             if (err) {
                 console.log(err);
                 return conn.closeSync();
             }
-            stmt.execute([obj.orgID, data.groupID, obj.positionTitle, obj.groupEdit, obj.groupSessions, obj.groupMembers, obj.groupPositions, obj.groupResults, obj.groupTests, -1, -1, -1, -1], function (err, result) {
+            stmt.execute([obj.orgID, data.groupID, obj.positionTitle, parseInt(obj.groupEdit), parseInt(obj.groupSessions), parseInt(obj.groupMembers), parseInt(obj.groupPositions), parseInt(obj.groupResults), parseInt(obj.groupTests), -1, -1, -1, -1], function (err, result) {
                 if (err) console.log(err);
                 else conn.close(function () {
                     return callback();
