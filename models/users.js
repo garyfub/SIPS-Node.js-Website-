@@ -275,15 +275,25 @@ function appGetGroupMembers(req, callback) {
         var adminLength = Object.keys(req.user.Admin).length;
         var gLength = Object.keys(req.user.Groups).length;
 
+        var dateObj = new Date();
+        var currentDate = dateObj.getUTCFullYear() + "-" + (dateObj.getUTCMonth() + 1) + "-" + dateObj.getUTCDate();
+
         for(var y = 0; y < gLength; y++){
             var groups = req.user.Groups;
             var group = groups[y];
            
             if(group["GROUP_TEST"] == 1) {
                 group["Members"] = {};
-                var rows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
-                group["Members"] = rows;
+                
+                //Add Members
+                var mRows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
+                group["Members"] = mRows;
 
+                //Add Sessions
+                var sRows = conn.querySync("SELECT * FROM SESSIONS WHERE groupid =  \'" + group["GROUPID"] + "\' AND \'" + currentDate + "\' BETWEEN start_date AND end_date");
+                console.log("SESSIONS: " + JSON.stringify(sRows, null, 2));
+                group["Sessions"] = sRows;
+                
                 console.log("HAS GROUP TEST PERMISSIONS" + JSON.stringify(group, null, 2));
             }
         }
@@ -301,12 +311,17 @@ function appGetGroupMembers(req, callback) {
             groupLength = Object.keys(groups).length;
             for (var t = 0; t < groupLength; t++) {
                 group = groups[t + ""];
-                group["Members"] = {};
+                //console.log("GROUP: " + t);
 
-                console.log("GROUP: " + t);
-
+                //Add Group Members
                 var rows = conn.querySync("SELECT USER.*, MEMBERS.*, ROLEPERMISSIONS.* FROM MEMBERS INNER JOIN USER ON USER.userid = MEMBERS.userid INNER JOIN ROLEPERMISSIONS ON Rolepermissions.role_name = MEMBERS.role_name WHERE MEMBERS.groupid =  \'" + group["GROUPID"] + "\'");
                         group["Members"] = rows;
+
+                //Add Group Sessions
+                var sRows = conn.querySync("SELECT * FROM SESSIONS WHERE groupid =  \'" + group["GROUPID"] + "\' AND \'" + currentDate + "\' BETWEEN start_date AND end_date");
+                console.log("SESSIONS: " + JSON.stringify(sRows, null, 2));
+                group["Sessions"] = sRows;
+                
                         //console.log("//QUERY MADE//" );
                         if (i == (adminLength-1) && t == (groupLength-1)) {
 

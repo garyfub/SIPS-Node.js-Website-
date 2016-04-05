@@ -137,6 +137,7 @@ function taskEntry(user, data, callback) {
     var appSensorData = data.hasOwnProperty("appsensor") ? 1 : 0;
     var userInput = data.hasOwnProperty("tasknotes") ? data.tasknotes : "null";
     var groupID = data.hasOwnProperty("groupID") ? data.groupID : "null";
+    var sessionID = data.hasOwnProperty("sessionID") ? data.sessionID : "null";
 
     console.log("USERID: " + userID);
     console.log("USER INPUT: " + userInput);
@@ -146,23 +147,24 @@ function taskEntry(user, data, callback) {
         } else {
 
             //Preparing to excecute SQL command, ? are placements for values given in the execute command
-            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, groupID, TaskNotes, appsensordata, flankerdata, DateAdded, TaskType, TestedBy) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
+            conn.prepare("INSERT INTO TaskEntryList ( TaskEntryID, USERID, groupID, TaskNotes, appsensordata, flankerdata, DateAdded, TaskType, TestedBy, sessionID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", function (err, stmt) {
                 if (err) {
                     console.log(err);
                     return conn.closeSync();
                 }
-                stmt.execute([taskEntryID, String(userID), String(groupID), String(userInput), appSensorData, flankerdata, date, taskType, testedBy], function (err, result) {
+                stmt.execute([taskEntryID, String(userID), String(groupID), String(userInput), appSensorData, flankerdata, date, taskType, testedBy, sessionID], function (err, result) {
                     if (err) {
                         console.log("ERROR: " + err);
                     }
                     else {
-
+/*
                         if (flankerdata == 1)
                             flanker(data.flanker, taskEntryID, callback);
 
                         if (appSensorData == 1)
                             appsensor(data.appsensor, taskEntryID, callback);
-                        
+
+                        */
                     }
                 });
             });
