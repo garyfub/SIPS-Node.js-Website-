@@ -28,14 +28,26 @@ postTarget = "/forms/next";
 
         <!-- Question 1 -->
         <article id="apage_1" class="part1 visible Question1">
-            <h3 class="control-label">What is your name? </h3>
-            <span class="q-container">
-                <input id="fname" name="fname" class="element text medium other required" maxlength="30" value=""
-                       type="text"
-                       oninput="checkInput_URF(this)" placeholder="First name">
-                <input id="lname" name="lname" class="element text medium other required" maxlength="30" value=""
-                       type="text"
-                       oninput="checkInput_URF(this)" placeholder="Last name">
+            <h2>Consent Agreement</h2>
+            <div class="well">
+                <p>Entering your name and clicking on the “Next” button below will serve as confirmation that you have
+                    read and understand the following:</p>
+                <p>My parent/legal guardian has provided my school athletic program with documentation of permission for
+                    my participation in one or more sports. The responses entered for the following survey items will be
+                    used as part of the pre-participation examination that is required for sport participation. I affirm
+                    that my responses to the survey questions will be complete and correct.</p>
+                <p>I understand that information pertaining to any previous or future sport-related injury will be
+                    combined with that provided by other athletes for improvement of efforts to prevent injuries. I
+                    understand that the results may be published and/or presented at professional meetings, which will
+                    not include any personal information that could reveal my identity.</p>
+            </div>
+            <h3 class="control-label">Please enter your name to continue: </h3>
+            <input id="fname" name="fname" class="element text medium other required" maxlength="30" value=""
+                   type="text"
+                   oninput="checkInput_URF(this)" placeholder="First name">
+            <input id="lname" name="lname" class="element text medium other required" maxlength="30" value=""
+                   type="text"
+                   oninput="checkInput_URF(this)" placeholder="Last name">
             </span>
             <div class="" style="float:right;"></div>
         </article>
@@ -219,8 +231,7 @@ postTarget = "/forms/next";
 
 <script type="text/javascript">
     $(window).load(function () {
-        $('#consent-modal').modal('show');
-        $('#consent-modal').modal({backdrop: 'static', keyboard: false});
+        // $('#consent-modal').modal('show');
     });
 
     $('#consent-not-confirmed').click(function (e) {

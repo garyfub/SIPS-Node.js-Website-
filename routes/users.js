@@ -41,12 +41,12 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
 
         if (isNew == 1) {//if user id is located in db
 
-            model.getPositions(req, function (req) {
-                console.log("ADMIN: " + Object.keys(req.user.Admin));
-                console.log("GROUP: " + Object.keys(req.user.Groups));
+           // model.getPositions(req, function (req) {
+               // console.log("ADMIN: " + Object.keys(req.user.Admin));
+               // console.log("GROUP: " + Object.keys(req.user.Groups));
 
                 res.redirect('/');
-            });
+            //});
         }
         else {
             model.UserCreate(req.user, function () {
