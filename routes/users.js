@@ -49,9 +49,7 @@ router.all('/auth/google/callback', passport.authenticate('google', {failureRedi
             //});
         }
         else {
-            model.UserCreate(req.user, function () {
                 res.redirect('/forms/user-registration');
-            });
         }
     });
 });

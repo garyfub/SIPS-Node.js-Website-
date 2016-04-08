@@ -66,10 +66,12 @@ router.post('/code-submit', ensureAuthenticated, function (req, res, next) {
 
 });
 
-router.get('/group/invite/:code', ensureAuthenticated, function (req, res, next) {
+router.get('/group/invite/:code/:num?', ensureAuthenticated, function (req, res, next) {
 
     req.body.code_insert = req.params.code;
-
+   if(req.params.num){
+       req.body.pos_num = req.params.num;
+   }
     model_groups.inviteCode(req, function (err) {
         if (!err)
             model_users.getPositions(req, function (req) {

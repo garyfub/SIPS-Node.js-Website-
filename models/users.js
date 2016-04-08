@@ -63,8 +63,8 @@ function UserCheck(profile, callback) {
 function UserCreate(profile, callback) {
     console.log(JSON.stringify(profile, null, 2));
     var userid = profile.id;
-    var name_first = profile.name.hasOwnProperty("givenName") ? profile.name.givenName : "";
-    var name_last = profile.name.hasOwnProperty("familyName") ? profile.name.familyName : "";
+    var name_first = ""; //profile.name.hasOwnProperty("givenName") ? profile.name.givenName : "";
+    var name_last = "";  //profile.name.hasOwnProperty("familyName") ? profile.name.familyName : "";
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1;
     var day = dateObj.getUTCDate();
@@ -154,8 +154,6 @@ function getPositions(req, callback) {
             return callback(req);
         });
     });
-
-
 }
 
 /**

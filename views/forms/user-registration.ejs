@@ -42,10 +42,10 @@ postTarget = "/forms/next";
                     not include any personal information that could reveal my identity.</p>
             </div>
             <h3 class="control-label">Please enter your name to continue: </h3>
-            <input id="fname" name="fname" class="element text medium other required" maxlength="30" value=""
+            <input id="fname" name="fname" class="element text medium other hidden" maxlength="30" value="n/a"
                    type="text"
                    oninput="checkInput_URF(this)" placeholder="First name">
-            <input id="lname" name="lname" class="element text medium other required" maxlength="30" value=""
+            <input id="lname" name="lname" class="element text medium other hidden" maxlength="30" value="n/a"
                    type="text"
                    oninput="checkInput_URF(this)" placeholder="Last name">
             </span>
@@ -183,40 +183,7 @@ postTarget = "/forms/next";
     </div>
 
     <input name="form_id" value="registrationform" type="hidden">
-
-
 </form>
-
-<!-- Position Removal Modal -->
-<div id="consent-modal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Consent Agreement</h4>
-            </div>
-            <div class="modal-body">
-                <p>Entering your name and clicking on the “Next” button below will serve as confirmation that you have
-                    read and understand the following:</p>
-                <p>My parent/legal guardian has provided my school athletic program with documentation of permission for
-                    my participation in one or more sports. The responses entered for the following survey items will be
-                    used as part of the pre-participation examination that is required for sport participation. I affirm
-                    that my responses to the survey questions will be complete and correct.</p>
-                <p>I understand that information pertaining to any previous or future sport-related injury will be
-                    combined with that provided by other athletes for improvement of efforts to prevent injuries. I
-                    understand that the results may be published and/or presented at professional meetings, which will
-                    not include any personal information that could reveal my identity</p>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="consent-not-confirmed" class="btn btn-default">No</button>
-                <button type="button" id="consent-confirmed" class="btn btn-success" data-dismiss="modal">Next
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -228,22 +195,5 @@ postTarget = "/forms/next";
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/additional-methods.min.js"></script>
 
 <script src="/js/forms/Forms.js"></script>
-
-<script type="text/javascript">
-    $(window).load(function () {
-        // $('#consent-modal').modal('show');
-    });
-
-    $('#consent-not-confirmed').click(function (e) {
-        e.preventDefault();
-        window.location.replace("http://sipsapp.org/logout");
-    });
-</script>
-
-<style>
-    .modal-backdrop {
-        opacity: 0.9 !important;
-    }
-</style>
 </body>
 </html>

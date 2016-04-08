@@ -15,10 +15,12 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
 router.post('/next', ensureAuthenticated, function (req, res, next) {
     console.log("NEXT: " + JSON.stringify(req.body, null, 2));
 
-    modelUsers.UserCheck(req.user, function (result) {
-        model.addFormEntry(req, function () {
-            console.log("FORM ENTRY USER CHECK: " + result);
-            res.redirect('/forms/sport-fitness-injury');
+    modelUsers.UserCreate(req.user, function () {
+        modelUsers.UserCheck(req.user, function (result) {
+            model.addFormEntry(req, function () {
+                console.log("FORM ENTRY USER CHECK: " + result);
+                res.redirect('/forms/sport-fitness-injury');
+            });
         });
     });
 
@@ -27,17 +29,24 @@ router.post('/next', ensureAuthenticated, function (req, res, next) {
 
 /* Displays Sports Fitness and Injury Form static version */
 router.get('/sport-fitness-injury/:group?', ensureAuthenticated, function (req, res, next) {
-    if(req.params.group){
-        var gid= req.params.group;
+    if (req.params.group) {
+        var gid = req.params.group;
 
         model_groups.getGroupInfo(gid, function (groupInfo) {
-            res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form', isAdmin: req.user.isAdmin, groupInfo: groupInfo});
+            res.render('forms/sport-fitness-injury', {
+                title: 'Sport Fitness and Injury Form',
+                isAdmin: req.user.isAdmin,
+                groupInfo: groupInfo
+            });
         });
     }
-    else res.render('forms/sport-fitness-injury', {title: 'Sport Fitness and Injury Form', isAdmin: req.user.isAdmin, groupInfo: null});
+    else res.render('forms/sport-fitness-injury', {
+        title: 'Sport Fitness and Injury Form',
+        isAdmin: req.user.isAdmin,
+        groupInfo: null
+    });
 
-    
-    
+
 });
 
 /* Displays Sports Fitness and Injury Form static version */

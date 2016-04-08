@@ -66,7 +66,10 @@ function inviteCode(req, callback) {
     var day = dateObj.getUTCDate();
     var year = dateObj.getUTCFullYear();
     var date = year + "-" + month + "-" + day;
-
+    var pos = "";
+    if(req.body.pos_num){
+        pos = req.body.pos_num;
+    }
     ibmdb.open(dsnString, function (err, conn) {
         conn.query("SELECT GROUPID FROM GROUPS WHERE invite_code =  \'" + code + "\'", function (err, rows, moreResultSets) {
             if (err) {
@@ -79,13 +82,13 @@ function inviteCode(req, callback) {
                 }
 
                 //Add user to single group if code is valid
-                conn.prepare("insert into Members (role_name, UserID, GROUPID, DATEADDED) VALUES (?, ?, ?, ?)", function (err, stmt) {
+                conn.prepare("insert into Members (role_name, UserID, GROUPID, NUMBER, DATEADDED) VALUES (?, ?, ?, ?, ?)", function (err, stmt) {
                     if (err) {
                         console.log(err);
                         conn.closeSync();
                         return callback(err);
                     }
-                    stmt.execute(["Pending", userid, rows[0].GROUPID, date], function (err, result) {
+                    stmt.execute(["Basic", userid, rows[0].GROUPID, pos, date], function (err, result) {
                         if (err) {
                             console.log(err);
                             return callback(err);
@@ -161,7 +164,7 @@ function groupUpdateInfo(data, callback) {
 function getGroupUsers(groupID, callback) {
 
     ibmdb.open(dsnString, function (err, conn) {
-        conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, users, moreResultSets) {
+        conn.query("SELECT MEMBERS.role_name, MEMBERS.userid, MEMBERS.number, USER.name_first, USER.name_last FROM MEMBERS INNER JOIN USER ON MEMBERS.userid = USER.userid WHERE GROUPID =  \'" + groupID + "\' ORDER BY USER.name_first;", function (err, users, moreResultSets) {
             if (err) {
                 console.log(err);
                 return false;

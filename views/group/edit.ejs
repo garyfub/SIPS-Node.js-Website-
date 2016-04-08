@@ -141,7 +141,7 @@
                                     <thead>
                                     <tr class="active">
                                         <th class="col-lg-1 hidden">Select</th>
-                                        <th class="col-lg-3">Name</th>
+                                        <th class="col-lg-3">Number</th>
                                         <th class="col-lg-3">Position</th>
                                         <th class="col-lg-1">Actions</th>
                                     </tr>
@@ -164,7 +164,7 @@
                                     <tr>
                                         <td class="hidden"><input name="user" class="selectedUser" type="radio"
                                                                   value="<%= groupInfo.users[i]["USERID"] %>"></td>
-                                        <td><%= groupInfo.users[i]["NAME_LAST"] + ", " + groupInfo.users[i]["NAME_FIRST"] %></td>
+                                        <td><%= groupInfo.users[i]["NUMBER"] /*groupInfo.users[i]["NAME_LAST"] + ", " + groupInfo.users[i]["NAME_FIRST"] */%></td>
                                         <td><%= groupInfo.users[i]["ROLE_NAME"] %></td>
                                         <td>
                                             <div class="btn-group">
