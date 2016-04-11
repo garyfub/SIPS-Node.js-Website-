@@ -157,14 +157,11 @@ function taskEntry(user, data, callback) {
                         console.log("ERROR: " + err);
                     }
                     else {
-/*
                         if (flankerdata == 1)
                             flanker(data.flanker, taskEntryID, callback);
 
                         if (appSensorData == 1)
                             appsensor(data.appsensor, taskEntryID, callback);
-
-                        */
                     }
                 });
             });
