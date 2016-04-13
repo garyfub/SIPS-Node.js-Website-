@@ -36,6 +36,14 @@ router.get('/', function (req, res, next) {
                 done(null, profile);
             }
         ));
+
+        //console.log("Invite code found  " + req.query.code);
+        if(req.query.code){
+            console.log("Invite code found for position " + req.query.num);
+            //req.tempVal = {};
+            req.session.code_insert = req.query.code;
+            req.session.pos_num = req.query.num;
+        }
         res.render('users/login');
     }
 });

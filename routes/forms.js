@@ -18,6 +18,15 @@ router.post('/next', ensureAuthenticated, function (req, res, next) {
     modelUsers.UserCreate(req.user, function () {
         modelUsers.UserCheck(req.user, function (result) {
             model.addFormEntry(req, function () {
+
+                /*
+                console.log("THIS SHOULD NOt BE NULL: " + req.session.code_insert);
+                if (req.temp.code_insert) {
+                    req.body.code_insert = req.session.code_insert;
+                    req.body.pos_num = req.session.pos_num;
+                    model_groups.inviteCode(req);
+                }
+                */
                 console.log("FORM ENTRY USER CHECK: " + result);
                 res.redirect('/forms/sport-fitness-injury');
             });

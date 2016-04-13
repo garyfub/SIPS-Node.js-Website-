@@ -119,7 +119,9 @@ function taskEntry(user, data, callback) {
     var userID = data.testedMember.id != null ? data.testedMember.id : user.id;
     
     //retrieve ID of person who administered test if memberID has a value
-    var testedBy= data.testedMember.id != null ? user.id : "";
+    var testedBy= data.testedMember.id != null ? user.id : "n/a";
+
+    console.log("TESTEDBY: " + testedBy);
     var dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1;
     var day = dateObj.getUTCDate();
@@ -128,7 +130,7 @@ function taskEntry(user, data, callback) {
 
     
     //TODO: temporarily set to use Task ID set manually on app. Should be changed to use taskID from a table of tasks in the database.
-    var taskType = data.task.id;
+    var taskType = data.task.hasOwnProperty("id")? data.task.id : "n/a";
 
     //Flankerdata specific properties
     var flankerdata = data.hasOwnProperty("flanker") ? 1 : 0;
